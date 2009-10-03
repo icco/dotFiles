@@ -5,6 +5,7 @@ This repository holds my config files for just about everything. In theory you c
 ## Install process
 
 This doesn't work yet, but I want to:
+
  * git clone
  * ./infect.sh
 
