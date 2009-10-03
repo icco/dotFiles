@@ -1,0 +1,80 @@
+#author = Dan Erat  <erat@cats.ucsc.edu - danerat@mindspring.com>
+author = Thomas Bouve <crahan@gmx.net>
+
+frame_left_width = 3
+frame_right_width = 3
+frame_top_height = 3
+frame_bottom_height = 3
+frame_top_border = 0,0,0,0
+frame_left_border = 0,0,0,0
+frame_right_border = 0,0,0,0
+frame_bottom_border = 0,0,0,0
+
+chart_width_min  = 60
+chart_width_max  = 200
+chart_width_ref  = 60
+allow_scaling    = false
+
+large_font = -*-helvetica-medium-r-normal-*-*-100-*-*-p-*-iso8859-1
+normal_font = -*-helvetica-medium-r-normal-*-*-80-*-*-p-*-iso8859-1
+small_font   = -*-helvetica-medium-r-normal-*-*-80-*-*-p-*-iso8859-1
+
+bg_grid_mode = 1
+
+rx_led_x = 2
+rx_led_y = 10
+tx_led_x = -2
+tx_led_y = 10
+
+StyleChart  *.border = 3,3,3,3
+
+StylePanel  *.border = 3,3,7,0
+StylePanel  *.label_position = 50
+StylePanel  *.margins = 1,1,9,4
+
+StylePanel  *.krell_left_margin = 2
+StylePanel  *.krell_right_margin = 2
+StylePanel  *.krell_depth = 1
+StylePanel  *.krell_yoff = 2
+StylePanel  *.krell_expand = bar-mode
+
+StyleMeter  *.border = 3,3,3,3
+StyleMeter  *.margins = 3,3,5,4
+
+StyleMeter  *.label_position = 50
+StyleMeter  *.krell_depth = 1
+StyleMeter  *.krell_left_margin = 2
+StyleMeter  *.krell_right_margin = 2
+
+StyleMeter  mem.label_position = 50
+StyleMeter  swap.label_position = 50
+StyleMeter  swap.border = 3,3,9,3
+StyleMeter  swap.margins = 3,3,11,4
+StyleMeter  swap.krell_yoff = 7
+StyleMeter  fs.label_position = 0
+
+#StyleMeter  volume.krell_yoff = -1
+#StyleMeter  volume.krell_left_margin = 5
+#krell_slider_depth 1
+
+
+# color
+StyleChart  *.textcolor = #efd997 #000000 shadow
+StyleChart  *.alt_textcolor = #efd097 #000000 shadow
+
+StylePanel  *.textcolor = #ffffff #000000 shadow
+StylePanel  *.alt_textcolor = #cccccc #000000 shadow
+
+StyleMeter  host.textcolor = #cccccc #000000 shadow
+StyleMeter  cal.textcolor = #ffffff #000000 none
+StyleMeter  *.textcolor = #cccccc #000000 shadow
+StyleMeter  *.alt_textcolor = #cccccc #000000 shadow
+StyleMeter  fs.textcolor = #9c9bb5 #000000 shadow
+StyleMeter  mem.textcolor = #9c9bb5 #000000 shadow
+StyleMeter  swap.textcolor = #9c9bb5 #000000 shadow
+StyleMeter  mail.textcolor = #9c9bb5 #000000 shadow
+
+
+
+
+

@@ -1,0 +1,91 @@
+# invisible.
+
+author = "Jkx <jkx@larsen-b.com>"
+
+chart_width_min = 58
+chart_width_max = 58
+chart_width_ref = 58
+allow_scaling = true
+frame_top_height = 0
+frame_bottom_height = 0
+frame_left_width = 0
+frame_right_width = 0
+frame_top_border = 0,0,0,0
+frame_bottom_border = 0,0,0,0
+frame_left_border = 0,0,0,0
+frame_right_border = 0,0,0,0
+
+chart_in_color = #11c4f1
+chart_in_color_grid = #11c4f1
+chart_out_color = #8758b3
+chart_out_color_grid = #8758b3
+
+bg_grid_mode = 1
+
+rx_led_x = -14
+rx_led_y = 11
+tx_led_x = -1
+tx_led_y = 11
+
+timer_time_x = 1
+timer_button_x = -4
+
+bg_timer_border = 2,2,2,2
+
+button_panel_border = 2,2,2,2
+button_meter_border = 2,2,2,2
+
+large_font = "-adobe-helvetica-medium-r-normal-*-*-100-*-*-p-*-*-*"
+normal_font = "-adobe-helvetica-medium-r-normal-*-*-80-*-*-p-*-*-*"
+small_font = "-adobe-helvetica-medium-r-normal-*-*-80-*-*-p-*-*-*"
+
+bg_slider_panel_border = 1,1,1,1
+bg_slider_meter_border = 1,1,1,1
+
+StyleChart *.border = 5,5,5,5
+StyleChart *.font = normal_font
+StyleChart *.alt_font = small_font
+StyleChart *.textcolor = #C1C1C1 #000000 shadow
+StyleChart *.alt_textcolor = #C1C1C1 #000000 shadow
+StyleChart *.transparency = 1
+
+StylePanel *.border = 0,0,11,2
+StylePanel *.font = normal_font
+StylePanel *.alt_font = normal_font
+StylePanel *.textcolor = #C1C1C1 #000000 shadow
+StylePanel *.alt_textcolor = #C1C1C1 #000000 shadow
+StylePanel *.label_position = 50
+StylePanel *.margin = 1
+StylePanel *.krell_x_hot = 63
+StylePanel *.krell_depth = 65
+StylePanel *.krell_yoff = 3
+StylePanel *.transparency = 1
+
+StyleMeter *.border = 0,0,12,4
+StyleMeter *.font = normal_font
+StyleMeter *.alt_font = small_font
+StyleMeter *.textcolor = #C1C1C1 #000000 shadow
+StyleMeter *.alt_textcolor = #C1C1C1 #000000 shadow
+StyleMeter *.label_position = 50
+StyleMeter *.margin = 1
+StyleMeter *.krell_x_hot = 63
+StyleMeter *.krell_depth = 65
+StyleMeter *.krell_yoff = 4
+StyleMeter *.transparency = 1
+
+StylePanel net.label_position = 0
+StyleMeter mem.label_position = 0
+StyleMeter mem.border = 0,0,12,4
+StyleMeter swap.label_position = 0
+StyleMeter swap.border = 0,0,12,2
+StyleMeter cal.font = med_font
+StyleMeter cal.alt_font = large_font
+StyleMeter clock.font = large_font
+StyleMeter fs.border = 0,0,12,4
+StyleMeter timer.border = 0,0,0,0
+StyleMeter host.border = 0,0,0,3
+StyleMeter cal.border = 0,0,0,4
+StyleMeter clock.border = 0,0,0,4
+StyleMeter uptime.border = 0,0,0,2
+StyleMeter fs.label_position = 0
+StyleMeter fs.alt_font = normal_font

@@ -1,0 +1,124 @@
+# -----------------------------------------------------------------------------
+# - Theme: prime 23
+# - Author: Jens Mittag <jens.mittag@prime23.de>
+# - Homepage: www.m00re.de
+# - Notes: I use the font snap in this theme, which was created by 
+#          artwiz. There's a package with some of his fonts available
+#          at http://fluxbox.sourceforge.net/docs/artwiz-fonts.php.
+# -----------------------------------------------------------------------------
+
+author = "Jens Mittag <jens.mittag at prime23.de>"
+
+theme_alternatives = 0
+
+chart_width_min = 64
+chart_width_max = 80
+chart_width_ref = 64
+allow_scaling = true
+
+frame_top_height = 0
+frame_bottom_height = 0
+frame_left_width = 0
+frame_right_width = 0
+
+frame_top_border = 2,2,0,0
+frame_bottom_border = 2,2,0,0
+frame_left_border = 0,0,0,0
+frame_right_border = 0,0,0,0
+
+chart_in_color = #435a6e
+chart_in_color_grid = #435a6e
+chart_out_color = #435a6e
+chart_out_color_grid = #435a6e
+
+bg_grid_mode = 1
+
+rx_led_x = -12
+rx_led_y = 11
+tx_led_x = -2
+tx_led_y = 11
+
+decal_mail_frames = 2
+decal_mail_delay = 0.5
+
+krell_slider_depth = 4
+krell_slider_x_hot = 5
+
+bg_slider_panel_border = 3,3,t,b
+bg_slider_neter_border = 3,3,t,b
+
+timer_time_x = 1
+timer_button_x = -4
+bg_timer_border = 2,2,2,2
+
+button_panel_border = 2,2,2,2
+button_meter_border = 2,2,2,2
+
+large_font = snap
+normal_font = snap
+small_font = snap
+
+spacer_top_height volume 4
+spacer_top_height gkrellms 4
+
+bg_slider_panel_border = 1,1,1,1
+bg_slider_meter_border = 1,1,1,1
+
+# - CHART STYLES --------------------------------------------------------------
+
+StyleChart *.border = 5,5,5,5
+StyleChart *.textcolor = #000000 #444444 none
+StyleChart *.alt_textcolor = #aaccff #444444 shadow
+StyleChart *.transparency = { 2 }
+
+# - PANEL STYLES --------------------------------------------------------------
+
+StylePanel *.border = 0,0,11,4
+StylePanel *.label_position = center
+StylePanel *.margin = 3
+StylePanel *.textcolor = #ffffff #000000 shadow
+StylePanel *.alt_textcolor = #aaccff #444444 shadow
+StylePanel *.krell_depth = 65
+StylePanel *.krell_x_hot = 63
+StylePanel *.krell_yoff  = 3
+
+StylePanel net.label_position = 0
+
+# - METER STYLES --------------------------------------------------------------
+
+StyleMeter *.label_position = center
+StyleMeter *.margin = 3
+StyleMeter *.textcolor = #ffffff #000000 shadow
+StyleMeter *.alt_textcolor = #aaccff #444444 shadow
+StyleMeter *.font = small_font
+StyleMeter *.alt_font = small_font
+StyleMeter *.krell_depth = 65
+StyleMeter *.krell_x_hot = 63
+StyleMeter *.krell_yoff = 4
+
+StyleMeter clock.font = large_font
+StyleMeter host.textcolor = #000000 #ffffff none
+StyleMeter uptime.textcolor = #ffffff #000000 shadow
+StyleMeter volume.textcolor = #000000 #ffffff none
+StyleMeter fs.textcolor = #000000 #ffffff none
+
+StyleMeter fs.label_position = 0
+StyleMeter volume.label_position = 0
+StyleMeter mem.label_position = 0
+StyleMeter swap.label_position = 0
+StyleMeter mem.border = 0,0,12,4
+StyleMeter swap.border = 0,0,12,4
+
+StyleMeter apm.krell_depth = 1
+StyleMeter apm.krell_x_hot = 4
+StyleMeter apm.krell_yoff = 1
+StyleMeter fs.krell_depth = 1
+StyleMeter fs.krell_x_hot = 4
+StyleMeter fs.krell_yoff = 1
+
+StyleMeter fs.border = 0,0,4,2
+StyleMeter timer.border = 0,0,3,3
+StyleMeter host.border = 0,0,3,3
+StyleMeter cal.border = 0,0,3,3
+StyleMeter clock.border = 0,0,3,3
+StyleMeter uptime.border = 0,0,3,3
