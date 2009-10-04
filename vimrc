@@ -1,57 +1,70 @@
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" .vimrc -- the way it ought to be: modified from dpaterno
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" GENERAL OPTIONS
-behave xterm
-set viminfo='20,\"500,%	" ' Maximum number of previously edited files for which the marks
-			"   are remembered.  
-			" " Maximum number of lines saved for each register.
-			" % When included, save and restore the buffer list.  If Vim is
-			"   started with a file name argument, the buffer list is not
-			"   restored.  If Vim is started without a file name argument, the
-			"   buffer list is restored from the viminfo file.  Buffers
-			"   without a file name and buffers for help files are not written
-			"   to the viminfo file.
-set history=500		" keep {number} lines of command line history
-set nowrap          " whether to wrap lines
-set tabstop=4		" ts, number of spaces that a tab *in an input file* is equivalent to
-"set softtabstop=4       "     number of spaces that a tab *pressed by the user* is equivalent to
-set shiftwidth=4	" sw, number of spaces shifted left and right when issuing << and >>  commands
-"set expandtab           " don't output tabs; replace with spaces.
-set autoindent          " follow current indentation
-set smartindent         " obey brace-indentation rules
+set nocompatible       " no compatibility with vi
+filetype on            " recognize syntax by file extension
+filetype indent on     " check for indent file
+syntax on              " syntax highlighting
+hi clear search        " do not highlight all search matches
 
-" set number		" number lines
-set nocompatible
-set incsearch
-set showmatch
-"set backspace=1
-syntax on
+" Don't know what these do...
+set ai
+set si
 
-set cinoptions=:0,p0,t0
-set cinwords=if,unless,else,while,until,do,for,switch,case
-set formatoptions=tcqr
-set cindent
-set bg=dark
+" meh...
+"set background=light   " background light, so foreground not bold
+
+set backspace=2        " allow <BS> to go past last insert
+set gdefault           " assume :s uses /g
+set ignorecase         " ignore case in search patterns
+set smartcase          " searches are case-sensitive if caps used
+set incsearch          " immediately highlight search matches
+set noerrorbells       " no beeps on errors
+set nomodeline         " prevent others from overriding this .vimrc
+set number             " display line numbers
+set ruler              " display row, column and % of document
+set showcmd            " show partial commands in the status line
+set showmatch          " show matching () {} etc.
+set showmode           " show current mode
+
+" Settings for autoindentation, comments, and what-have-you
+
+set expandtab          " expand tabs with spaces
+set tabstop=3          " <Tab> move three characters
+set shiftwidth=3       " >> and << shift 3 spaces
+set textwidth=79       " hard wrap at 79 characters
+set modeline           " check for a modeline
+set softtabstop=3      " see spaces as tabs
+set scrolloff=5        " start scrolling when cursor is N lines from edge
+
+" whoa... wtf?
+set nowrap             " don't soft wrap
+set wrap               " linewrap
+
+" Key Bindings, like a boss... ( cartography section )
+
+noremap <Ins> 2<C-Y>   " <Ins> defaults like i
+noremap <Del> 2<C-E>   " <Del> defaults like x
 
 " Because we like our line numbers sometimes...
-:nmap <C-N><C-N> :set invnumber <CR> 
+:nnoremap <C-N><C-N> :set invnumber<CR> 
 
 " But we don't always wanna wrap
-:nmap <C-w><C-w> :set invwrap <CR> 
+:nnoremap <C-w><C-w> :set invwrap<CR> 
 
 " And all the cool kids need to paste
-:nmap <C-p><C-p> :set invpaste <CR>
+:nnoremap <C-p><C-p> :set invpaste<CR>
 
-" CODE FOLDING!
-vmap <space> zf
-vmap <space> zd
+" Use the space key to open and close code folds
+:vnoremap <space> zf<CR>
+:nnoremap <space> zd<CR>
 
 " Kinda cool
 "colorscheme koehler
+colorscheme darknat
 
-" VIM DISPLAY OPTIONS
- set showmode		" show which mode (insert, replace, visual)
- set ruler
- set title
- set showcmd		" show commands in status line when typing
- set wildmenu	
+" Highlights long lines
+highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+match OverLength /\%81v.\+/
 

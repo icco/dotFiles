@@ -26,12 +26,9 @@ alias bt="screen rtorrent"
 ## IP Address
 alias echoIP="/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | cut -d' ' -f1"
 
-## Connect to vogon
-alias callschool="ssh nwelch@vogon.csc.calpoly.edu"
-
 ########### Debian Based Aliases
 
-alias texclean='rm -f *.toc *.aux *.log *.cp *.fn *.tp *.vr *.pg *.ky'
+alias texclean='rm -vf *.toc *.aux *.log *.cp *.fn *.tp *.vr *.pg *.ky'
 alias clean='echo -n "Really clean this directory?";
         read yorn;
         if test "$yorn" = "y"; then
@@ -45,7 +42,13 @@ alias j="jobs -l"
 alias pu="pushd"
 alias po="popd"
 
-alias nat="echo 'I.m the proud owner of  DF 82 8A F5 6F EF 0F 15 F6 12 09 0B 03 21 DA CF'"
+alias nat="echo 'I\'m the proud owner of DF 82 8A F5 6F EF 0F 15 F6 12 09 0B 03 21 DA CF'"
+
+## duh
+alias motd="cat /etc/motd"
+
+## nice for gnome based systems.
+alias go='gnome-open'
 
 #
 # Csh compatability:
@@ -95,5 +98,3 @@ seq ()
 
 ## Aliases added by the system call
 
-alias html2latex='gnuhtml2latex'
-alias go='gnome-open'
