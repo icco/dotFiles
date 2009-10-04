@@ -17,15 +17,31 @@ function exclude() {
 	return 0
 }
 
+function doitnow() {
+	if [ $2 ]; then
+		mkdir -p ~/tmp/oldDotFiles/;
+		mv $2 ~/tmp/oldDotFiles/;
+	fi;
+
+	ln -s $1 $2
+	echo "$1 => $2";
+}
+
 for file in $dotfiles; do
 	exclude $file;
 	ex="$?";
 	if [ $ex == 0 ]; then
 		destfile=`echo ~/.$file`;
+		file="`pwd`/$file";
+
 		if [ -d $file ]; then
-			echo "$file/ : `ls $file`"; # needs to be recursive...?
+			if [ -d $destfile ]; then
+				echo "$destfile exists"; # Push subfiles onto array?
+			else
+				doitnow $file $destfile;
+			fi;
 		else
-			echo "$file => $destfile"; #ln -s
+			doitnow $file $destfile;
 		fi;
 	fi;
 done;
