@@ -52,5 +52,10 @@ if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
 fi
 
+# For certain machines add an additional bashrc
+if [ -f ~/.bashrc.`hostname` ]; then
+ . ~/.bashrc.`hostname`
+fi
+
 # see /usr/share/doc/bash/examples/startup-files for examples
 
