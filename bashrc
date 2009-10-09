@@ -24,6 +24,9 @@ if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
+export GREP_COLOR="1;33"
+alias grep='grep --color=auto'
+
 # Comment in the above and uncomment this below for a color prompt
 #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 

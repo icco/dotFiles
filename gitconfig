@@ -6,3 +6,5 @@
 [github]
 	user = icco
 	token = 8b2383f5d9c7885267f0a40761640367
+[color]
+	ui = auto
