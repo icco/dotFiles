@@ -1,7 +1,8 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" .vimrc -- the way it ought to be: modified from dpaterno
+" .vimrc -- the way it ought to be: modified from dpatierno
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+behave xterm
 set nocompatible       " no compatibility with vi
 filetype on            " recognize syntax by file extension
 filetype indent on     " check for indent file
@@ -38,6 +39,8 @@ set modeline           " check for a modeline
 set softtabstop=3      " see spaces as tabs
 set scrolloff=5        " start scrolling when cursor is N lines from edge
 
+set bg=dark
+
 " whoa... wtf?
 set nowrap             " don't soft wrap
 set wrap               " linewrap
@@ -65,6 +68,6 @@ noremap <Del> 2<C-E>   " <Del> defaults like x
 colorscheme darknat
 
 " Highlights long lines
-highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-match OverLength /\%81v.\+/
+"highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+"match OverLength /\%81v.\+/
 
