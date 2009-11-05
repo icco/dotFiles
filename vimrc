@@ -65,7 +65,7 @@ noremap <Del> 2<C-E>   " <Del> defaults like x
 
 " Kinda cool
 "colorscheme koehler
-colorscheme darknat
+"colorscheme darknat
 
 " Highlights long lines
 "highlight OverLength ctermbg=red ctermfg=white guibg=#592929
