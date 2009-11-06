@@ -45,8 +45,22 @@ set bg=dark
 set nowrap             " don't soft wrap
 set wrap               " linewrap
 
-" Key Bindings, like a boss... ( cartography section )
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Color Stuff
+"colorscheme koehler
+colorscheme darknat
 
+" Highlights long lines
+highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+match OverLength /\%81v.\+/
+
+" Markdown
+augroup mkd
+  autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:>
+augroup END
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Key Bindings, like a boss... ( cartography section )
 noremap <Ins> 2<C-Y>   " <Ins> defaults like i
 noremap <Del> 2<C-E>   " <Del> defaults like x
 
@@ -63,16 +77,40 @@ noremap <Del> 2<C-E>   " <Del> defaults like x
 :vnoremap <space> zf<CR>
 :nnoremap <space> zd<CR>
 
-" Kinda cool
-"colorscheme koehler
-"colorscheme darknat
+" Tabs can be fun too!
+:nnoremap ,. :tabnew<CR>
+:nnoremap ., :tabclose<CR>
 
-" Highlights long lines
-"highlight OverLength ctermbg=red ctermfg=white guibg=#592929
-"match OverLength /\%81v.\+/
+" And this is how pros navigate splits and tabs.
+:nnoremap ,q :tabp<CR>
+:nnoremap ,e :tabn<CR>
+:nnoremap ,w <c-w><Up><CR>
+:nnoremap ,s <c-w><Down><CR>
+:nnoremap ,a <c-w><Left><CR>
+:nnoremap ,d <c-w><Right><CR>
+:nnoremap ,1 :tabn 1<CR>
+:nnoremap ,2 :tabn 2<CR>
+:nnoremap ,3 :tabn 3<CR>
+:nnoremap ,4 :tabn 4<CR>
+:nnoremap ,5 :tabn 5<CR>
+:nnoremap ,6 :tabn 6<CR>
+:nnoremap ,7 :tabn 7<CR>
+:nnoremap ,8 :tabn 8<CR>
+:nnoremap ,9 :tabn 9<CR>
 
-" Markdown
-augroup mkd
-  autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:>
-augroup END
-
+" I haven't decided if I like . better.
+:nnoremap .q :tabp<CR>
+:nnoremap .e :tabn<CR>
+:nnoremap .w <c-w><Up><CR>
+:nnoremap .s <c-w><Down><CR>
+:nnoremap .a <c-w><Left><CR>
+:nnoremap .d <c-w><Right><CR>
+:nnoremap .1 :tabn 1<CR>
+:nnoremap .2 :tabn 2<CR>
+:nnoremap .3 :tabn 3<CR>
+:nnoremap .4 :tabn 4<CR>
+:nnoremap .5 :tabn 5<CR>
+:nnoremap .6 :tabn 6<CR>
+:nnoremap .7 :tabn 7<CR>
+:nnoremap .8 :tabn 8<CR>
+:nnoremap .9 :tabn 9<CR>
