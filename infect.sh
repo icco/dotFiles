@@ -21,7 +21,7 @@ function exclude() {
 
 # actually move files 
 function doitnow() {
-	if [ $2 ]; then
+	if [ -f $2 ]; then
 		mkdir -p ~/tmp/oldDotFiles/;
 		mv $2 ~/tmp/oldDotFiles/;
 	fi;

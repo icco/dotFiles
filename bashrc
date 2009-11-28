@@ -24,6 +24,8 @@ if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
+export EDITOR="/usr/bin/vim"
+
 export GREP_COLOR="1;33"
 alias grep='grep --color=auto'
 
