@@ -29,6 +29,11 @@ export EDITOR="/usr/bin/vim"
 export GREP_COLOR="1;33"
 alias grep='grep --color=auto'
 
+# Add ruby to path on ubuntu
+if [ -d /var/lib/gems/1.8/bin ]; then
+   export PATH=/var/lib/gems/1.8/bin:$PATH
+fi
+
 # Comment in the above and uncomment this below for a color prompt
 #PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
 
