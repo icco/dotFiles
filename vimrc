@@ -9,9 +9,8 @@ filetype indent on     " check for indent file
 syntax on              " syntax highlighting
 hi clear search        " do not highlight all search matches
 
-" Don't know what these do...
-set ai
-set si
+set ai " Auto indent
+set si " smart indenting
 
 " meh...
 "set background=light   " background light, so foreground not bold
@@ -34,7 +33,7 @@ set showmode           " show current mode
 set expandtab          " expand tabs with spaces
 set tabstop=3          " <Tab> move three characters
 set shiftwidth=3       " >> and << shift 3 spaces
-set textwidth=79       " hard wrap at 79 characters
+"set textwidth=79       " hard wrap at 79 characters
 set modeline           " check for a modeline
 set softtabstop=3      " see spaces as tabs
 set scrolloff=5        " start scrolling when cursor is N lines from edge
