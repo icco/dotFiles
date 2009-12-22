@@ -23,7 +23,8 @@ Host arclight
 	port 4022
 	User nat
 
-Host southwood.homeip.net
+Host santaclara
+	Hostname santaclarahome.homeip.net
 	ForwardX11 yes
 	KeepAlive yes
 
@@ -85,4 +86,8 @@ Host vm
 	Hostname localhost
 	Port 2222
 	User nat
+
+Host welchfamilyweb.com
+   User dlnwelch
+   Port 2222
 
