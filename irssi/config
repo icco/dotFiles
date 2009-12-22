@@ -56,9 +56,7 @@ chatnets = {
     max_whois = "30";
   };
   SILC = { type = "SILC"; };
-  OFTC = {
-    type = "IRC";
-  };
+  OFTC = { type = "IRC"; };
   freenode = { type = "IRC"; };
 };
 
@@ -228,14 +226,17 @@ statusbar = {
   };
 };
 settings = {
-  core = { real_name = "Nat Welch"; user_name = "nat"; nick = "icco-server"; };
+  core = {
+    real_name = "Nat Welch";
+    user_name = "nat";
+    nick = "icco-server";
+  };
   "fe-text" = { actlist_sort = "refnum"; };
   "fe-common/core" = {
     autoclose_windows = "no";
     reuse_unused_windows = "yes";
     timestamps = "yes";
   };
+  "irc/dcc" = { dcc_download_path = "~/Downloads/"; dcc_autoget = "yes"; };
 };
-hilights = (
-  { text = "icco"; nick = "yes"; word = "yes"; },
-);
+hilights = ( { text = "icco"; nick = "yes"; word = "yes"; } );

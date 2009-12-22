@@ -9,9 +9,8 @@ filetype indent on     " check for indent file
 syntax on              " syntax highlighting
 hi clear search        " do not highlight all search matches
 
-" Don't know what these do...
-set ai
-set si
+set ai " Auto indent
+set si " smart indenting
 
 " meh...
 "set background=light   " background light, so foreground not bold
@@ -34,7 +33,7 @@ set showmode           " show current mode
 set expandtab          " expand tabs with spaces
 set tabstop=3          " <Tab> move three characters
 set shiftwidth=3       " >> and << shift 3 spaces
-set textwidth=79       " hard wrap at 79 characters
+"set textwidth=79       " hard wrap at 79 characters
 set modeline           " check for a modeline
 set softtabstop=3      " see spaces as tabs
 set scrolloff=5        " start scrolling when cursor is N lines from edge
@@ -58,6 +57,10 @@ match OverLength /\%81v.\+/
 augroup mkd
   autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:>
 augroup END
+
+" Makefiles
+autocmd BufEnter ?akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Key Bindings, like a boss... ( cartography section )
@@ -114,3 +117,4 @@ noremap <Del> 2<C-E>   " <Del> defaults like x
 :nnoremap .7 :tabn 7<CR>
 :nnoremap .8 :tabn 8<CR>
 :nnoremap .9 :tabn 9<CR>
+
