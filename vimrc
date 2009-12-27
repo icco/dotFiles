@@ -47,7 +47,7 @@ set wrap               " linewrap
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Color Stuff
 "colorscheme koehler
-colorscheme darknat
+"colorscheme darknat
 
 " Highlights long lines
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929

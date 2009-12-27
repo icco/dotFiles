@@ -16,7 +16,6 @@ alias la='ls -A'
 alias l='ls -CF'
 
 alias vi='vim'
-alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-tilde'
 
 ## Extra Cool Alias
 alias c="clear"
