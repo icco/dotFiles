@@ -22,7 +22,6 @@ alias c="clear"
 gfind () { if [ $# -lt 2 ]; then files="*"; search="${1}"; else files="${1}"; search="${2}"; fi; find . -name "$files" -a ! -wholename '*/.*' -exec grep -Hin ${3} "$search" {} \; ; }
 pidof () { ps -Acw | egrep -i $@ | awk '{print $1}'; }
 
-
 ## BitTorrent Aliases, require bitornado   
 alias btdl="screen btdownloadcurses.bittornado"
 alias bthere="screen btlaunchmanycurses.bittornado ."
@@ -63,6 +62,11 @@ alias unsetenv=unset
 function setenv () {
   export $1="$2"
 }
+
+# Socat is awesome.
+if [ -f `which socat` ]; then
+   alias sml="socat READLINE EXEC:sml";
+fi;
 
 # Function which adds an alias to the current shell and to
 # the ~/.bash_aliases file.
