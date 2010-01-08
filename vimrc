@@ -7,7 +7,7 @@ set nocompatible       " no compatibility with vi
 filetype on            " recognize syntax by file extension
 filetype indent on     " check for indent file
 syntax on              " syntax highlighting
-hi clear search        " do not highlight all search matches
+"hi clear search        " do not highlight all search matches
 
 " Don't know what these do...
 set ai
