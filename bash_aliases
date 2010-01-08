@@ -64,7 +64,7 @@ function setenv () {
 }
 
 # Socat is awesome.
-if [ -f `which socat` ]; then
+if [ -f `which socat 2>/dev/null` ]; then
    alias sml="socat READLINE EXEC:sml";
 fi;
 
