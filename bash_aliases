@@ -16,7 +16,6 @@ alias la='ls -A'
 alias l='ls -CF'
 
 alias vi='vim'
-alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-tilde'
 
 ## Extra Cool Alias
 alias c="clear"
@@ -30,7 +29,8 @@ alias bthere="screen btlaunchmanycurses.bittornado ."
 alias bt="screen rtorrent"
 
 ## IP Address
-alias echoIP="/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | cut -d' ' -f1"
+#alias echoIP="/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | cut -d' ' -f1"
+alias myip="curl -s http://natwelch.com/ip/ | html2text"
 
 ########### Debian Based Aliases
 

@@ -1,8 +1,10 @@
 #!/bin/bash
+# A script to covert a linux profile to have all of my prefered settings.
 
 dotfiles=`ls`;
 excludes=( "README.md" "infect.sh" );
 
+# Checks to see if a file should be excluded
 function exclude() {
 	if [ -z "$1" ]; then
 		return 1;
@@ -17,10 +19,18 @@ function exclude() {
 	return 0
 }
 
+# actually move files 
 function doitnow() {
+   for i in {1..5}; do
+      if [ -d ~/tmp/oldDotFiles$i/ ]; then
+         storeDir= "~/tmp/oldDotFiles$i/";
+         break;
+      fi;
+   done;
+
 	if [ -f $2 ]; then
-		mkdir -p ~/tmp/oldDotFiles/;
-		mv $2 ~/tmp/oldDotFiles/;
+		mkdir -p $storeDir;
+		mv $2 $storeDir;
 	fi;
 
 	ln -s $1 $2
@@ -48,3 +58,4 @@ done;
 
 #echo $dotfiles;
 #echo ${excludes[*]};
+
