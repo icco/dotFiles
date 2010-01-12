@@ -4,8 +4,5 @@
 [alias]
 	co = checkout
    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
-[github]
-	user = icco
-	token = 8b2383f5d9c7885267f0a40761640367
 [color]
 	ui = auto
