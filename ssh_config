@@ -91,3 +91,7 @@ Host welchfamilyweb.com
    User dlnwelch
    Port 2222
 
+Host acm
+   User nwelch
+   Hostname acm.calpoly.edu
+

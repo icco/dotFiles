@@ -30,8 +30,12 @@ export GREP_COLOR="1;33"
 alias grep='grep --color=auto'
 
 # Add ruby to path on ubuntu
-if [ -d /var/lib/gems/1.8/bin ]; then
-   export PATH=/var/lib/gems/1.8/bin:$PATH
+if [ -d /var/lib/gems/1.9.0/bin ]; then
+   export PATH=/var/lib/gems/1.9.0/bin:$PATH
+fi
+
+if [ -d ~/.gem/ruby/1.9.0/bin ]; then
+   export PATH=~/.gem/ruby/1.9.0/bin:$PATH
 fi
 
 # Comment in the above and uncomment this below for a color prompt
