@@ -7,7 +7,7 @@ set nocompatible       " no compatibility with vi
 filetype on            " recognize syntax by file extension
 filetype indent on     " check for indent file
 syntax on              " syntax highlighting
-"hi clear search        " do not highlight all search matches
+hi clear search        " do not highlight all search matches
 
 set ai " Auto indent
 set si " smart indenting
@@ -47,7 +47,7 @@ set wrap               " linewrap
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Color Stuff
 "colorscheme koehler
-"colorscheme darknat
+colorscheme darknat
 
 " Highlights long lines
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
