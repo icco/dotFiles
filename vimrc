@@ -7,7 +7,7 @@ set nocompatible       " no compatibility with vi
 filetype on            " recognize syntax by file extension
 filetype indent on     " check for indent file
 syntax on              " syntax highlighting
-"hi clear search        " do not highlight all search matches
+hi clear search        " do not highlight all search matches
 
 set ai " Auto indent
 set si " smart indenting
@@ -47,7 +47,7 @@ set wrap               " linewrap
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Color Stuff
 "colorscheme koehler
-"colorscheme darknat
+colorscheme darknat
 
 " Highlights long lines
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
@@ -85,23 +85,6 @@ noremap <Del> 2<C-E>   " <Del> defaults like x
 :nnoremap ., :tabclose<CR>
 
 " And this is how pros navigate splits and tabs.
-:nnoremap ,q :tabp<CR>
-:nnoremap ,e :tabn<CR>
-:nnoremap ,w <c-w><Up><CR>
-:nnoremap ,s <c-w><Down><CR>
-:nnoremap ,a <c-w><Left><CR>
-:nnoremap ,d <c-w><Right><CR>
-:nnoremap ,1 :tabn 1<CR>
-:nnoremap ,2 :tabn 2<CR>
-:nnoremap ,3 :tabn 3<CR>
-:nnoremap ,4 :tabn 4<CR>
-:nnoremap ,5 :tabn 5<CR>
-:nnoremap ,6 :tabn 6<CR>
-:nnoremap ,7 :tabn 7<CR>
-:nnoremap ,8 :tabn 8<CR>
-:nnoremap ,9 :tabn 9<CR>
-
-" I haven't decided if I like . better.
 :nnoremap .q :tabp<CR>
 :nnoremap .e :tabn<CR>
 :nnoremap .w <c-w><Up><CR>
@@ -117,4 +100,21 @@ noremap <Del> 2<C-E>   " <Del> defaults like x
 :nnoremap .7 :tabn 7<CR>
 :nnoremap .8 :tabn 8<CR>
 :nnoremap .9 :tabn 9<CR>
+
+" I want to be able to navigate with one hand.
+:nnoremap xq :tabp<CR>
+:nnoremap xe :tabn<CR>
+:nnoremap xw <c-w><Up><CR>
+:nnoremap xs <c-w><Down><CR>
+:nnoremap xa <c-w><Left><CR>
+:nnoremap xd <c-w><Right><CR>
+:nnoremap x1 :tabn 1<CR>
+:nnoremap x2 :tabn 2<CR>
+:nnoremap x3 :tabn 3<CR>
+:nnoremap x4 :tabn 4<CR>
+:nnoremap x5 :tabn 5<CR>
+:nnoremap x6 :tabn 6<CR>
+:nnoremap x7 :tabn 7<CR>
+:nnoremap x8 :tabn 8<CR>
+:nnoremap x9 :tabn 9<CR>
 
