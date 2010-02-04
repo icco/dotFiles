@@ -1,0 +1,11 @@
+# My home server's special stuff for bash
+
+# Add ruby to path 
+if [ -d /var/lib/gems/1.9.1/bin ]; then
+   export PATH=/var/lib/gems/1.9.1/bin:$PATH
+fi
+
+if [ -d ~/.gem/ruby/1.9.1/bin ]; then
+   export PATH=~/.gem/ruby/1.9.1/bin:$PATH
+fi
+
