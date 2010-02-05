@@ -15,8 +15,6 @@ alias ll='ls -lh'
 alias la='ls -A'
 alias l='ls -CF'
 
-alias vi='vim'
-
 ## Extra Cool Alias
 alias c="clear"
 gfind () { if [ $# -lt 2 ]; then files="*"; search="${1}"; else files="${1}"; search="${2}"; fi; find . -name "$files" -a ! -wholename '*/.*' -exec grep -Hin ${3} "$search" {} \; ; }
@@ -53,6 +51,11 @@ alias nat="echo 'I\'m the proud owner of DF 82 8A F5 6F EF 0F 15 F6 12 09 0B 03 
 
 ## duh
 alias motd="cat /etc/motd"
+
+# For epic typing fail
+alias bim="vim"
+alias cim="vim"
+alias vi='vim'
 
 ## nice for gnome based systems.
 alias go='gnome-open'

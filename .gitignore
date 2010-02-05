@@ -1,2 +1,4 @@
 .viminfo
 .bash_history
+vim/.net*
+*.spl
