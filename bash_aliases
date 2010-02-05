@@ -64,9 +64,9 @@ function setenv () {
 }
 
 # Socat is awesome.
-if [ -f `which socat 2>/dev/null` ]; then
-   alias sml="socat READLINE EXEC:sml";
-fi;
+#if [ -f `which socat 2>/dev/null` ]; then
+ #  alias sml="socat READLINE EXEC:sml";
+#fi;
 
 # Function which adds an alias to the current shell and to
 # the ~/.bash_aliases file.
