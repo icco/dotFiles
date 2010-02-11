@@ -12,8 +12,9 @@ hi clear search        " do not highlight all search matches
 set ai " Auto indent
 set si " smart indenting
 
-" meh...
+" bg overridden by colorscheme
 "set background=light   " background light, so foreground not bold
+"set background=dark     " background dark
 
 set backspace=2        " allow <BS> to go past last insert
 set gdefault           " assume :s uses /g
@@ -38,16 +39,20 @@ set modeline           " check for a modeline
 set softtabstop=3      " see spaces as tabs
 set scrolloff=5        " start scrolling when cursor is N lines from edge
 
-set bg=dark
 
 " whoa... wtf?
 set nowrap             " don't soft wrap
 set wrap               " linewrap
 
+" turns status line always on and configures it
+set laststatus=2
+set statusline=%<%f\ %m\ %h%r%=%b\ 0x%B\ \ %l,%c%V\ %P
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Color Stuff
 "colorscheme koehler
-"colorscheme darknat
+"colorscheme elflord
+colorscheme darknat
 
 " Highlights long lines
 highlight OverLength ctermbg=red ctermfg=white guibg=#592929
@@ -60,7 +65,6 @@ augroup END
 
 " Makefiles
 autocmd BufEnter ?akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Key Bindings, like a boss... ( cartography section )
