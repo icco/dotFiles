@@ -1,13 +1,13 @@
 [user]
-	name = Nat Welch
-	email = nat@natwelch.com
+   name = Nat Welch
+   email = nat@natwelch.com
 [alias]
 	co = checkout
 	st = status
 	ci = commit
    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
 [color]
-	ui = auto
+   ui = auto
 [push]
 	default = tracking
 [github]
