@@ -2,13 +2,16 @@
    name = Nat Welch
    email = nat@natwelch.com
 [alias]
-   co = checkout
-   st = status
+	co = checkout
+	st = status
+	ci = commit
    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
 [color]
    ui = auto
 [push]
-   default = tracking
+	default = tracking
+[github]
+   user = icco
 
 [github]
 	user = icco
