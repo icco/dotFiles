@@ -1,5 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =3
-let g:netrw_dirhist_1='/home/nat/Work/PdfUploader'
-let g:netrw_dirhist_2='/home/nat/CSC430/MLIntroduction'
-let g:netrw_dirhist_3='/home/nat/CSC430/LexicalAnalyzer/hw2given/tests/input'
