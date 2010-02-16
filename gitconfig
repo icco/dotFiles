@@ -11,7 +11,5 @@
 [push]
 	default = tracking
 [github]
-   user = icco
-
-[github]
 	user = icco
+
