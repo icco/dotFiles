@@ -14,7 +14,7 @@ endif
 
 let colors_name = "darknat"
 
-hi Normal		   guifg=#c0c0c0 guibg=#000040 ctermfg=gray ctermbg=black
+hi Normal		   ctermfg=gray 
 hi ErrorMsg		   guifg=#ffffff guibg=#287eff ctermfg=white ctermbg=lightblue
 hi Visual		   guifg=#8080ff guibg=fg gui=reverse ctermfg=lightblue ctermbg=fg cterm=reverse
 hi VisualNOS	   guifg=#8080ff guibg=fg gui=reverse,underline	ctermfg=lightblue ctermbg=fg cterm=reverse,underline
@@ -48,12 +48,12 @@ hi DiffText	      cterm=bold ctermbg=red gui=bold guibg=Red
 hi Cursor	      guifg=black guibg=yellow ctermfg=black ctermbg=yellow
 hi lCursor	      guifg=black guibg=white ctermfg=black ctermbg=white
 
-hi Comment	      guifg=#80a0ff ctermfg=darkred
+hi Comment	      guifg=#80a0ff ctermfg=cyan
 hi Constant	      ctermfg=magenta guifg=#ffa0a0 cterm=none
 hi Special	      ctermfg=brown guifg=Orange cterm=none gui=none
 hi Identifier	   ctermfg=cyan guifg=#40ffff cterm=none
 hi Statement	   ctermfg=yellow cterm=none guifg=#ffff60 gui=none
-hi PreProc	      ctermfg=magenta guifg=#ff80ff gui=none cterm=none
+hi PreProc	      ctermfg=cyan guifg=#ff80ff gui=none cterm=none
 hi type		      ctermfg=green guifg=#60ff60 gui=none cterm=none
 hi Underlined	   cterm=underline term=underline
-hi Ignore	      guifg=bg ctermfg=bg
+hi Ignore	      guifg=black ctermfg=black
