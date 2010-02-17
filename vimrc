@@ -55,7 +55,7 @@ set statusline=%<%f\ %m\ %h%r%=%b\ 0x%B\ \ %l,%c%V\ %P
 colorscheme darknat
 
 " Highlights long lines
-highlight OverLength ctermbg=red ctermfg=white guibg=#592929
+highlight OverLength term=standout cterm=bold ctermfg=1
 match OverLength /\%81v.\+/
 
 " Markdown
@@ -65,6 +65,9 @@ augroup END
 
 " Makefiles
 autocmd BufEnter ?akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
+
+" Text Files
+" to be added...
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Key Bindings, like a boss... ( cartography section )
