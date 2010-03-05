@@ -63,6 +63,9 @@ augroup mkd
   autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:>
 augroup END
 
+" Less
+au BufRead,BufNewFile *.less setfiletype css
+
 " Makefiles
 autocmd BufEnter ?akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
 
