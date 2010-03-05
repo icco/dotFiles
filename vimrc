@@ -1,5 +1,5 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" .vimrc -- the way it ought to be: modified from dpatierno
+" .vimrc -- the way it ought to be: Ha. it rhymes!
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 behave xterm
@@ -46,7 +46,7 @@ set wrap               " linewrap
 
 " turns status line always on and configures it
 set laststatus=2
-set statusline=%<%f\ %m\ %h%r%=%b\ 0x%B\ \ %l,%c%V\ %P
+set statusline=%<%f\ %m\ %h%r%=%b\ 0x%B\ \ %l,%c%V\ %P\ of\ %L 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Color Stuff
@@ -69,10 +69,24 @@ autocmd BufEnter ?akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
 " Text Files
 " to be added...
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Key Bindings, like a boss... ( cartography section )
-noremap <Ins> 2<C-Y>   " <Ins> defaults like i
-noremap <Del> 2<C-E>   " <Del> defaults like x
+" Call 'svn blame' on the current file and grab the output for the current line
+" plus the surrounding context. Display the result via echo and redraw the
+" screen after input.
+" @author Shawn Tice
+function SvnBlame(linesOfContext)
+   let pos = line(".")
+   let text = system("svn blame " . expand("%:p"))
+   let tempName = tempname()
+
+   exec "redir! > " . tempName
+   silent echon text
+   redir END 
+   execute "botr " . (a:linesOfContext * 2 + 1) . "split " . tempName
+   exec pos 
+   norm zz
+   redraw!
+endfunction
+noremap <C-b> :call SvnBlame(6)<CR>
 
 " Because we like our line numbers sometimes...
 :nnoremap <C-N><C-N> :set invnumber<CR> 
@@ -86,6 +100,9 @@ noremap <Del> 2<C-E>   " <Del> defaults like x
 " Use the space key to open and close code folds
 :vnoremap <space> zf<CR>
 :nnoremap <space> zd<CR>
+
+" Tab fun 
+" @author David Patierno
 
 " Tabs can be fun too!
 :nnoremap ,. :tabnew<CR>
