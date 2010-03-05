@@ -7,7 +7,7 @@ set nocompatible       " no compatibility with vi
 filetype on            " recognize syntax by file extension
 filetype indent on     " check for indent file
 syntax on              " syntax highlighting
-hi clear search        " do not highlight all search matches
+"hi clear search        " do not highlight all search matches
 
 set ai " Auto indent
 set si " smart indenting
@@ -76,20 +76,24 @@ autocmd BufEnter ?akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
 " plus the surrounding context. Display the result via echo and redraw the
 " screen after input.
 " @author Shawn Tice
-function SvnBlame(linesOfContext)
-   let pos = line(".")
-   let text = system("svn blame " . expand("%:p"))
-   let tempName = tempname()
+"function SvnBlame(linesOfContext)
+"   let pos = line(".")
+"   let text = system("svn blame " . expand("%:p"))
+"   let tempName = tempname()
+"
+"   exec "redir! > " . tempName
+"   silent echon text
+"   redir END 
+"   execute "botr " . (a:linesOfContext * 2 + 1) . "split " . tempName
+"   exec pos 
+"   norm zz
+"   redraw!
+"endfunction
+"noremap <C-b><C-b> :call SvnBlame(6)<CR>
 
-   exec "redir! > " . tempName
-   silent echon text
-   redir END 
-   execute "botr " . (a:linesOfContext * 2 + 1) . "split " . tempName
-   exec pos 
-   norm zz
-   redraw!
-endfunction
-noremap <C-b> :call SvnBlame(6)<CR>
+" Shawn's code was cool, but this works on all vcs'
+:noremap <C-b><C-b> :VCSBlame<CR>
+
 
 " Because we like our line numbers sometimes...
 :nnoremap <C-N><C-N> :set invnumber<CR> 
