@@ -7,7 +7,14 @@ set nocompatible       " no compatibility with vi
 filetype on            " recognize syntax by file extension
 filetype indent on     " check for indent file
 syntax on              " syntax highlighting
-"hi clear search        " do not highlight all search matches
+
+" Switch syntax highlighting on, when the terminal has colors
+" Also switch on highlighting the last used search pattern.
+if &t_Co > 2 || has("gui_running")
+  syntax on
+  set hlsearch
+endif
+
 
 set ai " Auto indent
 set si " smart indenting
