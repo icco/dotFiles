@@ -10,6 +10,8 @@
    ui = auto
 [push]
 	default = tracking
+[core]
+   autocrlf = input
 [github]
 	user = icco
 
