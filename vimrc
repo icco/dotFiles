@@ -101,7 +101,6 @@ autocmd BufEnter ?akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
 " Shawn's code was cool, but this works on all vcs'
 :noremap <C-b><C-b> :VCSBlame<CR>
 
-
 " Because we like our line numbers sometimes...
 :nnoremap <C-N><C-N> :set invnumber<CR> 
 
