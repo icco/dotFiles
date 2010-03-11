@@ -339,13 +339,13 @@ syn keyword phpTodo todo fixme xxx  contained
 
 " Comment
 if exists("php_parent_error_open")
-  syn region  phpComment  start="/\*" end="\*/" contained contains=phpTodo
+  syn region  phpComment  start="/\*" end="\*/" contained contains=phpTodo,@Spell
 else
-  syn region  phpComment  start="/\*" end="\*/" contained contains=phpTodo extend
+  syn region  phpComment  start="/\*" end="\*/" contained contains=phpTodo,@Spell extend
 endif
 if version >= 600
-  syn match phpComment  "#.\{-}\(?>\|$\)\@="  contained contains=phpTodo
-  syn match phpComment  "//.\{-}\(?>\|$\)\@=" contained contains=phpTodo
+  syn match phpComment  "#.\{-}\(?>\|$\)\@="  contained contains=phpTodo,@Spell
+  syn match phpComment  "//.\{-}\(?>\|$\)\@=" contained contains=phpTodo,@Spell
 else
   syn match phpComment  "#.\{-}$" contained contains=phpTodo
   syn match phpComment  "#.\{-}?>"me=e-2  contained contains=phpTodo
