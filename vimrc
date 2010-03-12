@@ -114,6 +114,9 @@ autocmd BufEnter ?akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
 :vnoremap <space> zf<CR>
 :nnoremap <space> zd<CR>
 
+" Toggle spell checking.
+:map <f7> :set spell!<cr>
+
 " Tab fun 
 " @author David Patierno
 
