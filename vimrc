@@ -104,7 +104,6 @@ au BufRead,BufNewFile *.fs set filetype=fs
 " Shawn's code was cool, but this works on all vcs'
 :noremap <C-b><C-b> :VCSBlame<CR>
 
-
 " Because we like our line numbers sometimes...
 :nnoremap <C-N><C-N> :set invnumber<CR> 
 
@@ -117,6 +116,9 @@ au BufRead,BufNewFile *.fs set filetype=fs
 " Use the space key to open and close code folds
 :vnoremap <space> zf<CR>
 :nnoremap <space> zd<CR>
+
+" Toggle spell checking.
+:map <f7> :set spell!<cr>
 
 " Tab fun 
 " @author David Patierno
