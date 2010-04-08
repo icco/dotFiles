@@ -21,20 +21,12 @@ function exclude() {
 
 # actually move files 
 function doitnow() {
-   for i in {1..5}; do
-      if [ -d ~/tmp/oldDotFiles$i/ ]; then
-         storeDir= "~/tmp/oldDotFiles$i/";
-         break;
-      fi;
-   done;
-
-	if [ -f $2 ]; then
-		mkdir -p $storeDir;
-		mv $2 $storeDir;
+	if [ $2 ]; then
+		mkdir -p ~/tmp/oldDotFiles_`date +%Y%m%d`/;
+		mv $2 ~/tmp/oldDotFiles_`date +%Y%m%d`/;
 	fi;
 
-	ln -s $1 $2
-	echo "$1 => $2";
+	ln -s $1 $2 && echo "$1 => $2";
 }
 
 for file in $dotfiles; do
@@ -58,4 +50,3 @@ done;
 
 #echo $dotfiles;
 #echo ${excludes[*]};
-
