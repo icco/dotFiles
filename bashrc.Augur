@@ -6,3 +6,8 @@ fi
 if [ -d ~/.gem/ruby/1.9.0/bin ]; then
    export PATH=~/.gem/ruby/1.9.0/bin:$PATH
 fi
+
+# F# 
+export MONO_PATH=~/lib/fsharp/bin:~/lib/fsharp/testing
+alias fsc="mono $MONO_PATH/fsc.exe --resident"
+alias fsi="mono $MONO_PATH/fsi.exe --gui-"
