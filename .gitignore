@@ -2,3 +2,4 @@
 .bash_history
 vim/.net*
 *.spl
+gkrellm/data/*/*
