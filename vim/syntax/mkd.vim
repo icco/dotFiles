@@ -5,9 +5,10 @@
 " Version:	9
 " Last Change:  2009 May 18 
 " Remark:	Uses HTML syntax file
-" Remark:	I don't do anything with angle brackets (<>) because that would too easily
-"		easily conflict with HTML syntax
+" Remark:	I don't do anything with angle brackets (<>) because that would too easily conflict with HTML syntax
 " TODO: 	Handle stuff contained within stuff (e.g. headings within blockquotes)
+" TODO:  Handle underscores in words
+" TODO:  Handle images references in links
 
 
 " Read the HTML syntax to start with
@@ -36,10 +37,10 @@ syn case ignore
 syn sync linebreaks=1
 
 "additions to HTML groups
-syn region htmlBold     start=/\\\@<!\(^\|\A\)\@=\*\@<!\*\*\*\@!/     end=/\\\@<!\*\@<!\*\*\*\@!\($\|\A\)\@=/   contains=@Spell,htmlItalic
-syn region htmlItalic   start=/\\\@<!\(^\|\A\)\@=\*\@<!\*\*\@!/       end=/\\\@<!\*\@<!\*\*\@!\($\|\A\)\@=/      contains=htmlBold,@Spell
-syn region htmlBold     start=/\\\@<!\(^\|\A\)\@=_\@<!___\@!/         end=/\\\@<!_\@<!___\@!\($\|\A\)\@=/       contains=htmlItalic,@Spell
-syn region htmlItalic   start=/\\\@<!\(^\|\A\)\@=_\@<!__\@!/          end=/\\\@<!_\@<!__\@!\($\|\A\)\@=/        contains=htmlBold,@Spell
+"syn region htmlBold     start=/\\\@<!\(^\|\A\)\@=\*\@<!\*\*\*\@!/     end=/\\\@<!\*\@<!\*\*\*\@!\($\|\A\)\@=/   contains=@Spell,htmlItalic
+"syn region htmlItalic   start=/\\\@<!\(^\|\A\)\@=\*\@<!\*\*\@!/       end=/\\\@<!\*\@<!\*\*\@!\($\|\A\)\@=/     contains=htmlBold,@Spell
+"syn region htmlBold     start=/\\\@<!\(^\|\A\)\@=_\@<!___\@!/         end=/\\\@<!_\@<!___\@!\($\|\A\)\@=/       contains=htmlItalic,@Spell
+"syn region htmlItalic   start=/\\\@<!\(^\|\A\)\@=_\@<!__\@!/          end=/\\\@<!_\@<!__\@!\($\|\A\)\@=/        contains=htmlBold,@Spell
 
 " [link](URL) | [link][id] | [link][]
 syn region mkdLink matchgroup=mkdDelimiter      start="\!\?\[" end="\]\ze\s*[[(]" contains=@Spell nextgroup=mkdURL,mkdID skipwhite oneline
@@ -101,4 +102,5 @@ HtmlHiLink mkdDelimiter     Delimiter
 let b:current_syntax = "mkd"
 
 delcommand HtmlHiLink
+
 " vim: ts=8
