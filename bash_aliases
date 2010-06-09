@@ -66,6 +66,10 @@ function setenv () {
   export $1="$2"
 }
 
+# F Sharp
+#alias fsc="~jcswenso/fsc"
+#alias fsi="~jcswenso/fsi"
+
 # Socat is awesome.
 #if [ -f `which socat 2>/dev/null` ]; then
  #  alias sml="socat READLINE EXEC:sml";
