@@ -95,3 +95,9 @@ Host acm
    User nwelch
    Hostname acm.calpoly.edu
 
+Host local
+   User nat
+   HostName 127.0.0.1
+   Port 8022
+
+
