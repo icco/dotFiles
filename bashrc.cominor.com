@@ -17,3 +17,5 @@ export PHP_CLASSPATH=${PHING_HOME}/classes:${MY_CODE_DIR}:${MY_CODE_DIR}/3P
 function mgrep() { grep -r \'$1\' . | grep -v svn ; }
 
 alias blame-dave="update-dev";
+
+fortune ~/UnWork/crackquotes/crackquotes
