@@ -2,7 +2,7 @@
 
 # Mac ls does not have color...
 alias ls="`which ls`";
-alias cmr='ssh nwelch@www.cominor.com'
+alias cmr='ssh cominor'
 
 # MacPorts stuff
 export PATH=/opt/local/bin:/opt/local/sbin:$PATH
