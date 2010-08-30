@@ -83,7 +83,7 @@ syn match  htmlH1       /^.\+\n=\+$/ contains=@Spell
 syn match  htmlH2       /^.\+\n-\+$/ contains=@Spell
 
 "highlighting for Markdown groups
-HtmlHiLink mkdString	       String
+HtmlHiLink mkdString	    String
 HtmlHiLink mkdCode          String
 HtmlHiLink mkdBlockquote    Comment
 HtmlHiLink mkdLineContinue  Comment
@@ -102,4 +102,5 @@ HtmlHiLink mkdDelimiter     Delimiter
 let b:current_syntax = "mkd"
 
 delcommand HtmlHiLink
+
 " vim: ts=8

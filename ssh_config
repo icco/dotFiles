@@ -5,18 +5,8 @@ Host *
 host forge
 	Hostname forge.gotdns.org
 	KeepAlive yes
-	User nat
-
-Host elpaso
-	Hostname elpaso.csc.calpoly.edu
-	User nat
-	KeepAlive yes
-
-Host forge.gotdns.org
-	KeepAlive yes
 	Compression yes
 	User nat
-
 Host arclight
 	Hostname santaclarahome.homeip.net
 	KeepAlive yes
@@ -25,7 +15,6 @@ Host arclight
 
 Host santaclara
 	Hostname santaclarahome.homeip.net
-	ForwardX11 yes
 	KeepAlive yes
 
 Host vogon
@@ -36,34 +25,18 @@ Host vogon
 Host cominor
     Hostname www.cominor.com
     User nwelch
+   RemoteForward 8022 localhost:22
+
+Host cmr
+	Hostname cominor.com
+	User nwelch
+   RemoteForward 8022 localhost:22
 
 Host unix1
     Hostname unix1.csc.calpoly.edu
     User nwelch
 	Compression yes
 	ForwardX11 yes
-
-Host santacruz
-    Hostname santacruz.csc.calpoly.edu
-    User nwelch
-	Compression yes
-	ForwardX11 yes
-
-Host alpine
-    Hostname alpine.csc.calpoly.edu
-    User nwelch
-	Compression yes
-	ForwardX11 yes
-
-Host hornet 
-    Hostname hornet.csc.calpoly.edu
-    User nwelch
-	Compression yes
-
-Host falcon
-    Hostname falcon.csc.calpoly.edu
-    User nwelch
-	Compression yes
 
 Host wiki 
     Hostname wiki.csc.calpoly.edu
@@ -76,16 +49,7 @@ Host cplug
 Host multicore
     Hostname multicore.csc.calpoly.edu
     User nwelch
-	Compression yes
-
-Host blugoo
-	Hostname blugoo.csc.calpoly.edu
-	User nwelch
-	
-Host vm
-	Hostname localhost
-	Port 2222
-	User nat
+    Compression yes
 
 Host welchfamilyweb.com
    User dlnwelch
@@ -95,3 +59,7 @@ Host acm
    User nwelch
    Hostname acm.calpoly.edu
 
+Host local
+   User nat
+   HostName 127.0.0.1
+   Port 8022
