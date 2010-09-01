@@ -12,3 +12,7 @@ if [ -f /opt/local/etc/bash_completion ]; then
     . /opt/local/etc/bash_completion
 fi
 
+# Colors
+export CLICOLOR=1
+export LSCOLORS=ExFxCxDxBxegedabagacad
+
