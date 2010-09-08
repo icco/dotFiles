@@ -15,3 +15,5 @@
 [github]
 	user = icco
 
+[branch]
+	autosetupmerge = true

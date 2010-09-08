@@ -2,7 +2,7 @@
 
 # Mac ls does not have color...
 alias ls="`which ls`";
-alias cmr='ssh nwelch@www.cominor.com'
+alias cmr='ssh cominor'
 
 # MacPorts stuff
 export PATH=/opt/local/bin:/opt/local/sbin:$PATH
@@ -11,4 +11,8 @@ export MANPATH=/opt/local/share/man:$MANPATH
 if [ -f /opt/local/etc/bash_completion ]; then
     . /opt/local/etc/bash_completion
 fi
+
+# Colors
+export CLICOLOR=1
+export LSCOLORS=ExFxCxDxBxegedabagacad
 
