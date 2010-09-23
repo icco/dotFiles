@@ -120,6 +120,12 @@ au BufRead,BufNewFile *.fs set filetype=fs
 " Toggle spell checking.
 :map <f7> :set spell!<cr>
 
+" Clear search buffer with Ctrl+l
+:noremap <silent> <c-l> :nohls<cr><c-l>
+
+" Use :w!! to reopen with sudo.
+cmap w!! %!sudo tee > /dev/null %
+
 " Tab fun 
 " @author David Patierno
 

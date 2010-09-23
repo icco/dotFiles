@@ -1,91 +1,54 @@
 Host *
-	KeepAlive yes
-	Compression no 
+   KeepAlive yes
+   Compression no 
 
 host forge
-	Hostname forge.gotdns.org
-	KeepAlive yes
-	User nat
-
-Host elpaso
-	Hostname elpaso.csc.calpoly.edu
-	User nat
-	KeepAlive yes
-
-Host forge.gotdns.org
-	KeepAlive yes
-	Compression yes
-	User nat
+   Hostname forge.gotdns.org
+   KeepAlive yes
+   Compression yes
+   User nat
 
 Host arclight
-	Hostname santaclarahome.homeip.net
-	KeepAlive yes
-	port 4022
-	User nat
+   Hostname santaclarahome.homeip.net
+   KeepAlive yes
+   port 4022
+   User nat
 
 Host santaclara
-	Hostname santaclarahome.homeip.net
-	ForwardX11 yes
-	KeepAlive yes
+   Hostname santaclarahome.homeip.net
+   KeepAlive yes
 
 Host vogon
-    Hostname vogon.csc.calpoly.edu
-    User nwelch
-	Compression yes
+   Hostname vogon.csc.calpoly.edu
+   User nwelch
+   Compression yes
 
 Host cominor
-    Hostname www.cominor.com
-    User nwelch
+   Hostname www.cominor.com
+   User nwelch
+
+Host cmr
+   Hostname www.cominor.com
+   User nwelch
 
 Host unix1
-    Hostname unix1.csc.calpoly.edu
-    User nwelch
-	Compression yes
-	ForwardX11 yes
-
-Host santacruz
-    Hostname santacruz.csc.calpoly.edu
-    User nwelch
-	Compression yes
-	ForwardX11 yes
-
-Host alpine
-    Hostname alpine.csc.calpoly.edu
-    User nwelch
-	Compression yes
-	ForwardX11 yes
-
-Host hornet 
-    Hostname hornet.csc.calpoly.edu
-    User nwelch
-	Compression yes
-
-Host falcon
-    Hostname falcon.csc.calpoly.edu
-    User nwelch
-	Compression yes
+   Hostname unix1.csc.calpoly.edu
+   User nwelch
+   Compression yes
+   ForwardX11 yes
 
 Host wiki 
-    Hostname wiki.csc.calpoly.edu
-    User nwelch
+   Hostname wiki.csc.calpoly.edu
+   User nwelch
 
 Host cplug
-	Hostname www.cplug.org
-	user cplug
+   Hostname www.cplug.org
+   user cplug
 
 Host multicore
-    Hostname multicore.csc.calpoly.edu
-    User nwelch
-	Compression yes
-
-Host blugoo
-	Hostname blugoo.csc.calpoly.edu
-	User nwelch
-	
-Host vm
-	Hostname localhost
-	Port 2222
-	User nat
+   Hostname multicore.csc.calpoly.edu
+   User nwelch
+   Compression yes
 
 Host welchfamilyweb.com
    User dlnwelch
