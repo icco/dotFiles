@@ -2,12 +2,6 @@ Host *
    KeepAlive yes
    Compression no 
 
-host forge
-   Hostname forge.gotdns.org
-   KeepAlive yes
-   Compression yes
-   User nat
-
 Host arclight
    Hostname santaclarahome.homeip.net
    KeepAlive yes
@@ -27,15 +21,9 @@ Host cominor
    Hostname www.cominor.com
    User nwelch
 
-Host cmr
-   Hostname www.cominor.com
+Host faranor
+   Hostname www.faranor.com
    User nwelch
-
-Host unix1
-   Hostname unix1.csc.calpoly.edu
-   User nwelch
-   Compression yes
-   ForwardX11 yes
 
 Host wiki 
    Hostname wiki.csc.calpoly.edu
@@ -53,8 +41,3 @@ Host multicore
 Host welchfamilyweb.com
    User dlnwelch
    Port 2222
-
-Host acm
-   User nwelch
-   Hostname acm.calpoly.edu
-
