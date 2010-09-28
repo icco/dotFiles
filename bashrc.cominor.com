@@ -18,7 +18,7 @@ function mgrep() { grep -r \'$1\' . | grep -v svn ; }
 
 alias blame-dave="update-dev";
 
-fortune ~/UnWork/crackquotes/crackquotes
+fortune -n 80 -s ~/UnWork/crackquotes/crackquotes
 
 # Wrapper around SVN merge and commit for LiveCode
 # Stolen from Dave...
