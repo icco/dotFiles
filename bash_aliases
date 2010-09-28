@@ -112,3 +112,4 @@ seq () {
 
 ## Aliases added by the system call
 
+# vim: set filetype=sh:

@@ -61,3 +61,4 @@ fi
 
 # see /usr/share/doc/bash/examples/startup-files for examples
 
+# vim: set filetype=sh:

@@ -69,3 +69,4 @@ unset bash_prompt
 
 #Nat's PS1, Ver simple w/ date ('';;)
 #PS1='\n[\d \@]\n[\u@\h: \w]$ '
+# vim: set filetype=sh:
