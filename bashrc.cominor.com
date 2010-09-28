@@ -42,3 +42,5 @@ lc () {
       svn ci /home/$USER/LiveCode -m "Merge$revisions to LiveCode"
    fi
 }
+
+# vim: set filetype=sh:

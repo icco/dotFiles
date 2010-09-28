@@ -16,3 +16,4 @@ fi
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
+# vim: set filetype=sh:
