@@ -1,7 +1,8 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" .vimrc -- the way it ought to be: Ha. it rhymes!
+" .vimrc -- the way it ought to be: Ha. It rhymes!
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+set encoding=utf-8
 behave xterm
 set nocompatible       " no compatibility with vi
 filetype on            " recognize syntax by file extension
