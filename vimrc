@@ -74,7 +74,7 @@ autocmd BufEnter ?akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
 au BufRead,BufNewFile *.fs set filetype=fs
 
 " Text Files
-" to be added...
+au BufRead,BufNewFile *.txt set textwidth=80
 
 " Call 'svn blame' on the current file and grab the output for the current line
 " plus the surrounding context. Display the result via echo and redraw the
