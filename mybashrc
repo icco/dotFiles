@@ -1,37 +1,18 @@
-#
-# `.mybashrc' is automatically run by `.bashrc' when you log in.
-#
+# my bashrc to use on cal poly servers
 
-mesg n
 
-#PS1='\n[\d \@]\n[\u@\h: \w]$ '
+# Seriously, CSC machines only.
+DNS=`dnsdomainname | grep csc.calpoly.edu`;
+HOS=`hostname | grep csc.calpoly.edu`;
+if [ `echo $DNS$HOS` ]; then
+   mesg n
 
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
-
-# some ls aliases
-alias ll='ls -l'
-alias la='ls -A'
-alias l='ls -CF'
-alias c="clear"
-
-#nat's aliases
-alias cp='cp -i'
-alias rm='rm -i'
-
-#PS1 File
-if [ -f ~/.bash_PS1 ]; then 
-    . ~/.bash_PS1
-fi 
-
-if [ -f ~/.bash_aliases ]; then
-	. ~/.bash_aliases
+   #PS1='\n[\d \@]\n[\u@\h: \w]$ '
+   
+   #if [ -f ~/.bash_SQL ]; then
+   #	. ~/.bash_SQL
+   #fi
 fi
 
-
-#if [ -f ~/.bash_SQL ]; then
-#	. ~/.bash_SQL
-#fi
+# vim: set filetype=sh:
 
