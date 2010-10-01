@@ -5,6 +5,7 @@
 DNS=`dnsdomainname | grep csc.calpoly.edu`;
 HOS=`hostname | grep csc.calpoly.edu`;
 if [ `echo $DNS$HOS` ]; then
+   echo '=====> Loaded .mybashrc'
    mesg n
 
    #PS1='\n[\d \@]\n[\u@\h: \w]$ '
