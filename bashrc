@@ -3,9 +3,6 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-# If I have a bin in my user directory, check there for commands.
-[ -d ~/bin ] && PATH=~/bin:$PATH
-
 # don't put duplicate lines in the history. See bash(1) for more options
 export HISTCONTROL=ignoredups
 
@@ -63,6 +60,8 @@ elif [ -f ~/.mybashrc ]; then
    . ~/.mybashrc
 fi
 
-# see /usr/share/doc/bash/examples/startup-files for examples
+# If I have a bin in my user directory, check there for commands.
+# We do this late in the file so it takes priority.
+[ -d ~/bin ] && PATH=~/bin:$PATH
 
 # vim: set filetype=sh:
