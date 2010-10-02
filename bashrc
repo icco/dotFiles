@@ -3,9 +3,6 @@
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
-# If I have a bin in my user directory, check there for commands.
-[ -d ~/bin ] && PATH=~/bin:$PATH
-
 # don't put duplicate lines in the history. See bash(1) for more options
 export HISTCONTROL=ignoredups
 
@@ -47,17 +44,24 @@ if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
+# enable programmable completion features. Since we don't know if the machine
+# supports it, make sure to check both locally and in /etc. System settings
+# always take preference.
 if [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
+   . /etc/bash_completion
+elif [ -f ~/.bash_completion ]; then
+   . ~/.bash_completion
 fi
 
 # For certain machines add an additional bashrc
 if [ -f ~/.bashrc.`hostname` ]; then
- . ~/.bashrc.`hostname`
+   . ~/.bashrc.`hostname`
+elif [ -f ~/.mybashrc ]; then
+   . ~/.mybashrc
 fi
 
-# see /usr/share/doc/bash/examples/startup-files for examples
+# If I have a bin in my user directory, check there for commands.
+# We do this late in the file so it takes priority.
+[ -d ~/bin ] && PATH=~/bin:$PATH
 
+# vim: set filetype=sh:

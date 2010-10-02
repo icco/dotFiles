@@ -1,0 +1,19 @@
+# my bashrc to use on cal poly servers
+
+
+# Seriously, CSC machines only.
+DNS=`dnsdomainname | grep csc.calpoly.edu`;
+HOS=`hostname | grep csc.calpoly.edu`;
+if [ `echo $DNS$HOS` ]; then
+   echo '=====> Loaded .mybashrc'
+   mesg n
+
+   #PS1='\n[\d \@]\n[\u@\h: \w]$ '
+   
+   #if [ -f ~/.bash_SQL ]; then
+   #	. ~/.bash_SQL
+   #fi
+fi
+
+# vim: set filetype=sh:
+

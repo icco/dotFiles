@@ -1,7 +1,8 @@
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" .vimrc -- the way it ought to be: Ha. it rhymes!
+" .vimrc -- the way it ought to be: Ha. It rhymes!
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+set encoding=utf-8
 behave xterm
 set nocompatible       " no compatibility with vi
 filetype on            " recognize syntax by file extension
@@ -15,13 +16,8 @@ if &t_Co > 2 || has("gui_running")
   set hlsearch
 endif
 
-
 set ai " Auto indent
 set si " smart indenting
-
-" bg overridden by colorscheme
-"set background=light   " background light, so foreground not bold
-"set background=dark     " background dark
 
 set backspace=2        " allow <BS> to go past last insert
 set gdefault           " assume :s uses /g
@@ -46,7 +42,6 @@ set modeline           " check for a modeline
 set softtabstop=3      " see spaces as tabs
 set scrolloff=5        " start scrolling when cursor is N lines from edge
 
-
 " whoa... wtf?
 set nowrap             " don't soft wrap
 set wrap               " linewrap
@@ -63,7 +58,7 @@ colorscheme darknat
 
 " Highlights long lines
 highlight OverLength term=standout cterm=bold ctermfg=1
-match OverLength /\%81v.\+/
+match OverLength /\%91v.\+/
 
 " Markdown
 augroup mkd
@@ -80,7 +75,7 @@ autocmd BufEnter ?akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
 au BufRead,BufNewFile *.fs set filetype=fs
 
 " Text Files
-" to be added...
+au BufRead,BufNewFile *.txt set textwidth=80
 
 " Call 'svn blame' on the current file and grab the output for the current line
 " plus the surrounding context. Display the result via echo and redraw the
@@ -149,21 +144,3 @@ cmap w!! %!sudo tee > /dev/null %
 :nnoremap .7 :tabn 7<CR>
 :nnoremap .8 :tabn 8<CR>
 :nnoremap .9 :tabn 9<CR>
-
-" I want to be able to navigate with one hand.
-:nnoremap xq :tabp<CR>
-:nnoremap xe :tabn<CR>
-:nnoremap xw <c-w><Up><CR>
-:nnoremap xs <c-w><Down><CR>
-:nnoremap xa <c-w><Left><CR>
-:nnoremap xd <c-w><Right><CR>
-:nnoremap x1 :tabn 1<CR>
-:nnoremap x2 :tabn 2<CR>
-:nnoremap x3 :tabn 3<CR>
-:nnoremap x4 :tabn 4<CR>
-:nnoremap x5 :tabn 5<CR>
-:nnoremap x6 :tabn 6<CR>
-:nnoremap x7 :tabn 7<CR>
-:nnoremap x8 :tabn 8<CR>
-:nnoremap x9 :tabn 9<CR>
-

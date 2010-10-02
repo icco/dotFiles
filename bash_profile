@@ -15,3 +15,4 @@ if [ -d ~/bin ] ; then
     PATH=~/bin:"${PATH}"
 fi
 
+# vim: set filetype=sh:
