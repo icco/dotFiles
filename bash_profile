@@ -6,13 +6,9 @@
 #umask 022
 
 # include .bashrc if it exists
-if [ -f ~/.bashrc ]; then
-    . ~/.bashrc
-fi
+if [ -f ~/.bashrc ]; then . ~/.bashrc fi
 
 # set PATH so it includes user's private bin if it exists
-if [ -d ~/bin ] ; then
-    PATH=~/bin:"${PATH}"
-fi
+if [ -d ~/bin ] ; then PATH=~/bin:"${PATH}" fi
 
 # vim: set filetype=sh:
