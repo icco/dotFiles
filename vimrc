@@ -69,7 +69,7 @@ augroup END
 au BufRead,BufNewFile *.less setfiletype css
 
 " Makefiles
-autocmd BufEnter ?akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
+autocmd BufEnter [Mm]akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
 
 " F#
 au BufRead,BufNewFile *.fs set filetype=fs
