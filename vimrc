@@ -61,21 +61,19 @@ highlight OverLength term=standout cterm=bold ctermfg=1
 match OverLength /\%91v.\+/
 
 " Markdown
-augroup mkd
-  autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:>
-augroup END
+au BufRead,BufNewFile *.md highlight clear OverLength set ai formatoptions=tcroqn2 comments=n:>
 
 " Less
 au BufRead,BufNewFile *.less setfiletype css
 
 " Makefiles
-autocmd BufEnter [Mm]akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
+au BufRead,BufNewFile [Mm]akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
 
 " F#
 au BufRead,BufNewFile *.fs set filetype=fs
 
 " Text Files
-au BufRead,BufNewFile *.txt set textwidth=80
+au BufRead,BufNewFile *.txt highlight clear OverLength set textwidth=80
 
 " Call 'svn blame' on the current file and grab the output for the current line
 " plus the surrounding context. Display the result via echo and redraw the
