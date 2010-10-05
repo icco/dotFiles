@@ -48,7 +48,7 @@ set wrap               " linewrap
 
 " turns status line always on and configures it
 set laststatus=2
-set statusline=%<%f\ %m\ %h%r%=%b\ 0x%B\ \ %l,%c%V\ %P\ of\ %L 
+set statusline=%<%f\ %m\ %h%r%=%b\ 0x%B\ \ %l,%c%V\ %P\ of\ %L
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Color Stuff
@@ -88,9 +88,9 @@ au BufRead,BufNewFile *.txt set textwidth=80
 "
 "   exec "redir! > " . tempName
 "   silent echon text
-"   redir END 
+"   redir END
 "   execute "botr " . (a:linesOfContext * 2 + 1) . "split " . tempName
-"   exec pos 
+"   exec pos
 "   norm zz
 "   redraw!
 "endfunction
@@ -100,10 +100,10 @@ au BufRead,BufNewFile *.txt set textwidth=80
 :noremap <C-b><C-b> :VCSBlame<CR>
 
 " Because we like our line numbers sometimes...
-:nnoremap <C-N><C-N> :set invnumber<CR> 
+:nnoremap <C-N><C-N> :set invnumber<CR>
 
 " But we don't always wanna wrap
-:nnoremap <C-w><C-w> :set invwrap<CR> 
+:nnoremap <C-w><C-w> :set invwrap<CR>
 
 " And all the cool kids need to paste
 :nnoremap <C-p><C-p> :set invpaste<CR>
@@ -121,7 +121,7 @@ au BufRead,BufNewFile *.txt set textwidth=80
 " Use :w!! to reopen with sudo.
 cmap w!! %!sudo tee > /dev/null %
 
-" Tab fun 
+" Tab fun
 " @author David Patierno
 
 " Tabs can be fun too!
