@@ -33,6 +33,7 @@ alias grep='grep --color=auto'
 # I put PS1 in a sepeerate file
 if [ -f ~/.bash_PS1 ]; then
     . ~/.bash_PS1
+   echo "===> Loaded .bash_PS1";
 fi
 
 # Alias definitions.
@@ -42,6 +43,7 @@ fi
 
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
+   echo "===> Loaded .bash_aliases";
 fi
 
 # enable programmable completion features. Since we don't know if the machine
@@ -49,13 +51,16 @@ fi
 # always take preference.
 if [ -f /etc/bash_completion ]; then
    . /etc/bash_completion
+   echo "===> Loaded /etc/bash_completion";
 elif [ -f ~/.bash_completion ]; then
    . ~/.bash_completion
+   echo "===> Loaded .bash_completion";
 fi
 
 # For certain machines add an additional bashrc
 if [ -f ~/.bashrc.`hostname` ]; then
    . ~/.bashrc.`hostname`
+   echo "===> Loaded .bashrc.`hostname`";
 elif [ -f ~/.mybashrc ]; then
    . ~/.mybashrc
 fi
