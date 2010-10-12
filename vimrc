@@ -65,7 +65,7 @@ au BufRead,BufNewFile *.md highlight clear OverLength
 au BufRead,BufNewFile *.md set ai formatoptions=tcroqn2 comments=n:>
 
 " Less
-au BufRead,BufNewFile *.less setfiletype css
+au BufRead,BufNewFile *.less setfiletype less
 
 " Makefiles
 au BufRead,BufNewFile [Mm]akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
