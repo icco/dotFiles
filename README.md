@@ -1,10 +1,8 @@
 # Nat Welch's .Files  
 
-This repository holds my config files for just about everything. In theory you could use this as the basis for a home directory and I would be a very happy man.
+This repository holds my config files for just about everything. Use this to set up a fresh OSX of Linux box, and Nat will be a happy user.
 
-## Install process
-
-This doesn't work yet, but I want to:
+## Install
 
  * git clone
  * ./infect.sh
