@@ -18,7 +18,18 @@ alias l='ls -CF'
 ## Extra Cool Alias
 alias c="clear"
 
-gfind () { if [ $# -lt 2 ]; then files="*"; search="${1}"; else files="${1}"; search="${2}"; fi; find . -name "$files" -a ! -wholename '*/.*' -exec grep -Hin ${3} "$search" {} \; ; }
+if [ `which gfind` == "" ]; then
+   gfind () { 
+      if [ $# -lt 2 ]; then 
+         files="*"; 
+         search="${1}"; 
+      else 
+         files="${1}"; 
+         search="${2}"; 
+      fi; 
+      find . -name "$files" -a ! -wholename '*/.*' -exec grep -Hin ${3} "$search" {} \; ; 
+   }
+fi;
 
 pidof () { ps -Acw | egrep -i $@ | awk '{print $1}'; }
 
