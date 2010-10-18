@@ -21,9 +21,14 @@ return 0
 
 # actually move files 
 function doitnow() {
-if [ -f $2 ]; then
+if [ -e $2 ]; then
    mkdir -p ~/tmp/oldDotFiles_`date +%Y%m%d`/;
    mv $2 ~/tmp/oldDotFiles_`date +%Y%m%d`/;
+elif [ -h $2 ]; then
+   mkdir -p ~/tmp/oldDotFiles_`date +%Y%m%d`/;
+   mv $2 ~/tmp/oldDotFiles_`date +%Y%m%d`/;
+else
+   echo "$2 does not exist."
 fi;
 
 ln -s $1 $2 && echo "$1 => $2";
