@@ -18,7 +18,7 @@ alias l='ls -CF'
 ## Extra Cool Alias
 alias c="clear"
 
-if [ `which gfind` == "" ]; then
+if [ -n $(which gfind) ]; then
    gfind () { 
       if [ $# -lt 2 ]; then 
          files="*"; 
