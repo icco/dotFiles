@@ -1,5 +1,9 @@
 # Nat's Bashrc
 
+# For building debian packages
+export DEBFULLNAME="Nat Welch"
+export DEBEMAIL="nat@natwelch.com"
+
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
