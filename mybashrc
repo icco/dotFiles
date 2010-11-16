@@ -6,8 +6,9 @@ DNS=`dnsdomainname | grep csc.calpoly.edu`;
 HOS=`hostname | grep csc.calpoly.edu`;
 if [ `echo $DNS$HOS` ]; then
    # It'd be cool to load a specific CSC motd right here...
-   echo '===> Loaded .mybashrc'
    mesg n
+
+   [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
 
    #PS1='\n[\d \@]\n[\u@\h: \w]$ '
    
@@ -15,11 +16,7 @@ if [ `echo $DNS$HOS` ]; then
    #	. ~/.bash_SQL
    #fi
 
-   #echo -e '|-----------------------------------------------------------------------------|'
-   #echo -e '|                                                                             |'
-   #echo -e '|                            Welcome back!                                    |'
-   #echo -e '|                                                                             |'
-   #echo -e '|-----------------------------------------------------------------------------|'
+   echo '===> Loaded .mybashrc'
 fi
 
 # vim: set filetype=sh:
