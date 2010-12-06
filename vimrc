@@ -6,6 +6,7 @@ set encoding=utf-8
 behave xterm
 set nocompatible       " no compatibility with vi
 filetype on            " recognize syntax by file extension
+filetype plugin on     " Look at .vim/ftplugin
 filetype indent on     " check for indent file
 syntax on              " syntax highlighting
 
