@@ -75,7 +75,7 @@ au BufRead,BufNewFile *.fs set filetype=fs
 
 " Text Files
 au BufRead,BufNewFile *.txt highlight clear OverLength
-au BufRead,BufNewFile *.txt set textwidth=80
+"au BufRead,BufNewFile *.txt set textwidth=80
 
 " Call 'svn blame' on the current file and grab the output for the current line
 " plus the surrounding context. Display the result via echo and redraw the
