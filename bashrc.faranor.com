@@ -24,8 +24,8 @@ lc () {
    for to in $*
    do
       from=$((to - 1))
-      echo "svn merge -r $from:$to file:///var/ifixit/CodeRepos/trunk /home/$USER/LiveCode"
-      svn merge -r $from:$to file:///var/ifixit/CodeRepos/trunk /home/$USER/LiveCode
+      echo "svn merge -r $from:$to svn+ssh://$USER@faranor.com/var/ifixit/CodeRepos/trunk /home/$USER/LiveCode"
+      svn merge -r $from:$to svn+ssh://$USER@faranor.com/var/ifixit/CodeRepos/trunk /home/$USER/LiveCode
       echo
 
       revisions="$revisions r$to"

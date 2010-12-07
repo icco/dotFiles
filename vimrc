@@ -6,6 +6,7 @@ set encoding=utf-8
 behave xterm
 set nocompatible       " no compatibility with vi
 filetype on            " recognize syntax by file extension
+filetype plugin on     " Look at .vim/ftplugin
 filetype indent on     " check for indent file
 syntax on              " syntax highlighting
 
@@ -61,8 +62,7 @@ highlight OverLength term=standout cterm=bold ctermfg=1
 match OverLength /\%91v.\+/
 
 " Markdown
-au BufRead,BufNewFile *.md highlight clear OverLength
-au BufRead,BufNewFile *.md set ai formatoptions=tcroqn2 comments=n:>
+au BufRead,BufNewFile *.md set ft=markdown
 
 " Less
 au BufRead,BufNewFile *.less setfiletype less
@@ -75,7 +75,7 @@ au BufRead,BufNewFile *.fs set filetype=fs
 
 " Text Files
 au BufRead,BufNewFile *.txt highlight clear OverLength
-au BufRead,BufNewFile *.txt set textwidth=80
+"au BufRead,BufNewFile *.txt set textwidth=80
 
 " Call 'svn blame' on the current file and grab the output for the current line
 " plus the surrounding context. Display the result via echo and redraw the
