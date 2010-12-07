@@ -4,6 +4,9 @@
 export DEBFULLNAME="Nat Welch"
 export DEBEMAIL="nat@natwelch.com"
 
+# For RVM
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
+
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
 
