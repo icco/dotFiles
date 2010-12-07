@@ -62,8 +62,7 @@ highlight OverLength term=standout cterm=bold ctermfg=1
 match OverLength /\%91v.\+/
 
 " Markdown
-au BufRead,BufNewFile *.md highlight clear OverLength
-au BufRead,BufNewFile *.md set ai formatoptions=tcroqn2 comments=n:>
+au BufRead,BufNewFile *.md set ft=markdown
 
 " Less
 au BufRead,BufNewFile *.less setfiletype less

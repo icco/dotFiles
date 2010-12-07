@@ -30,4 +30,5 @@ sensor "temp9" "thinkpad-hwmon1/temp9" 10000 0 0 0
 sensor "Fan" "IBM ACPI Fan Sensor" 10000 0 0 0
 sensor "fan1" "thinkpad-hwmon1/fan1" 10000 0 0 0
 sensor units_fahrenheit 0
+sensor show_units 1
 sensor volt_display_mode 0
