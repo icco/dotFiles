@@ -1,10 +1,3 @@
-# Add ruby to path on ubuntu
-if [ -d /var/lib/gems/1.8/bin ]; then
-   export PATH=/var/lib/gems/1.8/bin:$PATH
-fi
-
-if [ -d ~/.gem/ruby/1.8/bin ]; then
-   export PATH=~/.gem/ruby/1.8/bin:$PATH
-fi
+# We use RVM here now, no need to do crazy path mangling.
 
 # vim: set filetype=sh:
