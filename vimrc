@@ -77,25 +77,6 @@ au BufRead,BufNewFile *.fs set filetype=fs
 au BufRead,BufNewFile *.txt highlight clear OverLength
 "au BufRead,BufNewFile *.txt set textwidth=80
 
-" Call 'svn blame' on the current file and grab the output for the current line
-" plus the surrounding context. Display the result via echo and redraw the
-" screen after input.
-" @author Shawn Tice
-"function SvnBlame(linesOfContext)
-"   let pos = line(".")
-"   let text = system("svn blame " . expand("%:p"))
-"   let tempName = tempname()
-"
-"   exec "redir! > " . tempName
-"   silent echon text
-"   redir END
-"   execute "botr " . (a:linesOfContext * 2 + 1) . "split " . tempName
-"   exec pos
-"   norm zz
-"   redraw!
-"endfunction
-"noremap <C-b><C-b> :call SvnBlame(6)<CR>
-
 " Shawn's code was cool, but this works on all vcs'
 :noremap <C-b><C-b> :VCSBlame<CR>
 
@@ -121,10 +102,8 @@ au BufRead,BufNewFile *.txt highlight clear OverLength
 " Use :w!! to reopen with sudo.
 cmap w!! %!sudo tee > /dev/null %
 
-" Tab fun
+" Tab fun - Tabs can be fun too!
 " @author David Patierno
-
-" Tabs can be fun too!
 :nnoremap ,. :tabnew<CR>
 :nnoremap ., :tabclose<CR>
 
