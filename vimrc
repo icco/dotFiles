@@ -77,6 +77,10 @@ au BufRead,BufNewFile *.fs set filetype=fs
 au BufRead,BufNewFile *.txt highlight clear OverLength
 "au BufRead,BufNewFile *.txt set textwidth=80
 
+" Tex Files
+au BufRead,BufNewFile *.tex highlight clear OverLength
+au BufRead,BufNewFile *.bib highlight clear OverLength
+
 " Shawn's code was cool, but this works on all vcs'
 :noremap <C-b><C-b> :VCSBlame<CR>
 
