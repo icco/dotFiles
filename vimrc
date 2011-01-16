@@ -81,8 +81,11 @@ au BufRead,BufNewFile *.txt highlight clear OverLength
 au BufRead,BufNewFile *.tex highlight clear OverLength
 au BufRead,BufNewFile *.bib highlight clear OverLength
 
+" Remove trailing spaces from lines: http://vim.wikia.com/wiki/Remove_unwanted_spaces
+:nnoremap <silent> <F6> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
+
 " Shawn's code was cool, but this works on all vcs'
-:noremap <C-b><C-b> :VCSBlame<CR>
+:nnoremap <C-b><C-b> :VCSBlame<CR>
 
 " Because we like our line numbers sometimes...
 :nnoremap <C-N><C-N> :set invnumber<CR>
@@ -102,9 +105,6 @@ au BufRead,BufNewFile *.bib highlight clear OverLength
 
 " Clear search buffer with Ctrl+l
 :noremap <silent> <c-l> :nohls<cr><c-l>
-
-" Use :w!! to reopen with sudo.
-cmap w!! %!sudo tee > /dev/null %
 
 " Tab fun - Tabs can be fun too!
 " @author David Patierno
