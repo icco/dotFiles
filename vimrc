@@ -80,27 +80,15 @@ au BufRead,BufNewFile *.txt highlight clear OverLength
 " God
 au BufRead,BufNewFile *.god set filetype=ruby
 
-" Call 'svn blame' on the current file and grab the output for the current line
-" plus the surrounding context. Display the result via echo and redraw the
-" screen after input.
-" @author Shawn Tice
-"function SvnBlame(linesOfContext)
-"   let pos = line(".")
-"   let text = system("svn blame " . expand("%:p"))
-"   let tempName = tempname()
-"
-"   exec "redir! > " . tempName
-"   silent echon text
-"   redir END
-"   execute "botr " . (a:linesOfContext * 2 + 1) . "split " . tempName
-"   exec pos
-"   norm zz
-"   redraw!
-"endfunction
-"noremap <C-b><C-b> :call SvnBlame(6)<CR>
+" Tex Files
+au BufRead,BufNewFile *.tex highlight clear OverLength
+au BufRead,BufNewFile *.bib highlight clear OverLength
+
+" Remove trailing spaces from lines: http://vim.wikia.com/wiki/Remove_unwanted_spaces
+:nnoremap <silent> <F6> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
 " Shawn's code was cool, but this works on all vcs'
-:noremap <C-b><C-b> :VCSBlame<CR>
+:nnoremap <C-b><C-b> :VCSBlame<CR>
 
 " Because we like our line numbers sometimes...
 :nnoremap <C-N><C-N> :set invnumber<CR>
@@ -121,13 +109,8 @@ au BufRead,BufNewFile *.god set filetype=ruby
 " Clear search buffer with Ctrl+l
 :noremap <silent> <c-l> :nohls<cr><c-l>
 
-" Use :w!! to reopen with sudo.
-cmap w!! %!sudo tee > /dev/null %
-
-" Tab fun
+" Tab fun - Tabs can be fun too!
 " @author David Patierno
-
-" Tabs can be fun too!
 :nnoremap ,. :tabnew<CR>
 :nnoremap ., :tabclose<CR>
 
