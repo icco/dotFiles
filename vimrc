@@ -77,6 +77,9 @@ au BufRead,BufNewFile *.fs set filetype=fs
 au BufRead,BufNewFile *.txt highlight clear OverLength
 "au BufRead,BufNewFile *.txt set textwidth=80
 
+" God
+au BufRead,BufNewFile *.god set filetype=ruby
+
 " Tex Files
 au BufRead,BufNewFile *.tex highlight clear OverLength
 au BufRead,BufNewFile *.bib highlight clear OverLength
