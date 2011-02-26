@@ -31,11 +31,6 @@ gfind () {
 
 pidof () { ps -Acw | egrep -i $@ | awk '{print $1}'; }
 
-## BitTorrent Aliases, require bitornado   
-alias btdl="screen btdownloadcurses.bittornado"
-alias bthere="screen btlaunchmanycurses.bittornado ."
-alias bt="screen rtorrent"
-
 ## IP Address
 #alias echoIP="/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | cut -d' ' -f1"
 alias myip="curl -s http://natwelch.com/ip/ | html2text"
@@ -62,6 +57,9 @@ alias nat="echo 'I\'m the proud owner of DF 82 8A F5 6F EF 0F 15 F6 12 09 0B 03 
 
 ## duh
 alias motd="cat /etc/motd"
+
+## For git repos
+alias add_gitignore="echo '*swp' > .gitignore && git add .gitignore && git commit -m 'adds gitignore'"
 
 # For epic typing fail
 alias bim="vim"
