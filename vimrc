@@ -57,12 +57,13 @@ set statusline=%<%f\ %m\ %h%r%=%b\ 0x%B\ \ %l,%c%V\ %P\ of\ %L
 "colorscheme elflord
 colorscheme darknat
 
-" Highlights long lines
-highlight OverLength term=standout cterm=bold ctermfg=1
-match OverLength /\%91v.\+/
+" Highlights long lines (Turned off...)
+"highlight OverLength term=standout cterm=bold ctermfg=1
+"match OverLength /\%91v.\+/
 
 " Markdown
 au BufRead,BufNewFile *.md set ft=markdown
+au BufRead,BufNewFile *.markdown set ft=markdown
 
 " Less
 au BufRead,BufNewFile *.less setfiletype less

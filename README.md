@@ -4,7 +4,12 @@ This repository holds my config files for just about everything. Use this to set
 
 ## Install
 
- * git clone
- * ./infect.sh
+ * `git clone git@github.com:icco/dotFiles.git`
+ * `./infect.sh`
 
+## Notes
+
+Apparently other people have made similar things to my infect script.
+
+ * [homesick](https://github.com/technicalpickles/homesick)
 
