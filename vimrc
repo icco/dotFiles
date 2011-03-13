@@ -66,13 +66,13 @@ au BufRead,BufNewFile *.md set ft=markdown
 au BufRead,BufNewFile *.markdown set ft=markdown
 
 " Less
-au BufRead,BufNewFile *.less setfiletype less
+au BufRead,BufNewFile *.less set ft=less
 
 " Makefiles
 au BufRead,BufNewFile [Mm]akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
 
 " F#
-au BufRead,BufNewFile *.fs set filetype=fs
+au BufRead,BufNewFile *.fs set ft=fs
 
 " Text Files
 au BufRead,BufNewFile *.txt highlight clear OverLength
