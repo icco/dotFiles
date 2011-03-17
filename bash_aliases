@@ -33,7 +33,7 @@ pidof () { ps -Acw | egrep -i $@ | awk '{print $1}'; }
 
 ## IP Address
 #alias echoIP="/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | cut -d' ' -f1"
-alias myip="curl -s http://natwelch.com/ip/ | html2text"
+alias myip="curl -sL http://natwelch.com/ip"
 
 ########### Debian Based Aliases
 
