@@ -65,6 +65,9 @@ colorscheme darknat
 au BufRead,BufNewFile *.md set ft=markdown
 au BufRead,BufNewFile *.markdown set ft=markdown
 
+" Antlr
+au BufRead,BufNewFile *.g set ft=antlr
+
 " Less
 au BufRead,BufNewFile *.less set ft=less
 
