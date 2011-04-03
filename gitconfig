@@ -1,6 +1,6 @@
 [user]
-   name = Nat Welch
-   email = nat@natwelch.com
+	name = Nat Welch
+	email = nat@natwelch.com
 [alias]
    co = checkout
    st = status
