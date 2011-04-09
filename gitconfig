@@ -6,6 +6,7 @@
    st = status
    ci = commit
    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+	l = log --oneline --decorate
 [color]
    ui = auto
 [push]
@@ -16,3 +17,9 @@
    user = icco
 [branch]
    autosetupmerge = true
+[pager]
+	color = true
+[merge]
+	stat = true
+[diff "zip"]
+  textconv = unzip -c -a
