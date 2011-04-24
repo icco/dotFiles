@@ -2,6 +2,8 @@
 # see /usr/share/doc/bash/examples/startup-files for examples.
 # the files are located in the bash-doc package.
 
+TZ='America/Los_Angeles'; export TZ
+
 # the default umask is set in /etc/login.defs
 #umask 022
 
@@ -16,3 +18,4 @@ if [ -d ~/bin ]; then
 fi
 
 # vim: set filetype=sh:
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
