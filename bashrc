@@ -52,13 +52,15 @@ if [ -f ~/.bash_aliases ]; then
    echo "===> Loaded .bash_aliases";
 fi
 
-# enable programmable completion features. Since we don't know if the machine
-# supports it, make sure to check both locally and in /etc. System settings
-# always take preference.
+# Enable programmable completion features. Since we don't know if the machine
+# supports it, make sure to check both locally and in /etc. The home directory
+# takes preference and can overwrite settings.
 if [ -f /etc/bash_completion ]; then
    . /etc/bash_completion
    echo "===> Loaded /etc/bash_completion";
-elif [ -f ~/.bash_completion ]; then
+fi
+
+if [ -f ~/.bash_completion ]; then
    . ~/.bash_completion
    echo "===> Loaded .bash_completion";
 fi
