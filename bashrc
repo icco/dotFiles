@@ -1,4 +1,4 @@
-# Nat's Bashrc
+# Nat's Bashrc - BYAHHHHHHHHHH
 
 # For building debian packages
 export DEBFULLNAME="Nat Welch"

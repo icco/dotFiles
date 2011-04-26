@@ -1,6 +1,6 @@
 # .bashrc
 
-# Source global definitions
+# Source global definitions (We want to override my configs)
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
