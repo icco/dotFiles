@@ -5,6 +5,7 @@ export DEBFULLNAME="Nat Welch"
 export DEBEMAIL="nat@natwelch.com"
 
 # For RVM
+# Load RVM into a shell session *as a function*
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
 # If not running interactively, don't do anything
