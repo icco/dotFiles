@@ -1,10 +1,11 @@
-# Nat's Bashrc
+# Nat's Bashrc - BYAHHHHHHHHHH
 
 # For building debian packages
 export DEBFULLNAME="Nat Welch"
 export DEBEMAIL="nat@natwelch.com"
 
 # For RVM
+# Load RVM into a shell session *as a function*
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
 # If not running interactively, don't do anything
@@ -52,13 +53,15 @@ if [ -f ~/.bash_aliases ]; then
    echo "===> Loaded .bash_aliases";
 fi
 
-# enable programmable completion features. Since we don't know if the machine
-# supports it, make sure to check both locally and in /etc. System settings
-# always take preference.
+# Enable programmable completion features. Since we don't know if the machine
+# supports it, make sure to check both locally and in /etc. The home directory
+# takes preference and can overwrite settings.
 if [ -f /etc/bash_completion ]; then
    . /etc/bash_completion
    echo "===> Loaded /etc/bash_completion";
-elif [ -f ~/.bash_completion ]; then
+fi
+
+if [ -f ~/.bash_completion ]; then
    . ~/.bash_completion
    echo "===> Loaded .bash_completion";
 fi

@@ -1,13 +1,8 @@
-# Bashrc for my work laptop
+# Bashrc for my macmini
 
 # Mac ls does not have color...
 alias ls="`which ls`";
-alias cmr='ssh nwelch@www.cominor.com'
 alias arc='ssh -Y nat@10.0.1.222'
-
-# MacPorts stuff
-export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-export MANPATH=/opt/local/share/man:$MANPATH
 
 # bash completion in osx, thanks to mac ports
 if [ -f /opt/local/etc/bash_completion ]; then
