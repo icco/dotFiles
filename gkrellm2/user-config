@@ -56,7 +56,7 @@ cpu omit_nice_mode 0
 cpu config_tracking 0
 cpu sensor_mode 0
 cpu text_format $T
-proc enable 1 0
+proc enable 1 1
 proc launch 
 proc tooltip_comment 
 proc sensor_mode 1
