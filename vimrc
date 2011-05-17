@@ -55,7 +55,10 @@ set statusline=%<%f\ %m\ %h%r%=%b\ 0x%B\ \ %l,%c%V\ %P\ of\ %L
 " Color Stuff
 "colorscheme koehler
 "colorscheme elflord
-colorscheme darknat
+"colorscheme darknat
+syntax enable
+set background=dark
+colorscheme solarized
 
 " Highlights long lines (Turned off...)
 "highlight OverLength term=standout cterm=bold ctermfg=1
