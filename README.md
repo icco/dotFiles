@@ -4,14 +4,13 @@ This repository holds my config files for just about everything. Use this to set
 
 ## Install
 
- * `git clone git@github.com:icco/dotFiles.git`
- * `./infect.sh`
+Originally I did this entirely with shell scripts. Now I use rake. Make sure to `gem install rake` and install ruby 1.9.2 before going ahead with `rake infect`
 
 ## Notes
 
 Apparently other people have made similar things to my infect script.
 
  * [homesick](https://github.com/technicalpickles/homesick)
+ * [holman/dotfiles](https://github.com/holman/dotfiles)
 
-In the future, it'd be really cool to set up github with my public key, all through a script. Having to set up permissions before I infect is a pita.
-
+In the future, it'd be really cool to set up GitHub with my public key, all through a script. Having to set up permissions before I infect is a pita.
