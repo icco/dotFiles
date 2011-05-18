@@ -2,6 +2,9 @@
 
 This repository holds my config files for just about everything. Use this to set up a fresh OSX or Linux box, and Nat will be a happy user.
 
+ * `link` => directly links file or folder to ~/.fname
+ * `specific` => Links specific files, instead of their root folder.
+
 ## Install
 
 Originally I did this entirely with shell scripts. Now I use rake. Make sure to `gem install rake` and install ruby 1.9.2 before going ahead with `rake infect`
