@@ -4,3 +4,4 @@ vim/.net*
 *.spl
 *.swp
 gkrellm/data/*/*
+.rake_t_cache

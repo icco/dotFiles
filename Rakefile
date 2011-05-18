@@ -1,18 +1,19 @@
 require 'rake'
 
+task :default => 'infect'
+
 desc "Hook our dotfiles into system-standard positions."
-task :infect do
-  linkables = Dir.glob('*/**{.symlink}')
+task :infect => 'structure' do
+  linkables = Dir.glob('link/**')
 
   skip_all = false
   overwrite_all = false
   backup_all = false
 
-  linkables.each do |linkable|
+  linkables.each do |file|
     overwrite = false
     backup = false
 
-    file = linkable.split('/').last.split('.symlink')
     target = "#{ENV["HOME"]}/.#{file}"
 
     if File.exists?(target) || File.symlink?(target)
@@ -26,10 +27,24 @@ task :infect do
         when 'S' then skip_all = true
         end
       end
+
+      # Overwrite
       FileUtils.rm_rf(target) if overwrite || overwrite_all
-      `mv "$HOME/.#{file}" "$HOME/.#{file}.backup"` if backup || backup_all
+
+      # Backup
+      `mv "$HOME/.#{file}" "$HOME/tmp/#{file}.#{Time.now.to_i}.backup"` if backup || backup_all
     end
+
+    # Do the link...
     `ln -s "$PWD/#{linkable}" "#{target}"`
   end
 end
-task :default => 'infect'
+
+desc "Build wanted directory structure."
+task :structure do
+   dirs = [ 'Projects', 'bin', 'tmp' ].map {|dir|
+      "#{ENV["HOME"]}/#{dir}"
+   }.keep_if {|dir| !File.exist? dir }
+
+   FileUtils.mkdir dirs
+end
