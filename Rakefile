@@ -4,11 +4,14 @@ task :default => 'infect'
 
 desc "Hook our dotfiles into system-standard positions."
 task :infect => 'structure' do
+
+   # The files we want to link the roots.
    Dir.glob('link/**').each do |linkable|
       file = linkable.split('/').last
       link(linkable, "#{ENV["HOME"]}/.#{file}")
    end
 
+   # The files we want to link the leafs
    Dir.glob('specific/**/*').each do |linkable|
       file = linkable.split('/')
       file.delete_at 0
@@ -24,8 +27,9 @@ task :infect => 'structure' do
       end
    end
 
+   # Link all of bin.
    Dir.glob('bin/*').each do |linkable|
-      link(linkable, "#{ENV["HOME"]}/#{file}")
+      link(linkable, "#{ENV["HOME"]}/#{linkable}")
    end
 end
 
