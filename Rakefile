@@ -1,3 +1,8 @@
+# infect.sh
+# @author Nat Welch
+#
+# A rewrite of my oldschool script but in Ruby. Based off of holman/dotfiles initially.
+
 require 'rake'
 
 task :default => 'infect'
@@ -42,22 +47,17 @@ task :structure do
    FileUtils.mkdir dirs
 end
 
+# Function to do the actual linking.
 def link file, target
    overwrite = false
    backup = false
 
    if File.exists?(target) || File.symlink?(target)
-      puts "File already exists: #{target}, what do you want to do? [s]kip, [o]verwrite, [b]ackup"
-      case STDIN.gets.chomp
-      when 'o' then overwrite = true
-      when 'b' then backup = true
-      end
+      # Backup
+      `cp -r "#{target}" "#{target}.#{Time.now.to_i}.backup"`
 
       # Overwrite
-      FileUtils.rm_rf(target) if overwrite
-
-      # Backup
-      `mv "$HOME/.#{file}" "$HOME/tmp/#{file}.#{Time.now.to_i}.backup"` if backup
+      FileUtils.rm_rf(target)
    end
 
    # Do the link...
