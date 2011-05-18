@@ -17,6 +17,11 @@ Host vogon
    User nwelch
    Compression yes
 
+Host sparc03
+   Hostname sparc03.csc.calpoly.edu
+   User nwelch
+   Compression yes
+
 Host unix3
    Hostname unix3.csc.calpoly.edu
    User nwelch
