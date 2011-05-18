@@ -4,40 +4,29 @@ task :default => 'infect'
 
 desc "Hook our dotfiles into system-standard positions."
 task :infect => 'structure' do
-  linkables = Dir.glob('link/**')
+   Dir.glob('link/**').each do |linkable|
+      file = linkable.split('/').last
+      link(linkable, "#{ENV["HOME"]}/.#{file}")
+   end
 
-  skip_all = false
-  overwrite_all = false
-  backup_all = false
+   Dir.glob('specific/**/*').each do |linkable|
+      file = linkable.split('/')
+      file.delete_at 0
+      file = "#{ENV["HOME"]}/.#{file.join('/')}"
 
-  linkables.each do |file|
-    overwrite = false
-    backup = false
+      if !File.directory? linkable
+         dir = File.dirname file
+         if !Dir.exists? dir
+            FileUtils.mkdir_p dir
+         end
 
-    target = "#{ENV["HOME"]}/.#{file}"
-
-    if File.exists?(target) || File.symlink?(target)
-      unless skip_all || overwrite_all || backup_all
-        puts "File already exists: #{target}, what do you want to do? [s]kip, [S]kip all, [o]verwrite, [O]verwrite all, [b]ackup, [B]ackup all"
-        case STDIN.gets.chomp
-        when 'o' then overwrite = true
-        when 'b' then backup = true
-        when 'O' then overwrite_all = true
-        when 'B' then backup_all = true
-        when 'S' then skip_all = true
-        end
+         link(linkable, file)
       end
+   end
 
-      # Overwrite
-      FileUtils.rm_rf(target) if overwrite || overwrite_all
-
-      # Backup
-      `mv "$HOME/.#{file}" "$HOME/tmp/#{file}.#{Time.now.to_i}.backup"` if backup || backup_all
-    end
-
-    # Do the link...
-    `ln -s "$PWD/#{linkable}" "#{target}"`
-  end
+   Dir.glob('bin/*').each do |linkable|
+      link(linkable, "#{ENV["HOME"]}/#{file}")
+   end
 end
 
 desc "Build wanted directory structure."
@@ -47,4 +36,26 @@ task :structure do
    }.keep_if {|dir| !File.exist? dir }
 
    FileUtils.mkdir dirs
+end
+
+def link file, target
+   overwrite = false
+   backup = false
+
+   if File.exists?(target) || File.symlink?(target)
+      puts "File already exists: #{target}, what do you want to do? [s]kip, [o]verwrite, [b]ackup"
+      case STDIN.gets.chomp
+      when 'o' then overwrite = true
+      when 'b' then backup = true
+      end
+
+      # Overwrite
+      FileUtils.rm_rf(target) if overwrite
+
+      # Backup
+      `mv "$HOME/.#{file}" "$HOME/tmp/#{file}.#{Time.now.to_i}.backup"` if backup
+   end
+
+   # Do the link...
+   `ln -s "$PWD/#{file}" "#{target}"`
 end
