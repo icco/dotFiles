@@ -1,7 +1,7 @@
 .viminfo
 .bash_history
-vim/.net*
+link/vim/.net*
 *.spl
 *.swp
-gkrellm/data/*/*
+link/gkrellm/data/*/*
 .rake_t_cache
