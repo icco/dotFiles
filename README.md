@@ -18,3 +18,7 @@ Apparently other people have made similar things to my infect script.
  * [ryanb/dotfiles](https://github.com/ryanb/dotfiles)
 
 In the future, it'd be really cool to set up GitHub with my public key, all through a script. Having to set up permissions before I infect is a pita.
+
+## Assumptions
+
+This repo assumes you are managing a variety of machines. It makes some trade-offs because it assumes you use a variety of machines.
