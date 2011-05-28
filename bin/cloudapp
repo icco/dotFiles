@@ -3,7 +3,7 @@
 # cloudapp
 # Zach Holman / @holman
 #
-# Uploads a file from the command line to CloudApp, drops it into your 
+# Uploads a file from the command line to CloudApp, drops it into your
 # clipboard (on a Mac, at least).
 #
 # Example:
@@ -58,4 +58,8 @@ puts "Uploaded to #{url}."
 url = "#{url}/#{ARGV[0].split('/').last}"
 
 # Copy it to your (Mac's) clipboard.
-`echo -n '#{url}' | pbcopy`
+
+`which pbcopy`
+if $?.success?
+   `echo -n '#{url}' | pbcopy`
+end
