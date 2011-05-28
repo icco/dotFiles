@@ -5,3 +5,4 @@ link/vim/.net*
 *.swp
 link/gkrellm/data/*/*
 .rake_t_cache
+.DS_Store
