@@ -15,17 +15,14 @@ Host santaclara
 Host vogon
    Hostname vogon.csc.calpoly.edu
    User nwelch
-   Compression yes
 
 Host sparc03
    Hostname sparc03.csc.calpoly.edu
    User nwelch
-   Compression yes
 
 Host unix3
    Hostname unix3.csc.calpoly.edu
    User nwelch
-   Compression yes
 
 Host cominor
    Hostname www.cominor.com
