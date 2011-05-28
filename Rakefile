@@ -55,6 +55,7 @@ def link file, target
    if File.exists?(target) || File.symlink?(target)
       # Backup
       `cp -r "#{target}" "#{target}.#{Time.now.to_i}.backup"`
+      `mv "#{target}.#{Time.now.to_i}.backup" "$HOME/tmp/"`
 
       # Overwrite
       FileUtils.rm_rf(target)
