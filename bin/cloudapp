@@ -27,7 +27,6 @@ rescue LoadError
   exit!(1)
 end
 
-
 config_file = "#{ENV['HOME']}/.cloudapp"
 unless File.exist?(config_file)
   puts "You need to type your email and password (one per line) into "+
