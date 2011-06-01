@@ -44,6 +44,9 @@ end
 if ARGV[0].nil?
    puts "You need to specify a file to upload."
    exit!(1)
+elsif !File.exists? ARGV[0]
+   puts "`#{ARGV[0]}` does not exist."
+   exit!(1)
 end
 
 CloudApp.authenticate(email,password)
