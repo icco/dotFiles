@@ -51,6 +51,9 @@ set wrap               " linewrap
 set laststatus=2
 set statusline=%<%f\ %m\ %h%r%=%b\ 0x%B\ \ %l,%c%V\ %P\ of\ %L
 
+" Puts swapfiles in /tmp instead of current directory.
+set directory=/tmp
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Color Stuff
 syntax enable
@@ -91,7 +94,7 @@ au BufRead,BufNewFile *.god set filetype=ruby
 au BufRead,BufNewFile *.tex highlight clear OverLength
 au BufRead,BufNewFile *.bib highlight clear OverLength
 
-" Remove trailing spaces from lines: http://vim.wikia.com/wiki/Remove_unwanted_spaces
+" Remove trailing spaces from lines w/ F6: http://vim.wikia.com/wiki/Remove_unwanted_spaces
 :nnoremap <silent> <F6> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
 " Shawn's code was cool, but this works on all vcs'
