@@ -1,8 +1,8 @@
 # Bashrc for my work laptop
+export CC=gcc-4.2
 
 # Mac ls does not have color...
 alias ls="`which ls`";
-alias cmr='ssh cominor'
 
 if [ -f /opt/local/etc/bash_completion ]; then
     . /opt/local/etc/bash_completion
