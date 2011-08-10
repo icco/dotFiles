@@ -28,13 +28,13 @@ task :infect => 'structure' do
             FileUtils.mkdir_p dir
          end
 
-         link(linkable, file)
+         NatFile.link(linkable, file)
       end
    end
 
    # Link all of bin.
    Dir.glob('bin/*').each do |linkable|
-      link(linkable, "#{ENV["HOME"]}/#{linkable}")
+      NatFile.link(linkable, "#{ENV["HOME"]}/#{linkable}")
    end
 end
 
