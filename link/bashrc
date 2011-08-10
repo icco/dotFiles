@@ -72,6 +72,7 @@ if [ -f ~/.bashrc.`hostname` ]; then
    echo "===> Loaded .bashrc.`hostname`";
 elif [ -f ~/.mybashrc ]; then
    . ~/.mybashrc
+   echo "===> Loaded .mybashrc";
 fi
 
 # If I have a bin in my user directory, check there for commands.

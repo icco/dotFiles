@@ -12,4 +12,6 @@ fi
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
+#`brew --prefix grc`/etc/grc.bashrc
+
 # vim: set filetype=sh:
