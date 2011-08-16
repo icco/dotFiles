@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+PROJ=~/Projects/
+
+for i in $(ls $PROJ); do
+   echo "--------> $i"
+   cd $PROJ$i; 
+   git pull;
+done;
