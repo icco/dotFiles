@@ -1,0 +1,12 @@
+#!/usr/bin/env ruby
+
+require 'builder'
+
+BACKGROUND_DIR = '~/Dropbox/Photos/Wallpapers/dark/'
+
+Dir.foreach(File.expand_path(BACKGROUND_DIR)) do |file|
+   if File.file? file
+      # Add to xml
+
+   end
+end
