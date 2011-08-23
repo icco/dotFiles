@@ -3,7 +3,9 @@
 PROJ=~/Projects/
 
 for i in $(ls $PROJ); do
-   echo "--------> $i"
-   cd $PROJ$i; 
-   git pull;
+   if [ -d $PROJ$I ]; then
+      echo "--------> $i"
+      cd $PROJ$i;
+      git pull;
+   fi;
 done;
