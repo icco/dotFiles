@@ -15,7 +15,8 @@ out += builder.background do
       # We don't recurse down and don't include xml files.
       if File.file? path and file.slice(".xml").nil?
          builder.static do
-            builder.duration("10")
+            # Run each for 15 minutes.
+            builder.duration(15*60)
             builder.file(path)
          end
       end
