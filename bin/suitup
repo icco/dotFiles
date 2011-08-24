@@ -2,10 +2,19 @@
 
 PROJ=~/Projects/
 
-for i in $(ls $PROJ); do
-   if [ -d $PROJ$I ]; then
-      echo "--------> $i"
-      cd $PROJ$i;
-      git pull;
+for f in $(ls $PROJ | sort -fr); do
+   if [ -d $PROJ$f ]; then
+      echo "--------> $f"
+      cd $PROJ$f;
+      if [ -d $PROJ$f/.git/ ]; then
+         git pull;
+      elif [ -f $PROJ$f/.srcfs_workspace ]; then
+         prodaccess
+         g4 sync
+      elif [ -d $PROJ$f/.svn/ ]; then
+         svn up
+      else
+         echo "No known version control."
+      fi
    fi;
 done;
