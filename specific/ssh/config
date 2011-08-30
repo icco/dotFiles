@@ -3,7 +3,7 @@ Host *
    Compression no 
 
 Host arclight
-   Hostname santaclarahome.homeip.net
+   Hostname oblivionbar.dyndns.org
    KeepAlive yes
    port 4022
    User nat
