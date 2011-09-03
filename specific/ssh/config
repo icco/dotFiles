@@ -3,7 +3,7 @@ Host *
    Compression no 
 
 Host arclight
-   Hostname santaclarahome.homeip.net
+   Hostname oblivionbar.dyndns.org
    KeepAlive yes
    port 4022
    User nat
@@ -38,7 +38,7 @@ Host wiki
 
 Host cplug
    Hostname www.cplug.org
-   user cplug
+   User cplug
 
 Host multicore
    Hostname multicore.csc.calpoly.edu
@@ -52,3 +52,7 @@ Host welchfamilyweb.com
 Host sadnat.com
    User ec2-user
    IdentityFile ~/Dropbox/microEc2.pem
+
+Host google
+   Hostname natwelch.mtv.corp.google.com
+   User natwelch

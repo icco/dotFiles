@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+
+# Builds a gnome background rotation xml
+
+require 'builder' # gem install builder
+
+# The folder we wish to rotate through
+BACKGROUND_DIR = File.expand_path('~/Dropbox/Photos/Wallpapers/dark/')
+
+# Our XML builder, indenting to make readable
+builder = Builder::XmlMarkup.new(:indent => 2)
+out = builder.instruct!
+out += builder.background do
+   # Builds an array of files.
+   files = Dir.entries(BACKGROUND_DIR)
+   files.each do |file|
+      next_file_index = file == files.last ? 0 : files.index(file)
+
+      path = File.join(BACKGROUND_DIR, file)
+      next_path = File.join(BACKGROUND_DIR, files[next_file_index])
+
+      # We don't recurse down and don't include xml files.
+      if File.file? path and file.slice(".xml").nil?
+         # define each file
+         builder.static do
+            # Run each for 15 minutes.
+            builder.duration(15*60)
+            builder.file(path)
+         end
+
+         # This deals with smooth transitions.
+         builder.transition do
+            builder.duration(5)
+            builder.from(path)
+            builder.to(next_path)
+         end
+      end
+   end
+end
+
+# Write to file (Ruby is so weird some times...)
+File.open(File.join(BACKGROUND_DIR, "background.xml"), 'w') {|f| f.write(out) }

@@ -67,7 +67,11 @@ alias cim="vim"
 alias vi='vim'
 
 ## nice for gnome based systems.
-alias go='gnome-open'
+go () {
+   if   [ `uname` == "Darwin" ]; then open $@
+   elif [ `uname` == "Linux" ]; then gnome-open $@
+   fi
+}
 
 # Csh compatability:
 alias unsetenv=unset

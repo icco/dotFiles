@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+# @author Nat Welch
+
+require 'shellwords'
+
+SERVER = "192.168.1.131"
+USER = "nat"
+
+ARTISTS = [
+   'Dave Matthews Band',
+   'Moby',
+   'Radiohead',
+   'Broken Social Scene'
+]
+
+ARTISTS.sort.each do |artist|
+   local = File.join(File.expand_path("~/Music/"), Shellwords.escape(artist))
+   remote = "~nat/Music/#{Shellwords.escape(artist)}"
+   rsync = "rsync -aP --delete #{USER}@#{SERVER}:\"#{remote}/\" #{local}"
+   puts rsync
+   Kernel.system(rsync)
+end

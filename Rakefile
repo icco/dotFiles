@@ -13,7 +13,7 @@ task :infect => 'structure' do
    # The files we want to link the roots.
    Dir.glob('link/**').each do |linkable|
       file = linkable.split('/').last
-      link(linkable, "#{ENV["HOME"]}/.#{file}")
+      NatFile.link(linkable, "#{ENV["HOME"]}/.#{file}")
    end
 
    # The files we want to link the leafs
@@ -28,13 +28,13 @@ task :infect => 'structure' do
             FileUtils.mkdir_p dir
          end
 
-         link(linkable, file)
+         NatFile.link(linkable, file)
       end
    end
 
    # Link all of bin.
    Dir.glob('bin/*').each do |linkable|
-      link(linkable, "#{ENV["HOME"]}/#{linkable}")
+      NatFile.link(linkable, "#{ENV["HOME"]}/#{linkable}")
    end
 end
 
@@ -47,20 +47,23 @@ task :structure do
    FileUtils.mkdir dirs
 end
 
-# Function to do the actual linking.
-def link file, target
-   overwrite = false
-   backup = false
+class NatFile
+   # Function to do the actual linking.
+   def NatFile.link file, target
+      overwrite = false
+      backup = false
 
-   if File.exists?(target) || File.symlink?(target)
-      # Backup
-      `cp -r "#{target}" "#{target}.#{Time.now.to_i}.backup"`
-      `mv "#{target}.#{Time.now.to_i}.backup" "$HOME/tmp/"`
+      if File.exists?(target) || File.symlink?(target)
+         # Backup
+         `cp -r "#{target}" "#{target}.#{Time.now.to_i}.backup"`
+         `mv "#{target}.#{Time.now.to_i}.backup" "$HOME/tmp/"`
 
-      # Overwrite
-      FileUtils.rm_rf(target)
+         # Overwrite
+         FileUtils.rm_rf(target)
+      end
+
+      # Do the link...
+      `ln -s "$PWD/#{file}" "#{target}"`
    end
-
-   # Do the link...
-   `ln -s "$PWD/#{file}" "#{target}"`
 end
+
