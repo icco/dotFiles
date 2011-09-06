@@ -1,6 +1,6 @@
 Host *
    KeepAlive yes
-   Compression no 
+   Compression no
 
 Host arclight
    Hostname oblivionbar.dyndns.org
@@ -32,7 +32,7 @@ Host faranor
    Hostname www.faranor.com
    User nwelch
 
-Host wiki 
+Host wiki
    Hostname wiki.csc.calpoly.edu
    User nwelch
 
@@ -56,3 +56,7 @@ Host sadnat.com
 Host google
    Hostname natwelch.mtv.corp.google.com
    User natwelch
+
+Host *.punchd.net
+   IdentityFile ~/Projects/Punchd-Servers/elephant.pem
+   User ec2-user
