@@ -3,7 +3,7 @@
    email = nat@natwelch.com
 [alias]
    co = checkout
-   st = status
+   st = status -s
    ci = commit
    lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %C(blue)by %an%Creset - %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
    l = log --oneline --graph --decorate --date-order
