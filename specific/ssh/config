@@ -8,43 +8,6 @@ Host arclight
    port 4022
    User nat
 
-Host santaclara
-   Hostname santaclarahome.homeip.net
-   KeepAlive yes
-
-Host vogon
-   Hostname vogon.csc.calpoly.edu
-   User nwelch
-
-Host sparc03
-   Hostname sparc03.csc.calpoly.edu
-   User nwelch
-
-Host unix3
-   Hostname unix3.csc.calpoly.edu
-   User nwelch
-
-Host cominor
-   Hostname www.cominor.com
-   User nwelch
-
-Host faranor
-   Hostname www.faranor.com
-   User nwelch
-
-Host wiki
-   Hostname wiki.csc.calpoly.edu
-   User nwelch
-
-Host cplug
-   Hostname www.cplug.org
-   User cplug
-
-Host multicore
-   Hostname multicore.csc.calpoly.edu
-   User nwelch
-   Compression yes
-
 Host welchfamilyweb.com
    User dlnwelch
    Port 2222
