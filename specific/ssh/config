@@ -16,10 +16,14 @@ Host sadnat.com
    User ec2-user
    IdentityFile ~/Dropbox/microEc2.pem
 
-Host google
+Host natwelch
    Hostname natwelch.mtv.corp.google.com
    User natwelch
 
 Host *.punchd.net
    IdentityFile ~/Projects/Punchd-Servers/elephant.pem
    User ec2-user
+
+Host *.getpunchd.com
+  IdentityFile ~/Projects/Punchd-Servers/elephant.pem
+  User ec2-user
