@@ -1,28 +1,28 @@
 Host *
-   KeepAlive yes
-   Compression no
+  KeepAlive yes
+  Compression no
 
 Host arclight
-   Hostname oblivionbar.dyndns.org
-   KeepAlive yes
-   port 4022
-   User nat
+  Hostname oblivionbar.dyndns.org
+  KeepAlive yes
+  port 4022
+  User nat
 
 Host welchfamilyweb.com
-   User dlnwelch
-   Port 2222
+  User dlnwelch
+  Port 2222
 
 Host sadnat.com
-   User ec2-user
-   IdentityFile ~/Dropbox/microEc2.pem
+  User ec2-user
+  IdentityFile ~/Dropbox/microEc2.pem
 
 Host natwelch
-   Hostname natwelch.mtv.corp.google.com
-   User natwelch
+  Hostname natwelch.mtv.corp.google.com
+  User natwelch
 
 Host *.punchd.net
-   IdentityFile ~/Projects/Punchd-Servers/elephant.pem
-   User ec2-user
+  IdentityFile ~/Projects/Punchd-Servers/elephant.pem
+  User ec2-user
 
 Host *.getpunchd.com
   IdentityFile ~/Projects/Punchd-Servers/elephant.pem
