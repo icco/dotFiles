@@ -21,9 +21,9 @@ Host natwelch
   User natwelch
 
 Host *.punchd.net
-  IdentityFile ~/Projects/Punchd-Servers/elephant.pem
+  IdentityFile ~/Dropbox/elephant.pem
   User ec2-user
 
 Host *.getpunchd.com
-  IdentityFile ~/Projects/Punchd-Servers/elephant.pem
+  IdentityFile ~/Dropbox/elephant.pem
   User ec2-user
