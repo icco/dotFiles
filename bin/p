@@ -1,0 +1,10 @@
+#!/usr/bin/bash
+# TODO: Make this work
+
+DIR=$HOME/Projects
+
+if [ $# -gt 0 ]; then
+  cd $DIR/$1
+else
+  echo "$0 project_name"
+fi;

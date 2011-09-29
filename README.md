@@ -21,6 +21,10 @@ Apparently other people have made similar things to my infect script.
  * [ryanb/dotfiles](https://github.com/ryanb/dotfiles)
 
 In the future, it'd be really cool to set up GitHub with my public key, all through a script. Having to set up permissions before I infect is a pita.
+ 
+## TODO
+
+ * Figure out how to have vim deal with rackup files nicely.
 
 ## Assumptions
 
