@@ -30,7 +30,7 @@ out += builder.background do
 
          # This deals with smooth transitions.
          builder.transition do
-            builder.duration(5)
+            builder.duration(15)
             builder.from(path)
             builder.to(next_path)
          end
