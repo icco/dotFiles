@@ -97,6 +97,9 @@ au BufRead,BufNewFile *.bib highlight clear OverLength
 " Tab Seperated Files
 au BufRead,BufNewFile *.tsv set noet
 
+" Proto buffers?
+au BufRead,BufNewFile *.proto set ft=proto
+
 " Remove trailing spaces from lines w/ F6: http://vim.wikia.com/wiki/Remove_unwanted_spaces
 :nnoremap <silent> <F6> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
