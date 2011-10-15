@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 PROJ=~/Projects/
+PROD=""
 
 for f in $(ls $PROJ | sort -fr); do
   if [ -d $PROJ$f ]; then
@@ -9,8 +10,10 @@ for f in $(ls $PROJ | sort -fr); do
     if [ -d $PROJ$f/.git/ ]; then
       git pull;
     elif [ -f $PROJ$f/.srcfs_workspace ]; then
-
-      prodaccess
+      if [ ! $PROD ]; then
+        prodaccess
+        PROD="YES"
+      fi
       g4 sync
     elif [ -d $PROJ$f/.svn/ ]; then
       svn up
