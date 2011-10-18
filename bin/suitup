@@ -3,7 +3,7 @@
 PROJ=~/Projects/
 PROD=""
 
-for f in $(ls $PROJ | sort -fr); do
+for f in $(ls $PROJ | sort -f); do
   if [ -d $PROJ$f ]; then
     echo "--------> $f"
     cd $PROJ$f;
