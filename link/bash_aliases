@@ -9,6 +9,10 @@ if [ "$TERM" != "dumb" ]; then
     alias dir='ls --color=auto --format=vertical'
     alias vdir='ls --color=auto --format=long'   
 fi
+
+if [ -f `which hub` ]; then
+   alias git=hub
+fi
   
 ## some more ls aliases
 alias ll='ls -lh'
