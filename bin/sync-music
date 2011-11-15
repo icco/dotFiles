@@ -3,14 +3,20 @@
 
 require 'shellwords'
 
-SERVER = "192.168.1.131"
+# TODO: Move constansts into config file
+SERVER = "snowball.local"
 USER = "nat"
 
 ARTISTS = [
+   'Broken Social Scene',
    'Dave Matthews Band',
+   'Graycat',
    'Moby',
+   'Passion Pit',
+   'Pogo',
    'Radiohead',
-   'Broken Social Scene'
+   'Yoko Kanno',
+   'iLIKETRAINS'
 ]
 
 ARTISTS.sort.each do |artist|
