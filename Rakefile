@@ -1,7 +1,9 @@
 # infect.sh
-# @author Nat Welch
+# @author Nat Welch (@icco)
 #
-# A rewrite of my oldschool script but in Ruby. Based off of holman/dotfiles initially.
+# A rewrite of my oldschool script but in Ruby. Based off of @holman/dotfiles
+# initially. This script can be run multiple times, it in theory will be nice
+# to your home dir.
 
 require 'rake'
 
@@ -66,4 +68,3 @@ class NatFile
       `ln -s "$PWD/#{file}" "#{target}"`
    end
 end
-
