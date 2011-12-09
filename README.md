@@ -2,8 +2,8 @@
 
 This repository holds my config files for just about everything. Use this to set up a fresh OSX or Linux box, and Nat will be a happy user.
 
- * `link` => directly links file or folder to ~/.fname
- * `specific` => Links specific files, instead of their root folder.
+ * `link` &rarr; directly links file or folder to ~/.fname
+ * `specific` &rarr; Links specific files, instead of their root folder.
 
 ## Install
 
@@ -16,7 +16,7 @@ Originally I did this entirely with shell scripts. Now I use rake. Make sure to 
 
 Apparently other people have made similar things to my infect script.
 
- * [homesick](https://github.com/technicalpickles/homesick)
+ * [technicalpickles/homesick](https://github.com/technicalpickles/homesick)
  * [holman/dotfiles](https://github.com/holman/dotfiles)
  * [ryanb/dotfiles](https://github.com/ryanb/dotfiles)
 
@@ -28,4 +28,4 @@ In the future, it'd be really cool to set up GitHub with my public key, all thro
 
 ## Assumptions
 
-This repo assumes you are managing a variety of machines. It makes some trade-offs because it assumes you use a variety of machines.
+This repo assumes you are managing a variety of machines. It makes some trade-offs because it assumes you use multiple machines daily.
