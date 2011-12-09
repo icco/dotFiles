@@ -1,5 +1,6 @@
-#!/usr/bin/bash
-# TODO: Make this work
+#!/usr/bin/env bash
+# A simple script that makes jumping to projects easier.
+# @author Nat Welch (@icco)
 
 DIR=$HOME/Projects
 
