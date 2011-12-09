@@ -39,8 +39,8 @@ end
 email,password = File.read(config_file).split("\n")
 
 if ARGV[0].nil?
-   puts "You need to specify a file to upload."
-   exit!(1)
+  puts "You need to specify a file to upload."
+  exit!(1)
 end
 
 urls = []
