@@ -9,8 +9,16 @@ require 'rake'
 
 task :default => 'infect'
 
+desc "Test to make sure everything works ok."
+task :test do
+  if RUBY_VERSION < "1.9"
+    puts "Ruby needs to be at least 1.9.2 for this script."
+    Kernel.exit -1
+  end
+end
+
 desc "Hook our dotfiles into system-standard positions."
-task :infect => 'structure' do
+task :infect => [:test, :structure] do
 
   # The files we want to link the roots.
   Dir.glob('link/**').each do |linkable|
@@ -41,7 +49,7 @@ task :infect => 'structure' do
 end
 
 desc "Build wanted directory structure."
-task :structure do
+task :structure => :test do
   dirs = [ 'Projects', 'bin', 'tmp' ].map {|dir|
     "#{ENV["HOME"]}/#{dir}"
   }.keep_if {|dir| !File.exist? dir }
