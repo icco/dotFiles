@@ -58,7 +58,7 @@ bash_prompt() {
 
     #Nat's Colored Prompt
     local GITBRANCH='`git branch 2> /dev/null | grep -e ^* | sed -E  s/^\\\\\*\ \(.+\)$/\(\\\\\1\)\ /`'
-    PS1="${RST}\n[ ${EMR}\d ${EMR}\@${RST} ] $GITBRANCH \n${RST}[ ${UC}\u${RST}@${UC}\h ${EMB}\${NEW_PWD}${RST} ]${UC}\\$ ${RST}"
+    PS1="${RST}\n[ ${EMR}\$(date +\"%a %b %d %k:%M:%S\")${RST} ] $GITBRANCH \n${RST}[ ${UC}\u${RST}@${UC}\h ${EMB}\${NEW_PWD}${RST} ]${UC}\\$ ${RST}"
 }
 
 PROMPT_COMMAND=bash_prompt_command
