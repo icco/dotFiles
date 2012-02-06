@@ -12,7 +12,7 @@ Host welchfamilyweb.com
   User dlnwelch
   Port 2222
 
-Host sadnat.com
+Host happynat.com
   User ec2-user
   IdentityFile ~/Dropbox/microEc2.pem
 
