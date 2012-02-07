@@ -12,9 +12,10 @@ Host welchfamilyweb.com
   User dlnwelch
   Port 2222
 
-Host sadnat.com
+Host pseudoweb.net
   User ec2-user
   IdentityFile ~/Dropbox/microEc2.pem
+  Hostname happynat.com
 
 Host natwelch
   Hostname natwelch.mtv.corp.google.com
