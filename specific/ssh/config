@@ -17,6 +17,8 @@ Host happynat.com
   IdentityFile ~/Dropbox/microEc2.pem
 
 Host natwelch
+  Compression no
+  Cipher blowfish-cbc
   Hostname natwelch.mtv.corp.google.com
   User natwelch
 
