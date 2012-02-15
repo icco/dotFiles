@@ -27,3 +27,5 @@
    stat = true
 [diff "zip"]
    textconv = unzip -c -a
+[gist]
+	browse = false
