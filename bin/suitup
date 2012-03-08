@@ -3,22 +3,35 @@
 PROJ=~/Projects/
 PROD=""
 
-for f in $(ls $PROJ | sort -f); do
+# First Param is directory name
+sync_dir () {
+  f=$1
+
   if [ -d $PROJ$f ]; then
     echo "--------> $f"
     cd $PROJ$f;
     if [ -d $PROJ$f/.git/ ]; then
       git pull;
+      return 0;
     elif [ -f $PROJ$f/.srcfs_workspace ]; then
       if [ ! $PROD ]; then
         prodaccess
         PROD="YES"
       fi
       g4 sync
+      return 0;
     elif [ -d $PROJ$f/.svn/ ]; then
       svn up
+      return 0;
     else
-      echo "No known version control."
+      return 1;
     fi
+  fi;
+}
+
+for e in $(ls $PROJ | sort -f); do
+  sync_dir $e
+  if [ $? -eq 1 ]; then
+    echo "No known version control."
   fi;
 done;
