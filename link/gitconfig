@@ -14,7 +14,7 @@
 [core]
   whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
 [push]
-  default = tracking
+	default = upstream
 [core]
   autocrlf = input
 [github]
@@ -29,3 +29,5 @@
   textconv = unzip -c -a
 [gist]
   browse = false
+[rebase]
+	stat = true
