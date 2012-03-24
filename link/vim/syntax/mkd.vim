@@ -6,7 +6,7 @@
 " Last Change:  2009 May 18 
 " Remark:	Uses HTML syntax file
 " Remark:	I don't do anything with angle brackets (<>) because that would too easily conflict with HTML syntax
-" TODO: 	Handle stuff contained within stuff (e.g. headings within blockquotes)
+" TODO:  Handle stuff contained within stuff (e.g. headings within blockquotes)
 " TODO:  Handle underscores in words
 " TODO:  Handle images references in links
 
