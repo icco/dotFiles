@@ -13,7 +13,7 @@ sync_dir () {
     if [ -d $PROJ$f/.git/ ]; then
       git pull;
       return 0;
-    elif [ -f $PROJ$f/.srcfs_workspace ]; then
+    elif [ -f $PROJ$f/VERSION_MAP ]; then
       if [ ! $PROD ]; then
         prodaccess
         PROD="YES"
@@ -29,6 +29,14 @@ sync_dir () {
   fi;
 }
 
+for e in $(ls $PROJ | sort -f); do
+  sync_dir $e
+  if [ $? -eq 1 ]; then
+    echo "No known version control."
+  fi;
+done;
+
+PROJ=/google/src/cloud/$USER/
 for e in $(ls $PROJ | sort -f); do
   sync_dir $e
   if [ $? -eq 1 ]; then
