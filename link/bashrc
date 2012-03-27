@@ -14,6 +14,12 @@ export DEBEMAIL="nat@natwelch.com"
 # don't put duplicate lines in the history. See bash(1) for more options
 export HISTCONTROL=ignoredups
 
+# Append history instead of last closed terminal wins
+shopt -s histappend
+
+# Append every command to history
+export PROMPT_COMMAND="history -n; history -a"
+
 # give me the correct compiler
 export CC=/usr/bin/gcc
 

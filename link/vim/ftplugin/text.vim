@@ -7,7 +7,7 @@ setlocal wrap
 setlocal linebreak
 
 " Spell-checking is almost always going to be desired.
-setlocal spell
+"setlocal spell
 
 " Use the screen-based versions of the most common movement commands instead of
 " the text-based versions.
