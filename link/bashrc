@@ -18,7 +18,7 @@ export HISTCONTROL=ignoredups
 shopt -s histappend
 
 # Append every command to history
-export PROMPT_COMMAND="history -n; history -a"
+#export PROMPT_COMMAND="history -n; history -a"
 
 # give me the correct compiler
 export CC=/usr/bin/gcc
