@@ -15,7 +15,7 @@ export DEBEMAIL="nat@natwelch.com"
 export HISTCONTROL=ignoredups
 
 # Append history instead of last closed terminal wins
-shopt -s histappend
+#shopt -s histappend
 
 # Append every command to history
 #export PROMPT_COMMAND="history -n; history -a"
