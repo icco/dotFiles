@@ -1,0 +1,32 @@
+Host *
+  KeepAlive yes
+  Compression no
+
+Host arclight
+  Hostname oblivionbar.dyndns.org
+  KeepAlive yes
+  port 4022
+  User nat
+
+Host welchfamilyweb.com
+  User dlnwelch
+  Port 2222
+
+Host pseudoweb.net
+  User ec2-user
+  IdentityFile ~/Dropbox/microEc2.pem
+  Hostname happynat.com
+
+Host natwelch
+  Compression no
+  Cipher blowfish-cbc
+  Hostname natwelch.mtv.corp.google.com
+  User natwelch
+
+Host *.punchd.net
+  IdentityFile ~/Dropbox/elephant.pem
+  User ec2-user
+
+Host *.getpunchd.com
+  IdentityFile ~/Dropbox/elephant.pem
+  User ec2-user

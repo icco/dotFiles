@@ -1,0 +1,33 @@
+[user]
+  name = Nat Welch
+  email = nat@natwelch.com
+[alias]
+  co = checkout
+  st = status -sb
+  ci = commit
+  lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %C(blue)by %an%Creset - %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+  l = log --oneline --graph --decorate --date-order
+[color]
+  ui = auto
+[color "diff"]
+  whitespace = red reverse
+[core]
+  whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
+[push]
+	default = upstream
+[core]
+  autocrlf = input
+[github]
+  user = icco
+[branch]
+  autosetupmerge = true
+[pager]
+  color = true
+[merge]
+  stat = true
+[diff "zip"]
+  textconv = unzip -c -a
+[gist]
+  browse = false
+[rebase]
+	stat = true
