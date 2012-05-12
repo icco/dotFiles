@@ -10,8 +10,3 @@ noremap <buffer> 0 g0
 noremap <buffer> ^ g^
 noremap <buffer> $ g$
 noremap <buffer> G G$
-
-" I and A enter insert mode at the beginning and end of the current screen
-" line, rather than text line.
-noremap <buffer> I g^i
-noremap <buffer> A g$a
