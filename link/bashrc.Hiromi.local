@@ -14,4 +14,7 @@ export LSCOLORS=ExFxCxDxBxegedabagacad
 
 [[ -s "/Users/nat/.rvm/scripts/rvm" ]] && source "/Users/nat/.rvm/scripts/rvm"  # This loads RVM into a shell session.
 
+# Redis on OSX
+alias redis="redis-server /usr/local/etc/redis.conf"
+
 # vim: set filetype=sh:
