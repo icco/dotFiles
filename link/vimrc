@@ -33,7 +33,7 @@ set showcmd            " show partial commands in the status line
 set showmatch          " show matching () {} etc.
 set showmode           " show current mode
 
-set tw=100            " When you type gq to wrap a paragraph, wrap to 100 characters.
+"set tw=100            " When you type gq to wrap a paragraph, wrap to 100 characters.
 
 " Settings for autoindentation, comments, and what-have-you
 
