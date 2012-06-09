@@ -1,6 +1,7 @@
 [user]
   name = Nat Welch
   email = nat@natwelch.com
+  signingkey = "Nathaniel Welch (nat,icco) <nat@natwelch.com>"
 [alias]
   co = checkout
   st = status -sb
