@@ -20,7 +20,7 @@ Host pseudoweb.net
 Host natwelch
   Compression no
   Cipher blowfish-cbc
-  Hostname natwelch.mtv.corp.google.com
+  Hostname natwelch.sfo.corp.google.com
   User natwelch
 
 Host *.punchd.net
