@@ -17,4 +17,11 @@ export LSCOLORS=ExFxCxDxBxegedabagacad
 # Redis on OSX
 alias redis="redis-server /usr/local/etc/redis.conf"
 
+# Android
+export ANDROID_HOME=`brew --prefix android`
+
+# Postgres.app
+export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
+
+
 # vim: set filetype=sh:
