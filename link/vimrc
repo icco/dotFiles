@@ -36,7 +36,6 @@ set showmode           " show current mode
 "set tw=100            " When you type gq to wrap a paragraph, wrap to 100 characters.
 
 " Settings for autoindentation, comments, and what-have-you
-
 set expandtab          " expand tabs with spaces
 set tabstop=2          " <Tab> move three characters
 set shiftwidth=2       " >> and << shift 3 spaces
@@ -69,26 +68,6 @@ colorscheme darknat
 " Highlights long lines (Turned off...)
 "highlight OverLength term=standout cterm=bold ctermfg=1
 "match OverLength /\%91v.\+/
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Cool Functions
-
-" Create directories if they don't exist
-" from http://stackoverflow.com/a/4294176/1063
-" NOTE: Don't think this actually works. More testing needed.
-function s:MkNonExDir(file, buf)
-  if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
-    let dir=!isdirectory(fnamemodify(a:file, ':h'))
-    if !isdirectory(dir)
-      call mkdir(dir, 'p')
-    endif
-  endif
-endfunction
-augroup BWCCreateDir
-  autocmd!
-  autocmd BufWritePre * :call s:MkNonExDir(expand('<afile>'), +expand('<abuf>'))
-augroup END
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Extra Language Support
