@@ -58,6 +58,7 @@ set directory=/tmp
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Color Stuff
+
 syntax enable
 set background=dark
 "colorscheme koehler
@@ -74,6 +75,7 @@ colorscheme darknat
 
 " Create directories if they don't exist
 " from http://stackoverflow.com/a/4294176/1063
+" NOTE: Don't think this actually works. More testing needed.
 function s:MkNonExDir(file, buf)
   if empty(getbufvar(a:buf, '&buftype')) && a:file!~#'\v^\w+\:\/'
     let dir=!isdirectory(fnamemodify(a:file, ':h'))
