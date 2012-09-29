@@ -70,6 +70,10 @@ colorscheme darknat
 "match OverLength /\%91v.\+/
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" One off prject stuff
+autocmd BufNewFile,BufRead ~/Projects/apom/* set tabstop=3 shiftwidth=3 softtabstop=3
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Extra Language Support
 
 " Antlr
