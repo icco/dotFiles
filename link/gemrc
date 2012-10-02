@@ -1,1 +1,5 @@
 gem: --no-rdoc --no-ri
+#:sources:
+#  - http://ghost-internal-gems-server.corp.google.com/
+#  - http://ghost-approved-gems-server.corp.google.com/
+#  - http://ghost-gems-server.corp.google.com/
