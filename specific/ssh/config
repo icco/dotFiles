@@ -30,3 +30,6 @@ Host *.punchd.net
 Host *.getpunchd.com
   IdentityFile ~/Dropbox/elephant.pem
   User ec2-user
+
+Host icco.me
+  User ubuntu
