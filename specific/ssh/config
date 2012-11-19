@@ -33,3 +33,7 @@ Host *.getpunchd.com
 
 Host icco.me
   User ubuntu
+
+Host athenaeum
+  Hostname athenaeum.local
+  User root
