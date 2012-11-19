@@ -79,7 +79,9 @@ fi
 if [ -f ~/.bashrc.`hostname` ]; then
    . ~/.bashrc.`hostname`
    echo "===> Loaded .bashrc.`hostname`";
-elif [ -f ~/.mybashrc ]; then
+fi
+
+if [ -f ~/.mybashrc ]; then
    . ~/.mybashrc
    echo "===> Loaded .mybashrc";
 fi
