@@ -34,3 +34,5 @@
   browse = false
 [rebase]
 	stat = true
+[push]
+	default = simple
