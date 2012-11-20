@@ -23,6 +23,12 @@ Host natwelch
   Hostname abode.sfo.corp.google.com
   User natwelch
 
+Host abode
+  Compression no
+  Cipher blowfish-cbc
+  Hostname abode.sfo.corp.google.com
+  User natwelch
+
 Host *.punchd.net
   IdentityFile ~/Dropbox/elephant.pem
   User ec2-user
