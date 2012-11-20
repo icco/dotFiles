@@ -35,4 +35,4 @@
 [rebase]
 	stat = true
 [push]
-	default = simple
+#default = simple
