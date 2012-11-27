@@ -17,12 +17,6 @@ Host pseudoweb.net
   IdentityFile ~/Dropbox/microEc2.pem
   Hostname happynat.com
 
-Host natwelch
-  Compression no
-  Cipher blowfish-cbc
-  Hostname abode.sfo.corp.google.com
-  User natwelch
-
 Host abode
   Compression no
   Cipher blowfish-cbc
