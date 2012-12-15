@@ -53,8 +53,6 @@ alias j="jobs -l"
 alias pu="pushd"
 alias po="popd"
 
-alias nat="echo 'I\'m the proud owner of DF 82 8A F5 6F EF 0F 15 F6 12 09 0B 03 21 DA CF'"
-
 ## duh
 alias motd="cat /etc/motd"
 
