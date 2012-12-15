@@ -14,6 +14,9 @@ export DEBEMAIL="nat@natwelch.com"
 # don't put duplicate lines in the history. See bash(1) for more options
 export HISTCONTROL=ignoredups
 
+# History Length
+export HISTSIZE=50000
+
 # Format history w/ dates
 export HISTTIMEFORMAT='%m/%d/%Y %H:%M:%S - '
 
