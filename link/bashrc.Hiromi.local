@@ -26,4 +26,7 @@ export ANDROID_HOME=`brew --prefix android`
 # Postgres.app
 export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
 
+# Heroku app
+export PATH="/usr/local/heroku/bin:$PATH"
+
 # vim: set filetype=sh:
