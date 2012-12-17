@@ -68,7 +68,7 @@ fi
 # Enable programmable completion features. Since we don't know if the machine
 # supports it, make sure to check both locally and in /etc. The home directory
 # takes preference and can overwrite settings.
-if [ -f /etc/bash_completion ]; then
+if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
    . /etc/bash_completion
    echo "===> Loaded /etc/bash_completion";
 fi
