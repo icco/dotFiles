@@ -78,6 +78,11 @@ if [ -f ~/.bash_completion ]; then
    echo "===> Loaded .bash_completion";
 fi
 
+if [ -f /usr/local/etc/bash_completion ]; then
+   . /usr/local/etc/bash_completion
+   echo "===> Loaded /usr/local/etc/bash_completion";
+fi
+
 # For certain machines add an additional bashrc
 if [ -f ~/.bashrc.`hostname` ]; then
    . ~/.bashrc.`hostname`
