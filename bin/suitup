@@ -4,7 +4,11 @@
 #
 # Author: Nat Welch (nat@natwelch.com)
 
-PROD=""
+if [ -x /google/data/ro/projects/loas/loas_check ]; then
+  if ! /google/data/ro/projects/loas/loas_check &> /dev/null; then
+    prodaccess
+  fi
+fi
 
 # First Param is directory name
 sync_dir () {
@@ -17,18 +21,10 @@ sync_dir () {
       git pull;
       return 0;
     elif [ -f $PROJ$f/VERSION_MAP ]; then
-      if [ ! $PROD ]; then
-        prodaccess
-        PROD="YES"
-      fi
       g4 sync
       return 0;
     # Duplicated because I can't get the or stmt to work.
     elif [ -f $PROJ$f/.p4config ]; then
-      if [ ! $PROD ]; then
-        prodaccess
-        PROD="YES"
-      fi
       g4 sync
       return 0;
     elif [ -d $PROJ$f/.svn/ ]; then
@@ -62,10 +58,6 @@ fi
 
 PROJ=/google/src/cloud/$USER/
 if [ -d $PROJ ]; then
-  if [ ! $PROD ]; then
-    prodaccess
-    PROD="YES"
-  fi
   for e in $(ls $PROJ | sort -f); do
     sync_dir $e
     if [ $? -eq 1 ]; then
