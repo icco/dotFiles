@@ -26,7 +26,7 @@ Host abode
 Host arcplug
   Compression no
   Cipher blowfish-cbc
-  Hostname arcplug.sfo.corp.google.com
+  Hostname arcplug.dls.corp.google.com
   User natwelch
 
 Host *.punchd.net
