@@ -33,6 +33,6 @@
 [gist]
   browse = false
 [rebase]
-	stat = true
+  stat = true
 [push]
-	default = matching
+  default = matching
