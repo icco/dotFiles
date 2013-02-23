@@ -40,6 +40,11 @@ Host *.getpunchd.com
 Host icco.me
   User ubuntu
 
+Host snowball
+  Hostname snowball.icco.me
+  Port 4022
+  User nat
+
 Host athenaeum
   Hostname athenaeum.local
   User root
