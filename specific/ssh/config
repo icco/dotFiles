@@ -1,12 +1,5 @@
 Host *
   KeepAlive yes
-  Compression no
-
-Host arclight
-  Hostname oblivionbar.dyndns.org
-  KeepAlive yes
-  port 4022
-  User nat
 
 Host welchfamilyweb.com
   User dlnwelch
@@ -44,6 +37,8 @@ Host snowball
   Hostname snowball.icco.me
   Port 4022
   User nat
+  Compression yes
+  KeepAlive yes
 
 Host athenaeum
   Hostname athenaeum.local
