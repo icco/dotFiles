@@ -11,7 +11,7 @@ task :default => 'infect'
 
 desc "Sort and clean the vim dictionary."
 task :vim do
-  Kernel.exec("cat link/vim/spell/en.utf-8.add | sort | uniq > t && mv t link/vim/spell/en.utf-8.add && git diff")
+  Kernel.exec("cat link/vim/spell/en.utf-8.add | sort -if | uniq > t && mv t link/vim/spell/en.utf-8.add && git diff")
 end
 
 desc "Test to make sure everything works ok."
