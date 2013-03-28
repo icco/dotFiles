@@ -67,7 +67,7 @@ colorscheme darknat
 
 " Highlights long lines (Turned off...)
 "highlight OverLength term=standout cterm=bold ctermfg=1
-"match OverLength /\%91v.\+/
+"match OverLength /\%80v.\+/
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " One off prject stuff
@@ -105,6 +105,8 @@ au BufRead,BufNewFile *.tsv set noet
 " Proto buffers?
 au BufRead,BufNewFile *.proto set ft=proto
 
+" Python Templates
+au BufRead,BufNewFile *.dtl set ft=htmldjango
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Key Bindings
