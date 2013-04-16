@@ -5,11 +5,6 @@ Host welchfamilyweb.com
   User dlnwelch
   Port 2222
 
-Host pseudoweb.net
-  User ec2-user
-  IdentityFile ~/Dropbox/microEc2.pem
-  Hostname happynat.com
-
 Host abode
   Compression no
   Cipher blowfish-cbc
@@ -32,6 +27,7 @@ Host *.getpunchd.com
 
 Host icco.me
   User ubuntu
+  IdentityFile ~/Dropbox/ec2.pem
 
 Host snowball
   Hostname snowball.icco.me
