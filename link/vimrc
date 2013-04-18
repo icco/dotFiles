@@ -127,9 +127,18 @@ au BufRead,BufNewFile *.dtl set ft=htmldjango
 " And all the cool kids need to paste
 :nnoremap <C-p><C-p> :set invpaste<CR>
 
-" Use the space key to open and close code folds
-:vnoremap <space> zf<CR>
-:nnoremap <space> zd<CR>
+" Use the space key to collapse everything.
+:nnoremap <silent> <space> :call FoldUnfold()<CR>
+function! FoldUnfold()
+  if &foldmethod == 'manual' && &filetype == 'conf'
+    execute ":set foldmethod=indent"
+  elseif &foldmethod == 'manual'
+    execute ":set foldmethod=syntax"
+  elseif &foldmethod != 'manual'
+    execute ":set foldmethod=manual"
+    execute "normal zE"
+  endif
+endfunction
 
 " Toggle spell checking.
 :map <f7> :set spell!<cr>
