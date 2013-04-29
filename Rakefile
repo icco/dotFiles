@@ -17,7 +17,7 @@ end
 desc "Test to make sure everything works ok."
 task :test do
   if RUBY_VERSION < "1.9"
-    puts "Ruby needs to be at least 1.9.2 for this script."
+    puts "Ruby needs to be at least 1.9 for this script."
     Kernel.exit -1
   end
 end
