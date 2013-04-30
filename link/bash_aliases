@@ -15,9 +15,7 @@ alias ll='ls -lh'
 alias la='ls -A'
 alias l='ls -CF'
 
-## Extra Cool Alias
-alias c="clear"
-
+## For finding stuff in a directory.
 gfind () { 
    if [ $# -lt 2 ]; then 
       files="*"; 
@@ -50,14 +48,13 @@ alias clean='echo -n "Really clean this directory?";
 # Job Stuff
 alias h='history'
 alias j="jobs -l"
+
+# Directory jumping
 alias pu="pushd"
 alias po="popd"
 
 ## duh
 alias motd="cat /etc/motd"
-
-## For git repos
-alias add_gitignore="echo '*swp' > .gitignore && git add .gitignore && git commit -m 'adds gitignore'"
 
 # For epic typing fail
 alias bim="vim"
