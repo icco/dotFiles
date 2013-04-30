@@ -29,21 +29,18 @@ gfind () {
 
 pidof () { ps -Acw | egrep -i $@ | awk '{print $1}'; }
 
-## IP Address
-#alias echoIP="/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | cut -d' ' -f1"
-alias myip="curl -sL http://natwelch.com/ip"
-
-########### Debian Based Aliases
-
-alias texclean='rm -vf *.toc *.aux *.log *.cp *.fn *.tp *.vr *.pg *.ky'
-alias clean='echo -n "Really clean this directory?";
-        read yorn;
-        if test "$yorn" = "y"; then
-           rm -f \#* *~ .*~ *.bak .*.bak  *.tmp .*.tmp core a.out;
-           echo "Cleaned.";
-        else
-           echo "Not cleaned.";
-        fi';
+clean() {
+  cleanies=`ls \#* *~ .*~ *.bak .*.bak  *.tmp .*.tmp core a.out .DS_Store *.toc *.aux *.log *.cp *.fn *.tp *.vr *.pg *.ky`;
+  echo "Will delete $(echo $cleanies | wc -l) files."
+  echo -n "Really clean this directory? ";
+  read yorn;
+  if test "$yorn" = "y"; then
+    rm -vf $cleanies;
+    echo "Cleaned.";
+  else
+    echo "Not cleaned.";
+  fi
+}
 
 # Job Stuff
 alias h='history'
