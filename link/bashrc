@@ -105,3 +105,6 @@ fi
 # vim: set filetype=sh:
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+# And we're done!
+echo "===> Loaded .bashrc";

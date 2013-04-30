@@ -3,8 +3,6 @@
 # For android
 export PATH=${PATH}:~/tmp/android-sdk-linux_x86/tools
 
-# We use RVM here now, no need to do crazy path mangling.
-
 # Since pbcopy is a OSX thing
 alias pbcopy='xsel --clipboard --input'
 alias pbpaste='xsel --clipboard --output'

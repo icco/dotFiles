@@ -1,5 +1,4 @@
 ## Handy file for aliases, keep them seperate you here?
-## Word to your mother
 
 ## enable color support of ls and also add handy aliases
 if [ "$TERM" != "dumb" ]; then
@@ -7,24 +6,24 @@ if [ "$TERM" != "dumb" ]; then
     alias ls='ls --color=auto'
     alias grep='grep --color=auto'
     alias dir='ls --color=auto --format=vertical'
-    alias vdir='ls --color=auto --format=long'   
+    alias vdir='ls --color=auto --format=long'
 fi
-  
+
 ## some more ls aliases
 alias ll='ls -lh'
 alias la='ls -A'
 alias l='ls -CF'
 
 ## For finding stuff in a directory.
-gfind () { 
-   if [ $# -lt 2 ]; then 
-      files="*"; 
-      search="${1}"; 
-   else 
-      files="${1}"; 
-      search="${2}"; 
-   fi; 
-   find . -name "$files" -a ! -wholename '*/.*' -exec grep -Hin ${3} "$search" {} \; ; 
+gfind () {
+   if [ $# -lt 2 ]; then
+      files="*";
+      search="${1}";
+   else
+      files="${1}";
+      search="${2}";
+   fi;
+   find . -name "$files" -a ! -wholename '*/.*' -exec grep -Hin ${3} "$search" {} \; ;
 }
 
 pidof () { ps -Acw | egrep -i $@ | awk '{print $1}'; }
