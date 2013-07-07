@@ -18,16 +18,16 @@ Host arcplug
   User natwelch
 
 Host *.punchd.net
-  IdentityFile ~/Dropbox/elephant.pem
+  IdentityFile ~/Projects/icco.me/conf/keys/elephant.pem
   User ec2-user
 
 Host *.getpunchd.com
-  IdentityFile ~/Dropbox/elephant.pem
+  IdentityFile ~/Projects/icco.me/conf/keys/elephant.pem
   User ec2-user
 
 Host icco.me
   User ubuntu
-  IdentityFile ~/Dropbox/ec2.pem
+  IdentityFile ~/Projects/icco.me/conf/keys/ec2.pem
 
 Host snowball
   Hostname snowball.icco.me
