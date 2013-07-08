@@ -27,7 +27,7 @@ Host *.getpunchd.com
 
 Host icco.me
   User ubuntu
-  IdentityFile ~/Dropbox/ec2.pem
+  IdentityFile ~/Projects/icco.me/conf/keys/ec2.pem
 
 Host snowball
   Hostname snowball.icco.me
