@@ -39,3 +39,8 @@ Host snowball
 Host athenaeum
   Hostname athenaeum.local
   User root
+
+Host cabin
+  Hostname cabin.icco.me
+  User pi
+  Compression yes
