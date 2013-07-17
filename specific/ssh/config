@@ -1,10 +1,6 @@
 Host *
   KeepAlive yes
 
-Host welchfamilyweb.com
-  User dlnwelch
-  Port 2222
-
 Host abode
   Compression no
   Cipher blowfish-cbc
@@ -16,14 +12,6 @@ Host arcplug
   Cipher blowfish-cbc
   Hostname arcplug.dls.corp.google.com
   User natwelch
-
-Host *.punchd.net
-  IdentityFile ~/Projects/icco.me/conf/keys/elephant.pem
-  User ec2-user
-
-Host *.getpunchd.com
-  IdentityFile ~/Projects/icco.me/conf/keys/elephant.pem
-  User ec2-user
 
 Host icco.me
   User ubuntu
