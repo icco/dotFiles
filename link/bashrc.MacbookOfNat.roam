@@ -1,4 +1,4 @@
-# Bashrc for my macbookair
+# Bashrc for work macbookair
 
 # Try and fix PATH
 export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
@@ -16,17 +16,5 @@ export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
 [[ -s "/Users/nat/.rvm/scripts/rvm" ]] && source "/Users/nat/.rvm/scripts/rvm"  # This loads RVM into a shell session.
-
-# Redis on OSX
-alias redis="redis-server /usr/local/etc/redis.conf"
-
-# Android
-export ANDROID_HOME=`brew --prefix android`
-
-# Postgres.app
-export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
-
-# Heroku app
-export PATH="/usr/local/heroku/bin:$PATH"
 
 # vim: set filetype=sh:
