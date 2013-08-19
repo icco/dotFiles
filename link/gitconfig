@@ -36,3 +36,5 @@
 	stat = true
 [push]
 	default = matching
+[help]
+	autocorrect = 1
