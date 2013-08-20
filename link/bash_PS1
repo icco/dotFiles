@@ -59,7 +59,7 @@ bash_prompt() {
     # extra backslash in front of \$ to make bash colorize the prompt
 
     local GITBRANCH='`git branch 2> /dev/null | grep -e ^* | sed -E  s/^\\\\\*\ \(.+\)$/\(\\\\\1\)\ /`'
-    test -z "$(g4 info | grep 'Client unknown.')" && g4 info | grep -e ^Client\ name: | sed -e "s/^Client name:\ /(/" | sed -e "s/:[0-9]*:citc$/)/"
+    [ -x "$(which g4)" ] && test -z "$(g4 info | grep 'Client unknown.')" && g4 info | grep -e ^Client\ name: | sed -e "s/^Client name:\ /(/" | sed -e "s/:[0-9]*:citc$/)/"
 
     # install prompt
     PS1="${RST}\n[ ${EMR}\$(date +\"%a %b %d %H:%M:%S\")${RST} ] $GITBRANCH \n${RST}[ ${UC}\u${RST}@${UC}\h ${EMB}\${NEW_PWD}${RST} ]${UC}\\$ ${RST}"
