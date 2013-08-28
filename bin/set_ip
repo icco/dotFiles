@@ -1,0 +1,3 @@
+#! /bin/bash
+
+ curl -s -u "nat@natwelch.com:nat100" "https://iwantmyname.com/basicauth/ddns?hostname=$1&myip=`curl -s 'http://checkip.dyndns.org' | sed 's/.*Current IP Address: \([0-9\.]*\).*/\1/g'`"
