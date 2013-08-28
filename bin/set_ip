@@ -5,5 +5,5 @@ IP=`curl -s 'http://checkip.dyndns.org' | sed 's/.*Current IP Address: \([0-9\.]
 if [[ -z "$IP" ]]; then
   echo "IP is empty."
 else
-  curl -s "https://iwantmyname.com/basicauth/ddns?hostname=$1&myip=$IP"
+  curl -s -n "https://iwantmyname.com/basicauth/ddns?hostname=$1&myip=$IP"
 fi
