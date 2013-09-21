@@ -1,21 +1,24 @@
-" Vim filetype plugin
-" Language:		Markdown
-" Maintainer:		Tim Pope <vimNOSPAM@tpope.org>
+" Markdown settings
 
-if exists("b:did_ftplugin")
-  finish
-endif
+highlight clear OverLength " No need to highlight long lines
+setlocal ai formatoptions=tcroqn2 comments=n:>
 
-runtime! ftplugin/html.vim ftplugin/html_*.vim ftplugin/html/*.vim
+" Wrap lines, and break only on whitespace.
+setlocal textwidth=0
+setlocal wrap
+setlocal linebreak
 
-setlocal comments=fb:*,fb:-,fb:+,n:> commentstring=>\ %s
-setlocal formatoptions+=tcqln formatoptions-=r formatoptions-=o
-setlocal formatlistpat=^\\s*\\d\\+\\.\\s\\+\\\|^[-*+]\\s\\+
+" Use the screen-based versions of the most common movement commands instead of
+" the text-based versions.
+noremap <buffer> <Down> gj
+noremap <buffer> j gj
+noremap <buffer> <Up> gk
+noremap <buffer> k gk
+noremap <buffer> 0 g0
+noremap <buffer> ^ g^
+noremap <buffer> $ g$
+noremap <buffer> G G$
 
-if exists('b:undo_ftplugin')
-  let b:undo_ftplugin .= "|setl cms< com< fo< flp<"
-else
-  let b:undo_ftplugin = "setl cms< com< fo< flp<"
-endif
-
-" vim:set sw=2:
+" We still want the syntax coloring as defined in mkd.vim
+syntax enable
+set syntax=markdown
