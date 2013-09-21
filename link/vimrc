@@ -82,6 +82,9 @@ au BufRead,BufNewFile *.g set ft=antlr
 " Less
 au BufRead,BufNewFile *.less set ft=less
 
+" Markdown
+au BufRead,BufNewFile *.md set ft=markdown
+
 " Makefiles
 au BufRead,BufNewFile [Mm]akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
 
