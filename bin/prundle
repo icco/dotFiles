@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+#
+# Author: Nat Welch (nat@natwelch.com)
+
+for i in $(ls ~/Projects); do
+  cd $i && test -e Gemfile && rm -f Gemfile.lock && bundle update
+  cd $i && git add Gemfile* && git commit Gemfile* -m 'bundle update' && git push
+done
