@@ -1,17 +1,23 @@
 Host *
   KeepAlive yes
 
-Host abode
+Host *.corp.google.com
   Compression no
   Cipher blowfish-cbc
-  Hostname abode.sfo.corp.google.com
   User natwelch
 
+Host abode
+  Hostname abode.sfo.corp.google.com
+
+Host abode-tunnel
+  Hostname abode.sfo.corp.google.com
+  DynamicForward 2001
+  ExitOnForwardFailure yes
+  ServerAliveInterval 5
+  ServerAliveCountMax 3
+
 Host arcplug
-  Compression no
-  Cipher blowfish-cbc
   Hostname arcplug.dls.corp.google.com
-  User natwelch
 
 Host icco.me
   User ubuntu
