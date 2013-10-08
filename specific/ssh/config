@@ -1,3 +1,6 @@
+ControlMaster auto
+ControlPath ~/.ssh/tmp/%h_%p_%r
+
 Host *
   KeepAlive yes
 
@@ -33,6 +36,9 @@ Host snowball
 Host athenaeum
   Hostname athenaeum.local
   User root
+
+Host athenaeum-external
+  ProxyCommand ssh -q snowball nc -q0 athenaeum 22
 
 Host cabin
   Hostname cabin.icco.me
