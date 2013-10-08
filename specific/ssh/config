@@ -1,5 +1,6 @@
-ControlMaster auto
-ControlPath ~/.ssh/tmp/%h_%p_%r
+# A neat way to cache connections.
+#ControlMaster auto
+#ControlPath ~/.ssh/tmp/%h_%p_%r
 
 Host *
   KeepAlive yes
