@@ -38,7 +38,8 @@ Host athenaeum
   User root
 
 Host athenaeum-external
-  ProxyCommand ssh -q snowball nc -q0 athenaeum 22
+  User root
+  ProxyCommand ssh -q snowball nc -q0 athenaeum.local 22
 
 Host cabin
   Hostname cabin.icco.me
