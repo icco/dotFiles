@@ -11,9 +11,6 @@ Host *.corp.google.com
   User natwelch
 
 Host abode
-  Hostname abode.sfo.corp.google.com
-
-Host abode2
   Hostname abode2.sfo.corp.google.com
 
 Host abode-tunnel
