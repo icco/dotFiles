@@ -13,6 +13,9 @@ Host *.corp.google.com
 Host abode
   Hostname abode.sfo.corp.google.com
 
+Host abode2
+  Hostname abode2.sfo.corp.google.com
+
 Host abode-tunnel
   Hostname abode.sfo.corp.google.com
   DynamicForward 2001
