@@ -11,7 +11,7 @@ Host *.corp.google.com
   User natwelch
 
 Host abode
-  Hostname abode2.sfo.corp.google.com
+  Hostname abode.sfo.corp.google.com
 
 Host work-tunnel
   Hostname arcplug.dls.corp.google.com
