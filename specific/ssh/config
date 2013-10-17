@@ -23,6 +23,11 @@ Host work-tunnel
 Host arcplug
   Hostname arcplug.dls.corp.google.com
 
+Host icco-me
+  User nat
+  Hostname 192.158.28.236
+  IdentityFile ~/Dropbox/gce_key
+
 Host icco.me
   User ubuntu
   IdentityFile ~/Projects/icco.me/conf/keys/ec2.pem
