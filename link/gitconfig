@@ -10,6 +10,7 @@
 	ci = commit
 	lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %C(blue)by %an%Creset - %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
 	l = log --oneline --graph --decorate --date-order
+	serve = daemon --verbose --export-all --base-path=.git --reuseaddr --strict-paths .git/
 [color]
 	ui = auto
 [color "diff"]
@@ -38,3 +39,5 @@
 	default = matching
 [help]
 	autocorrect = 1
+[daemon]
+	uploadarch = true
