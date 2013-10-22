@@ -3,13 +3,13 @@
 	email = nat@natwelch.com
 
 	# 55F4 7ABE 2101 E282 5908	7826 E2F7 3798 BCDC 9C73
-	signingkey = "Nathaniel Welch (nat,icco) <nat@natwelch.com>"
+	signingkey = "Nat Welch <nat@natwelch.com>"
 [alias]
 	co = checkout
 	st = status -sb
 	ci = commit
 	lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %C(blue)by %an%Creset - %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
-	l = log --oneline --graph --decorate --date-order
+	lola = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %C(blue)by %an%Creset - %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --all
 [color]
 	ui = auto
 [color "diff"]
@@ -38,3 +38,5 @@
 	default = matching
 [help]
 	autocorrect = 1
+[credential]
+	helper = cache

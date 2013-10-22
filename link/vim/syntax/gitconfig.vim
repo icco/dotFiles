@@ -35,3 +35,4 @@ hi def link gitconfigEscape		Delimiter
 hi def link gitconfigError		Error
 
 let b:current_syntax = "gitconfig"
+set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
