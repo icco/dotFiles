@@ -1,15 +1,16 @@
 [user]
 	name = Nat Welch
 	email = nat@natwelch.com
-
 	# 55F4 7ABE 2101 E282 5908	7826 E2F7 3798 BCDC 9C73
 	signingkey = "Nat Welch <nat@natwelch.com>"
 [alias]
-	co = checkout
-	st = status -sb
 	ci = commit
+	co = checkout
+	l = log --oneline --graph --decorate --date-order
 	lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %C(blue)by %an%Creset - %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
 	lola = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %C(blue)by %an%Creset - %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --all
+	serve = daemon --verbose --export-all --base-path=.git --reuseaddr --strict-paths .git/
+	st = status -sb
 [color]
 	ui = auto
 [color "diff"]
@@ -40,3 +41,5 @@
 	autocorrect = 1
 [credential]
 	helper = cache
+[daemon]
+	uploadarch = true
