@@ -15,8 +15,6 @@ fi
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
 # Redis on OSX
 alias redis="redis-server /usr/local/etc/redis.conf"
 
@@ -28,5 +26,7 @@ export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
 
 # Heroku app
 export PATH="/usr/local/heroku/bin:$PATH"
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 # vim: set filetype=sh:
