@@ -6,7 +6,6 @@ export DEBEMAIL="nat@natwelch.com"
 
 # For RVM
 # Load RVM into a shell session *as a function*
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"
 
 # If not running interactively, don't do anything
 [ -z "$PS1" ] && return
@@ -27,7 +26,7 @@ export HISTTIMEFORMAT='%m/%d/%Y %H:%M:%S - '
 #export PROMPT_COMMAND="history -n; history -a"
 
 # give me the correct compiler
-export CC=/usr/bin/gcc
+#export CC=/usr/bin/gcc
 
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
@@ -87,6 +86,10 @@ if [ -f /usr/local/etc/bash_completion ]; then
    echo "===> Loaded /usr/local/etc/bash_completion";
 fi
 
+# If I have a bin in my user directory, check there for commands.
+# We do this late in the file so it takes priority.
+[ -d ~/bin ] && export PATH=~/bin:$PATH
+
 # For certain machines add an additional bashrc
 if [ -f ~/.bashrc.`hostname` ]; then
    . ~/.bashrc.`hostname`
@@ -98,13 +101,7 @@ if [ -f ~/.mybashrc ]; then
    echo "===> Loaded .mybashrc";
 fi
 
-# If I have a bin in my user directory, check there for commands.
-# We do this late in the file so it takes priority.
-[ -d ~/bin ] && PATH=~/bin:$PATH
-
-# vim: set filetype=sh:
-
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-
 # And we're done!
 echo "===> Loaded .bashrc";
+
+# vim: set filetype=sh:
