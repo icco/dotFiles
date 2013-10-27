@@ -38,6 +38,7 @@ Host snowball
   User nat
   Compression yes
   KeepAlive yes
+  IdentityFile ~/.ssh/id_rsa.pub
 
 Host athenaeum
   Hostname athenaeum.local
