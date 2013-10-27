@@ -4,11 +4,11 @@
 export DEBFULLNAME="Nat Welch"
 export DEBEMAIL="nat@natwelch.com"
 
-# For RVM
-# Load RVM into a shell session *as a function*
-
 # If not running interactively, don't do anything
-[ -z "$PS1" ] && return
+if [ -z "$PS1" ]; then
+  [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
+  return
+fi
 
 # don't put duplicate lines in the history. See bash(1) for more options
 export HISTCONTROL=ignoredups
