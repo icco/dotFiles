@@ -15,6 +15,6 @@ fi
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
-[[ -s "/Users/nat/.rvm/scripts/rvm" ]] && source "/Users/nat/.rvm/scripts/rvm"  # This loads RVM into a shell session.
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
 
 # vim: set filetype=sh:
