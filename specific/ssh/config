@@ -46,7 +46,13 @@ Host athenaeum
 
 Host athenaeum-external
   User root
+  IdentityFile ~/.ssh/id_rsa.pub
   ProxyCommand ssh -q snowball nc -q0 athenaeum.local 22
+
+Host gambit
+  User nat
+  IdentityFile ~/.ssh/id_rsa.pub
+  ProxyCommand ssh -q snowball nc -q0 gambit.local 22
 
 Host cabin
   Hostname cabin.icco.me
