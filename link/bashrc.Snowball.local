@@ -2,7 +2,6 @@
 
 # Mac ls does not have color...
 alias ls="`which ls`";
-alias arc='ssh -Y nat@10.0.1.222'
 
 # bash completion in osx, thanks to mac ports
 if [ -f /opt/local/etc/bash_completion ]; then

@@ -15,9 +15,9 @@ fi
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
-
 # Postgres
 PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
+
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
 
 # vim: set filetype=sh:
