@@ -12,6 +12,7 @@ Host *.corp.google.com
 
 Host abode
   Hostname abode.sfo.corp.google.com
+  RemoteForward 3000 localhost:1817
 
 Host work-tunnel
   Hostname arcplug.dls.corp.google.com
