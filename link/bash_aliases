@@ -62,6 +62,9 @@ go () {
    fi
 }
 
+# pgp.io
+alias pgpio="~/Projects/pgpio/pgpio"
+
 # Csh compatability:
 alias unsetenv=unset
 function setenv () {
