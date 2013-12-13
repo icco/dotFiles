@@ -24,6 +24,11 @@ Host work-tunnel
 Host arcplug
   Hostname arcplug.dls.corp.google.com
 
+Host pgp.io
+ Hostname 173.255.117.243
+ IdentityFile ~/.ssh/google_compute_engine
+ User nat
+
 Host icco-me
   User nat
   Hostname 192.158.28.236
