@@ -50,6 +50,9 @@ alias po="popd"
 ## duh
 alias motd="cat /etc/motd"
 
+## pgpio
+alias pgpio="~/Projects/pgpio/pgpio"
+
 # For epic typing fail
 alias bim="vim"
 alias cim="vim"
