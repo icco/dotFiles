@@ -19,4 +19,4 @@ convert -verbose -delay $delay -loop 0 -resize 500 -layers OptimizeTransparency 
   $* $output
 
 # comment out if you don't need CloudApp.
-#cloudapp $output
+cloudapp $output
