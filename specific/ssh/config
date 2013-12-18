@@ -1,9 +1,10 @@
-# A neat way to cache connections.
-#ControlMaster auto
-#ControlPath ~/.ssh/tmp/%h_%p_%r
-
 Host *
-  KeepAlive yes
+  ControlMaster auto
+  ControlPath ~/.ssh/tmp/%r@%h:%p
+  ControlPersist 4h
+  TCPKeepAlive no
+  ServerAliveCountMax 10
+  ServerAliveInterval 60
 
 Host *.corp.google.com
   Compression no
