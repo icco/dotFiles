@@ -1,0 +1,3 @@
+#! /bin/bash
+
+look . | grep -E "^[a-z]{4,6}$" | gshuf | head -4 | xargs
