@@ -1,3 +1,6 @@
+Host github.com
+  ControlMaster no
+
 Host *
   ControlMaster auto
   ControlPath ~/.ssh/tmp/%r@%h:%p
