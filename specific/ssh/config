@@ -36,7 +36,7 @@ Host pgp.io
 Host icco-me
   User nat
   Hostname 192.158.28.236
-  IdentityFile ~/Dropbox/gce_key
+  IdentityFile ~/Dropbox/Keys/gce_key
 
 Host icco.me
   User ubuntu

@@ -1,2 +1,2 @@
-alias docker="sudo lxc-docker"
+alias docker="sudo docker"
 source /home/nat/.rvm/scripts/rvm
