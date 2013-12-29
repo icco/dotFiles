@@ -39,5 +39,3 @@
 	helper = cache
 [daemon]
 	uploadarch = true
-[push]
-	default = simple
