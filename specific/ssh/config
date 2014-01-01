@@ -65,6 +65,6 @@ Host gambit
   ProxyCommand ssh -q snowball nc -q0 gambit.local 22
 
 Host cabin
-  Hostname cabin.icco.me
+  Hostname cabin.welch.io
   User pi
   Compression yes
