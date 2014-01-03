@@ -1,14 +1,3 @@
-Host github.com
-  ControlMaster no
-
-Host *
-  ControlMaster auto
-  ControlPath ~/.ssh/tmp/%r@%h:%p
-  ControlPersist 4h
-  TCPKeepAlive no
-  ServerAliveCountMax 10
-  ServerAliveInterval 60
-
 Host *.corp.google.com
   Compression no
   Cipher blowfish-cbc
