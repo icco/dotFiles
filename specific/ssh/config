@@ -40,7 +40,7 @@ Host icco-me
 
 Host icco.me
   User ubuntu
-  IdentityFile ~/Projects/icco.me/conf/keys/ec2.pem
+  IdentityFile ~/Projects/icco.me/etc/keys/ec2.pem
 
 Host snowball
   Hostname snowball.icco.me
