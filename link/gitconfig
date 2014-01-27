@@ -40,4 +40,4 @@
 [daemon]
 	uploadarch = true
 [push]
-	default = simple
+	default = current
