@@ -1,5 +1,9 @@
 ## Handy file for aliases, keep them seperate you here?
 
+# Write vim log to disk
+# http://www.drbunsen.org/vim-croquet/
+alias vim='vim -w ~/.vimlog "$@"'
+
 ## enable color support of ls and also add handy aliases
 if [ "$TERM" != "dumb" ]; then
     #eval "dircolors -b"
