@@ -16,6 +16,7 @@ Host work-tunnel
 
 Host arcplug
   Hostname arcplug.dls.corp.google.com
+  RemoteForward 3000 localhost:1817
 
 Host pgp.io
  Hostname 173.255.117.243
