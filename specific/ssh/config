@@ -54,4 +54,4 @@ Host cabin
 
 Host raspbmc
   User pi
-  Hostname 192.168.1.71
+  Hostname raspbmc.local
