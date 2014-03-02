@@ -19,6 +19,7 @@ sync_dir () {
     cd $PROJ$f;
     if [ -d $PROJ$f/.git/ ]; then
       git pull;
+      git status -sb
       return 0;
     elif [ -f $PROJ$f/VERSION_MAP ]; then
       g4 sync -q
