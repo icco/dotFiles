@@ -6,3 +6,4 @@ link/vim/.net*
 link/gkrellm/data/*/*
 .rake_t_cache
 .DS_Store
+.bundle
