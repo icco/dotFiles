@@ -63,11 +63,9 @@ alias cim="vim"
 alias vi='vim'
 
 ## nice for gnome based systems.
-go () {
-   if   [ `uname` == "Darwin" ]; then open $@
-   elif [ `uname` == "Linux" ]; then gnome-open $@
-   fi
-}
+if   [ `uname` == "Darwin" ]; then alias go="open"
+elif [ `uname` == "Linux" ]; then alias go="gnome-open"
+fi
 
 # pgp.io
 alias pgpio="~/Projects/pgpio/pgpio"
