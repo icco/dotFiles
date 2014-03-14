@@ -92,8 +92,8 @@ au BufRead,BufNewFile [Mm]akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,
 au BufRead,BufNewFile *.fs set ft=fs
 
 " Text Files
-au BufRead,BufNewFile *.txt highlight clear OverLength
-au BufRead,BufNewFile *.txt set textwidth=80
+"au BufRead,BufNewFile *.txt highlight clear OverLength
+"au BufRead,BufNewFile *.txt set textwidth=80
 
 " God
 au BufRead,BufNewFile *.god set filetype=ruby
