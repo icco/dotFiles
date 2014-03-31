@@ -78,7 +78,7 @@ autocmd BufNewFile,BufRead ~/Projects/apom/* set tabstop=3 shiftwidth=3 softtabs
 
 " Go
 " Format on Save (http://stackoverflow.com/questions/10969366/vim-automatically-formatting-golang-source-code-when-saving)
-autocmd FileType go autocmd BufWritePre <buffer> execute "normal! mz:mkview\<esc>:Fmt\<esc>:loadview\<esc>`z"
+autocmd FileType go autocmd BufWritePre <buffer> Fmt
 
 " Antlr
 au BufRead,BufNewFile *.g set ft=antlr
