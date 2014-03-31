@@ -7,3 +7,4 @@ link/gkrellm/data/*/*
 .rake_t_cache
 .DS_Store
 .bundle
+link/vim/view/~*
