@@ -70,6 +70,9 @@ function errexit() {
   exit "${code}"
 }
 
+# Set Gopath
+export GOPATH=$HOME/.gopath
+
 ## PS1
 # I put PS1 in a sepeerate file
 if [ -f ~/.bash_PS1 ]; then
