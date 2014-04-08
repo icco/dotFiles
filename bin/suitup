@@ -4,10 +4,14 @@
 #
 # Author: Nat Welch (nat@natwelch.com)
 
+# Google Specific stuff.
 if [ -x /google/data/ro/projects/loas/loas_check ]; then
   if ! /google/data/ro/projects/loas/loas_check &> /dev/null; then
     prodaccess -g
   fi
+
+  # Delete unneeded clients!
+  citctools cleanup -q
 fi
 
 # First Param is directory name
