@@ -1,5 +1,9 @@
 ## Handy file for aliases, keep them seperate you here?
 
+# Write vim log to disk
+# http://www.drbunsen.org/vim-croquet/
+alias vim='vim -w ~/.vimlog "$@"'
+
 ## enable color support of ls and also add handy aliases
 if [ "$TERM" != "dumb" ]; then
     #eval "dircolors -b"
@@ -57,13 +61,6 @@ alias pgpio="~/Projects/pgpio/pgpio"
 alias bim="vim"
 alias cim="vim"
 alias vi='vim'
-
-## nice for gnome based systems.
-go () {
-   if   [ `uname` == "Darwin" ]; then open $@
-   elif [ `uname` == "Linux" ]; then gnome-open $@
-   fi
-}
 
 # pgp.io
 alias pgpio="~/Projects/pgpio/pgpio"

@@ -18,6 +18,9 @@ export LSCOLORS=ExFxCxDxBxegedabagacad
 # Postgres
 PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
 
+# Android
+export ANDROID_HOME=/usr/local/opt/android-sdk
+
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
 
 # vim: set filetype=sh:

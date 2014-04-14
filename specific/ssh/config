@@ -1,17 +1,10 @@
-# A neat way to cache connections.
-#ControlMaster auto
-#ControlPath ~/.ssh/tmp/%h_%p_%r
-
-Host *
-  KeepAlive yes
-
 Host *.corp.google.com
   Compression no
   Cipher blowfish-cbc
   User natwelch
 
 Host abode
-  Hostname abode.sfo.corp.google.com
+  Hostname abode.lon.corp.google.com
   RemoteForward 3000 localhost:1817
 
 Host work-tunnel
@@ -23,6 +16,7 @@ Host work-tunnel
 
 Host arcplug
   Hostname arcplug.dls.corp.google.com
+  RemoteForward 3000 localhost:1817
 
 Host pgp.io
  Hostname 173.255.117.243
@@ -32,35 +26,32 @@ Host pgp.io
 Host icco-me
   User nat
   Hostname 192.158.28.236
-  IdentityFile ~/Dropbox/gce_key
+  IdentityFile ~/Dropbox/Keys/gce_key
 
 Host icco.me
   User ubuntu
-  IdentityFile ~/Projects/icco.me/conf/keys/ec2.pem
+  IdentityFile ~/Projects/icco.me/etc/keys/ec2.pem
 
 Host snowball
   Hostname snowball.icco.me
-  Port 4022
+  Port 22
   User nat
   Compression yes
   KeepAlive yes
-  IdentityFile ~/.ssh/id_rsa.pub
-
-Host athenaeum
-  Hostname athenaeum.local
-  User root
 
 Host athenaeum-external
   User root
-  IdentityFile ~/.ssh/id_rsa.pub
   ProxyCommand ssh -q snowball nc -q0 athenaeum.local 22
 
 Host gambit
   User nat
-  IdentityFile ~/.ssh/id_rsa.pub
   ProxyCommand ssh -q snowball nc -q0 gambit.local 22
 
 Host cabin
-  Hostname cabin.icco.me
+  Hostname cabin.welch.io
   User pi
   Compression yes
+
+Host raspbmc
+  User pi
+  Hostname raspbmc.local

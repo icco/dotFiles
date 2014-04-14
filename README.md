@@ -20,11 +20,8 @@ Apparently other people have made similar things to my infect script.
  * [holman/dotfiles](https://github.com/holman/dotfiles)
  * [ryanb/dotfiles](https://github.com/ryanb/dotfiles)
 
-In the future, it'd be really cool to set up GitHub with my public key, all through a script. Having to set up permissions before I infect is a pita.
- 
-## TODO
+This only initializes the configuration of a user. I assume you've used something like [Fog](http://fog.io) to automate your system deployment and configuration.
 
- * Figure out how to have vim deal with rackup files nicely.
 
 ## Assumptions
 

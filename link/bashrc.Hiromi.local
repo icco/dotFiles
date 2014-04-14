@@ -22,10 +22,12 @@ alias redis="redis-server /usr/local/etc/redis.conf"
 export ANDROID_HOME=`brew --prefix android`
 
 # Postgres.app
-export PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
+export PATH="/Applications/Postgres.app/Contents/Versions/9.3/bin:$PATH"
 
 # Heroku app
 export PATH="/usr/local/heroku/bin:$PATH"
+
+export ANDROID_KEYSTORE="/Users/nat/Dropbox/android_keys.jks"
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 

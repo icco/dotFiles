@@ -76,6 +76,10 @@ autocmd BufNewFile,BufRead ~/Projects/apom/* set tabstop=3 shiftwidth=3 softtabs
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Extra Language Support
 
+" Go
+" Format on Save (http://stackoverflow.com/questions/10969366/vim-automatically-formatting-golang-source-code-when-saving)
+autocmd FileType go autocmd BufWritePre <buffer> Fmt
+
 " Antlr
 au BufRead,BufNewFile *.g set ft=antlr
 
@@ -92,8 +96,8 @@ au BufRead,BufNewFile [Mm]akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,
 au BufRead,BufNewFile *.fs set ft=fs
 
 " Text Files
-au BufRead,BufNewFile *.txt highlight clear OverLength
-au BufRead,BufNewFile *.txt set textwidth=80
+"au BufRead,BufNewFile *.txt highlight clear OverLength
+"au BufRead,BufNewFile *.txt set textwidth=80
 
 " God
 au BufRead,BufNewFile *.god set filetype=ruby
@@ -110,6 +114,7 @@ au BufRead,BufNewFile *.proto set ft=proto
 
 " Python Templates
 au BufRead,BufNewFile *.dtl set ft=htmldjango
+au BufRead,BufNewFile *.template set ft=htmldjango
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Key Bindings
