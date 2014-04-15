@@ -28,10 +28,6 @@ Host icco-me
   Hostname 192.158.28.236
   IdentityFile ~/Dropbox/Keys/gce_key
 
-Host icco.me
-  User ubuntu
-  IdentityFile ~/Projects/icco.me/etc/keys/ec2.pem
-
 Host snowball
   Hostname snowball.icco.me
   Port 22
