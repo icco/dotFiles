@@ -23,10 +23,10 @@ Host pgp.io
  IdentityFile ~/.ssh/google_compute_engine
  User nat
 
-Host icco-me
+Host icco.me
   User nat
-  Hostname 192.158.28.236
   IdentityFile ~/Dropbox/Keys/gce_key
+  #Hostname 192.158.28.236
 
 Host snowball
   Hostname snowball.icco.me
