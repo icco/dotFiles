@@ -35,13 +35,13 @@ Host snowball
   Compression yes
   KeepAlive yes
 
-Host athenaeum-external
+Host athenaeum
   User root
   ProxyCommand ssh -q snowball nc -q0 athenaeum.local 22
 
 Host gambit
   User nat
-  ProxyCommand ssh -q snowball nc -q0 gambit.local 22
+  Hostname Gambit.local
 
 Host cabin
   Hostname cabin.welch.io
