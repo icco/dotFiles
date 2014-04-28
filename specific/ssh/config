@@ -35,9 +35,20 @@ Host snowball
   Compression yes
   KeepAlive yes
 
+Host london
+  Hostname london.welch.io
+  Port 22
+  User nat
+  Compression yes
+  KeepAlive yes
+
 Host athenaeum
   User root
   ProxyCommand ssh -q snowball nc -q0 athenaeum.local 22
+
+Host cask
+  User admin
+  Hostname cask.local
 
 Host gambit
   User nat
@@ -47,7 +58,3 @@ Host cabin
   Hostname cabin.welch.io
   User pi
   Compression yes
-
-Host raspbmc
-  User pi
-  Hostname raspbmc.local
