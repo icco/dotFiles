@@ -55,18 +55,6 @@ set statusline=%<%f\ %m\ %h%r%=%b\ 0x%B\ \ %l,%c%V\ %P\ of\ %L
 " Puts swapfiles in /tmp instead of current directory.
 set directory=/tmp
 
-"""""
-" Take over the ! to always open output in a new tab
-function! TabMessage(cmd)
-  redir => message
-  silent execute a:cmd
-  redir END
-  tabnew
-  silent put=message
-  set nomodified
-endfunction
-command! -nargs=+ -complete=command TabMessage call TabMessage(<q-args>)
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Color Stuff
 
