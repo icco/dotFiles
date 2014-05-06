@@ -1,145 +1,105 @@
-" Google Closure templates syntax file.
-" Language: Soy
-" Maintainer: Dugan Chen (https://github.com/duganchen)
+" Vim syntax file
+" Language:	Soy Templates
+" Maintainer:	Rodrigo Machado rcmachado@gmail.com
+" Last Change:  Thu Apr 15 16:59:00 GMT 2010
+" Filenames:    *.soy
+" URL:		http://gist.github.com/gists/367358/download
 "
-if exists("b:current_syntax")
-	finish
+" Based on Smarty.vim
+
+" For version 5.x: Clear all syntax items
+" For version 6.x: Quit when a syntax file was already loaded
+if !exists("main_syntax")
+  if version < 600
+    syntax clear
+  elseif exists("b:current_syntax")
+    finish
+  endif
+  let main_syntax = 'soy'
 endif
 
-if version < 600
-  syntax clear
-elseif exists("b:current_syntax")
-  finish
+syn case ignore
+
+runtime! syntax/html.vim
+"syn cluster htmlPreproc add=smartyUnZone
+
+syn keyword soyTagName template literal print msg namespace
+syn keyword soyTagName if elseif else switch case default
+syn keyword soyTagName foreach ifempty for in call param css
+
+syn keyword smartyInFunc ne eq == != > < >= <= === ! %
+
+" template tag
+syn match soyProperty contained "private="
+syn match soyProperty contained "autoescape="
+" msg tag
+syn match soyProperty contained "desc="
+syn match soyProperty contained "meaning="
+" call tag
+syn match soyProperty contained "data="
+
+
+
+
+syn match smartyConstant "\$smarty" 
+
+syn match smartyDollarSign      contained "\$"
+syn match smartyMaybeDollarSign contained "\([^\\]\|\\\\\)\@<=\$"
+
+syn match smartyVariable      contained "\$\@<=\h\w*"
+syn match smartyVariable      contained "\(\$\h\w*\(\.\|\->\|\[.*\]\(\.\|\->\)\)\)\@<=\w*"
+syn match smartyMaybeVariable contained "\(\(^\|[^\\]\|\\\\\)\$\)\@<=\h\w*"
+
+
+syn match smartyEscapedVariable contained "\\$\h\w*"
+
+syn region smartyInBracket    matchgroup=Constant start=+\[+ end=+\]+ contains=smartyVariable contained
+syn region smartyInBacktick   matchgroup=Constant start=+\`+ end=+\`+ contains=smartyVariable contained
+syn region smartyStringDouble matchgroup=Constant start=+"+  end=+"+  contains=smartyMaybeVariable, smartyInBacktick, smartyMaybeDollarSign contained keepend
+
+syn match smartyGlue "\.\|\->"
+
+
+syn region smartyModifier  matchgroup=Statement start=+|+   end=+\ze:\|\>+
+syn region smartyParameter matchgroup=Statement start=+:+   end=+\s\|}+ contains=smartyVariable, smartyDollarSign, smartyGlue, smartyInBracket, smartyStringDouble
+syn region smartyZone     matchgroup=Statement   start="{"   end="}" contains=smartyParameter, soyProperty, smartyGlue, smartyModifier, smartyDollarSign, smartyInBracket, smartyStringDouble, smartyVariable, smartyString, smartyBlock, soyTagName, smartyConstant, smartyInFunc
+syn region smartyComment  matchgroup=Comment   start="/\*\*" end="\*/"
+syn region smartyComment  matchgroup=Comment   start="//" skip="\\$" end="$"
+
+syn region  htmlString   contained start=+"+ end=+"+ contains=htmlSpecialChar,javaScriptExpression,@htmlPreproc,smartyZone
+syn region  htmlString   contained start=+'+ end=+'+ contains=htmlSpecialChar,javaScriptExpression,@htmlPreproc,smartyZone
+  syn region htmlLink start="<a\>\_[^>]*\<href\>" end="</a>"me=e-4 contains=@Spell,htmlTag,htmlEndTag,htmlSpecialChar,htmlPreProc,htmlComment,javaScript,@htmlPreproc,smartyZone
+
+
+if version >= 508 || !exists("did_smarty_syn_inits")
+  if version < 508
+    let did_smarty_syn_inits = 1
+    command -nargs=+ HiLink hi link <args>
+  else
+    command -nargs=+ HiLink hi def link <args>
+  endif
+
+  HiLink soyTagName         Function
+  HiLink soyProperty        Type
+  HiLink smartyComment         Comment
+  HiLink smartyInFunc          Function
+  HiLink smartyBlock           Constant
+  HiLink smartyGlue            Statement
+  HiLink smartyVariable        Identifier
+  HiLink smartyDollarSign      Statement
+  HiLink smartyMaybeVariable   Identifier
+  HiLink smartyMaybeDollarSign Statement
+  HiLink smartyStringDouble    Special
+  HiLink smartyInBracket       PreProc
+  HiLink smartyInBacktick      Statement
+  HiLink smartyModifier        Special
+  delcommand HiLink
+endif 
+
+let b:current_syntax = "soy"
+
+if main_syntax == 'soy'
+  unlet main_syntax
 endif
 
-syntax clear
-syntax case match
-
-syntax keyword soyConstant contained null
-syntax keyword soyConstant contained false
-syntax keyword soyConstant contained true
-
-syntax keyword soyFunction contained isFirst
-syntax keyword soyFunction contained isLast
-syntax keyword soyFunction contained index
-syntax keyword soyFunction contained hasData
-syntax keyword soyFunction contained length
-syntax keyword soyFunction contained round
-syntax keyword soyFunction contained floor
-syntax keyword soyFunction contained ceiling
-syntax keyword soyFunction contained min
-syntax keyword soyFunction contained max
-syntax keyword soyFunction contained randomInt
-syntax keyword soyFunction contained bidiGlobalDir
-syntax keyword soyFunction contained bidiDirAttr
-syntax keyword soyFunction contained bidiMark
-syntax keyword soyFunction contained bidiMarkAfter
-syntax keyword soyFunction contained bidiStartEdge
-syntax keyword soyFunction contained bidiEndEdge
-syntax keyword soyFunction contained bidiTextDir
-
-syntax keyword soyStatement contained namespace
-syntax keyword soyStatement contained template
-syntax keyword soyStatement contained delpackage
-syntax keyword soyStatement contained deltemplate
-
-syntax keyword soyKeyword contained literal
-syntax keyword soyKeyword contained print
-syntax keyword soyKeyword contained msg
-syntax keyword soyKeyword contained call
-syntax keyword soyKeyword contained delcall
-syntax keyword soyKeyword contained param
-syntax keyword soyKeyword contained let
-syntax keyword soyKeyword contained css
-
-syntax keyword soyConditional contained if
-syntax keyword soyConditional contained elseif
-syntax keyword soyConditional contained else
-syntax keyword soyConditional contained switch
-syntax keyword soyConditional contained case
-syntax keyword soyConditional contained default
-syntax keyword soyConditional contained ifempty
-
-syntax keyword soyRepeat contained foreach
-syntax keyword soyRepeat contained for
-syntax keyword soyRepeat contained in
-syntax keyword soyRepeat contained range
-
-syntax keyword soyCharacter contained sp
-syntax keyword soyCharacter contained nil
-syntax keyword soyCharacter contained r
-syntax keyword soyCharacter contained n
-syntax keyword soyCharacter contained t
-syntax keyword soyCharacter contained lb
-syntax keyword soyCharacter contained rb
-
-syntax keyword soyDirective contained private
-syntax keyword soyDirective contained autoescape
-syntax keyword soyDirective contained noAutoescape
-syntax keyword soyDirective contained id
-syntax keyword soyDirective contained escapeCssString
-syntax keyword soyDirective contained escapeHtml
-syntax keyword soyDirective contained escapeHtmlRcdata
-syntax keyword soyDirective contained escapeHtmlAttribute
-syntax keyword soyDirective contained escapeHtmlAttributeNospace
-syntax keyword soyDirective contained escapeUri
-syntax keyword soyDirective contained escapeJs
-syntax keyword soyDirective contained escapeJsRegex
-syntax keyword soyDirective contained escapeJsString
-syntax keyword soyDirective contained escapeJsValue
-syntax keyword soyDirective contained truncate
-syntax keyword soyDirective contained insertWordBreaks
-syntax keyword soyDirective contained changeNewlineToBr
-syntax keyword soyDirective contained desc
-syntax keyword soyDirective contained meaning
-syntax keyword soyDirective contained data
-syntax keyword soyDirective contained kind
-syntax keyword soyDirective contained variant
-syntax keyword soyDirective contained bidiSpanWrap
-syntax keyword soyDirective contained bidiUnicodeWrap
-
-syntax match soySpecialComment /@param?\?/ contained
-
-syntax region soyCommand start="{" end="}" contains=soyKeyword, soyDirective, soyIdentifier, soyString, soyTemplate, soyConstant, soyInteger, soyCharacter, soyFloat, soySci, soyOperator, soyFunction, soyRepeat, soyConditional, soyStatement, soyLabel
-
-syntax region soyString contained start="\'" end="\'"
-syntax region soyString contained start="\"" end="\""
-
-syntax match soyIdentifier /\$[a-zA-Z0-9._]*\>/ contained
-syntax region soyComment start=/\/\*/ end='\\*\/' contains=soySpecialComment
-
-syntax match soyComment /\/\/.*$/
-syntax match soyTemplate /\s\+\.\w\+\>/ contained
-
-syntax match soyInteger /\-\?\(0x\)\?[A-F0-9]\+\>/ contained
-
-syntax match soyNumber /\-\?\d\+\(e\-\?\d\+\)\?\>/ contained
-
-syntax match soyFloat /\-\?\d\+\.\d\+\>/ contained
-syntax match soySci /\-\?\d\+e\-\?\d\+\>/ contained
-
-syntax match soyOperator /\<\(not\|and\|or\)\>/ contained
-
-syntax match soyLabel /\<\w\+:/ contained
-
-" Yes, this causes the - in -1 to show as an operator. This is a bug.
-syntax match soyOperator /[-*/%+<>=!?:]/ contained
-
-highlight def link soyOperator Operator
-highlight def link soyKeyword Statement
-highlight def link soyDirective Type
-highlight def link soyIdentifier Identifier
-highlight def link soyString String
-highlight def link soyComment Comment
-highlight def link soyTemplate Identifier
-highlight def link soyInteger Number
-highlight def link soyFloat Float
-highlight def link soySci Float
-highlight def link soyConstant Constant
-highlight def link soyCharacter Character
-highlight def link soyFunction Function
-highlight def link soyRepeat Repeat
-highlight def link soyConditional Conditional
-highlight def link soyStatement Statement
-highlight def link soySpecialComment SpecialComment
-highlight def link soyLabel Identifier
+" vim: ts=8
