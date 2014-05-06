@@ -1,105 +1,156 @@
-" Vim syntax file
-" Language:	Soy Templates
-" Maintainer:	Rodrigo Machado rcmachado@gmail.com
-" Last Change:  Thu Apr 15 16:59:00 GMT 2010
-" Filenames:    *.soy
-" URL:		http://gist.github.com/gists/367358/download
-"
-" Based on Smarty.vim
+" Copyright (c) 2008 Google, Inc.
+" Vim syntax file for Soy template system.  This primarily uses the Soy V1
+" syntax, but some V2-specific syntax highlighting have been added.
+" Author: Sen-po Hu <senpo@google.com>
+" Documentation: http://goto/soy
 
-" For version 5.x: Clear all syntax items
-" For version 6.x: Quit when a syntax file was already loaded
-if !exists("main_syntax")
-  if version < 600
-    syntax clear
-  elseif exists("b:current_syntax")
-    finish
-  endif
-  let main_syntax = 'soy'
+if exists("b:current_syntax")
+  finish
 endif
 
-syn case ignore
+syn clear
 
 runtime! syntax/html.vim
-"syn cluster htmlPreproc add=smartyUnZone
 
-syn keyword soyTagName template literal print msg namespace
-syn keyword soyTagName if elseif else switch case default
-syn keyword soyTagName foreach ifempty for in call param css
+command! -nargs=+ SoyHiLink hi def link <args>
 
-syn keyword smartyInFunc ne eq == != > < >= <= === ! %
+" Soy uses the '-' character in keywords.
+setlocal iskeyword+=-
 
-" template tag
-syn match soyProperty contained "private="
-syn match soyProperty contained "autoescape="
-" msg tag
-syn match soyProperty contained "desc="
-syn match soyProperty contained "meaning="
-" call tag
-syn match soyProperty contained "data="
+" Soy comments and documentations.
+" ================================
 
+" soyComment: Matches both styles of comments (//, /* .. */)
+syn region soyComment start=/\m\/\// end=/\m$/
+    \ contains=soyCommentLinks containedin=htmlHead,htmlLink
+syn region soyComment start=/\m\/\*/ end=/\m\*\//
+    \ contains=soyDocumentationParam,soyCommentLinks
+    \ containedin=htmlHead,htmlLink
+" soyDocumentation*
+" /**
+"  * @param foo {number} desc.
+"  * @param? bar {string} desc - see http://www.bar.com/
+"  */
+" soyDocumentationParam: Matches the '@param' and '@param?'
+syn match soyDocumentationParam /\m@param\(?\)\?/ nextgroup=soyDocumentationVar skipwhite
+" soyDocumentationVar: Matches the 'foo' and 'bar'
+syn match soyDocumentationVar /\m\<\w\+\>/ contained nextgroup=soyDocumentationTypeWrapper skipwhite
+" soyDocumentationTypeWrapper: Matches the '{' and '}'
+syn region soyDocumentationTypeWrapper matchgroup=soyDocumentationParam start=/\m{/ end=/\m}/ contained contains=soyDocumentationType skipwhite keepend
+" soyDocumentationType: Matches the 'number' and 'string'
+syn match soyDocumentationType /\m\<.\+\>/ contained
+" soyCommentLinks: Matches 'http://www.bar.com/'
+syn match soyCommentLinks /\mhttps\?:\/\/\S\+/ contained
 
+" Defining expressions (soyExpr.*)
+" ================================
+" Standard variables and constants
 
+" soyExprString: Matches string literals that uses single/double quotes.
+syn region soyExprString contained start=/\m"/ skip=/\m\\"/ end=/\m"/
+syn region soyExprString contained start=/\m'/ skip=/\m\\'/ end=/\m'/
+" soyExprVar: Matches all variables, such as: $foo?.bar?.baz[$xyz].
+syn match soyExprVar contained /\m$\w\+[[:alnum:]\[\]?.$:_]*/
+" soyExprConstants: Matches injected params and numeric constants.
+syn match soyExprConstants contained /\m$\<ij\(\.\|\w\)*\>/ " Injected params
+syn match soyExprConstants contained /\m\<\d\+\>/
 
-syn match smartyConstant "\$smarty" 
+" Operators and functions
+" ================================
 
-syn match smartyDollarSign      contained "\$"
-syn match smartyMaybeDollarSign contained "\([^\\]\|\\\\\)\@<=\$"
+" soyExprOperator: Matches all valid soy operators.
+syn keyword soyExprOperator contained is and not or
+syn match soyExprOperator contained /\m\(-\|\*\|\/\|%\|+\|<\|>\|<=\|>=\|==\|!=\|?\|:\|&&\|||\)/
+" soyExprFunc, soyFuncInner: Matches all (even nested) function calls.
+syn keyword soyExprFunc contained isFirst isLast index length hasData keys
+    \ round floor ceiling min max randomInt remainder isNonnull
+    \ nextgroup=soyFuncInner skipwhite
+syn region soyFuncInner start=/\m(/ end=/\m)/ matchgroup=soyFuncInner contained contains=soyExpr.*
 
-syn match smartyVariable      contained "\$\@<=\h\w*"
-syn match smartyVariable      contained "\(\$\h\w*\(\.\|\->\|\[.*\]\(\.\|\->\)\)\)\@<=\w*"
-syn match smartyMaybeVariable contained "\(\(^\|[^\\]\|\\\\\)\$\)\@<=\h\w*"
+" Commands
+" ================================
+" Matches all commands supported by soy.  Where appropriate, the command will
+" specify the argument that may appear in valid soy code.
+" Note: soyExpr.* is used to match any expression specified in the two sections
+"     above.
+" Note: The soyPrintCommand has to be first as the last pattern defined always
+"     take priority over patterns that were defined earlier.
+syn region soyPrintCommand matchgroup=soyBraces start=/\m{\(print\)\?/ end=/\m}/ contains=soyExpr.*
+syn region soyParamDefCommand matchgroup=soyBraces
+    \ start=/\m{@param?\?/ end=/\m}/
+syn region soyInjectDefCommand matchgroup=soyBraces start=/\m{@inject/ end=/\m}/
+syn region soyDelpackageCommand matchgroup=soyBraces start=/\m{delpackage/ end=/\m}/
+syn region soyNamespaceCommand matchgroup=soyBraces
+    \ start=/\m{namespace/ end=/\m}/
+    \ contains=soyNamespaceName,soyNamespaceArg,soyExprString
+syn region soyAliasCommand matchgroup=soyBraces start=/\m{alias/ end=/\m}/
+    \ contains=soyNamespaceName,soyAliasSubCommand
+syn region soyTemplateCommand matchgroup=soyBraces start=/\m{\(del\)\?template/ end=/\m}/ contains=soyTemplateArg,soyExprString,soyTemplateName
+syn region soyCallCommand matchgroup=soyBraces start=/\m{\(del\)\?call/ end=/\m\/\?}/ contains=soyCallArg,soyExprString,soyTemplateName
+syn region soyParamCommand matchgroup=soyBraces start=/\m{param/ end=/\m\/\?}/ contains=soyParamArg,soyExpr.*
+syn region soyLetCommand matchgroup=soyBraces start=/\m{let/ end=/\m\/\?}/ contains=soyExpr.*
+syn region soyMsgCommand matchgroup=soyBraces
+    \ start=/\m{\(fallback\)\?msg/ end=/\m}/ contains=soyMsgArg,soyExprString
+syn region soyCondCommand matchgroup=soyBraces start=/\m{\(if\|elseif\|else\)/ end=/\m}/ contains=soyExpr.*
+syn region soyLoopCommand matchgroup=soyBraces start=/\m{for\(each\)\?/ end=/\m}/ contains=soyLoopSubCommand,soyExpr.*
+syn region soySwitchCommand matchgroup=soyBraces start=/\m{switch/ end=/\m}/ contains=soyExpr.*
+syn region soyCaseCommand matchgroup=soyBraces start=/\m{case/ end=/\m}/ contains=soyExpr.*
+syn region soyCssCommand matchgroup=soyBraces start=/\m{css/ end=/\m}/
+syn region soyPluralCommand matchgroup=soyBraces start=/\m{plural/ end=/\m}/
+    \ contains=soyPluralArg,soyExpr.*
+syn region soySelectCommand matchgroup=soyBraces start=/\m{select/ end=/\m}/
+    \ contains=soyExpr.*
+syn match soyDefaultCommand /\m{default}/
+syn region soyLiteralText matchgroup=soyLiteralCommand
+    \ start=/\m{literal}/ end=/\m{\/literal}/
+" soyEndCommand: Matches any 'end' command, i.e. {/if}
+syn match soyEndCommand /\m{\/.*}/
 
+" Arguments that appear in soy commands
+" ================================
+" The arguments that is used by commands in the above section.
+syn keyword soyNamespaceArg contained autoescape nextgroup=soyEqualInArg skipwhite
+syn match soyNamespaceName /\m\(\.\|\w\)\+/ contained
+syn keyword soyAliasSubCommand contained as
+syn keyword soyTemplateArg contained name override autoescape returntype codestyle private kind nextgroup=soyEqualInArg skipwhite
+syn match soyTemplateName /\m\(\.\|\w\)\+/ contained
+syn keyword soyCallArg contained function data never-codestyle-stringbuilder phname nextgroup=soyEqualInArg skipwhite
+syn keyword soyParamArg contained key value
+syn keyword soyMsgArg contained desc hidden meaning genders
+syn keyword soyLoopSubCommand contained in range
+syn match soyEqualInArg /\m=/ contained
+syn keyword soyPluralArg contained offset
 
-syn match smartyEscapedVariable contained "\\$\h\w*"
+" Non expression constants
+" ================================
+syn match soyCharConstants /\m{\(sp\|nil\|\\r\|\\n\|\\t\|lb\|rb\)}/
 
-syn region smartyInBracket    matchgroup=Constant start=+\[+ end=+\]+ contains=smartyVariable contained
-syn region smartyInBacktick   matchgroup=Constant start=+\`+ end=+\`+ contains=smartyVariable contained
-syn region smartyStringDouble matchgroup=Constant start=+"+  end=+"+  contains=smartyMaybeVariable, smartyInBacktick, smartyMaybeDollarSign contained keepend
-
-syn match smartyGlue "\.\|\->"
-
-
-syn region smartyModifier  matchgroup=Statement start=+|+   end=+\ze:\|\>+
-syn region smartyParameter matchgroup=Statement start=+:+   end=+\s\|}+ contains=smartyVariable, smartyDollarSign, smartyGlue, smartyInBracket, smartyStringDouble
-syn region smartyZone     matchgroup=Statement   start="{"   end="}" contains=smartyParameter, soyProperty, smartyGlue, smartyModifier, smartyDollarSign, smartyInBracket, smartyStringDouble, smartyVariable, smartyString, smartyBlock, soyTagName, smartyConstant, smartyInFunc
-syn region smartyComment  matchgroup=Comment   start="/\*\*" end="\*/"
-syn region smartyComment  matchgroup=Comment   start="//" skip="\\$" end="$"
-
-syn region  htmlString   contained start=+"+ end=+"+ contains=htmlSpecialChar,javaScriptExpression,@htmlPreproc,smartyZone
-syn region  htmlString   contained start=+'+ end=+'+ contains=htmlSpecialChar,javaScriptExpression,@htmlPreproc,smartyZone
-  syn region htmlLink start="<a\>\_[^>]*\<href\>" end="</a>"me=e-4 contains=@Spell,htmlTag,htmlEndTag,htmlSpecialChar,htmlPreProc,htmlComment,javaScript,@htmlPreproc,smartyZone
-
-
-if version >= 508 || !exists("did_smarty_syn_inits")
-  if version < 508
-    let did_smarty_syn_inits = 1
-    command -nargs=+ HiLink hi link <args>
-  else
-    command -nargs=+ HiLink hi def link <args>
-  endif
-
-  HiLink soyTagName         Function
-  HiLink soyProperty        Type
-  HiLink smartyComment         Comment
-  HiLink smartyInFunc          Function
-  HiLink smartyBlock           Constant
-  HiLink smartyGlue            Statement
-  HiLink smartyVariable        Identifier
-  HiLink smartyDollarSign      Statement
-  HiLink smartyMaybeVariable   Identifier
-  HiLink smartyMaybeDollarSign Statement
-  HiLink smartyStringDouble    Special
-  HiLink smartyInBracket       PreProc
-  HiLink smartyInBacktick      Statement
-  HiLink smartyModifier        Special
-  delcommand HiLink
-endif 
+SoyHiLink soyComment Comment
+SoyHiLink soyDocumentationParam Tag
+SoyHiLink soyExprConstants Constant
+SoyHiLink soyExprString String
+SoyHiLink soyDocumentationVar Identifier
+SoyHiLink soyEqualInArg Function
+SoyHiLink soyFuncInner Function
+SoyHiLink soyTemplateName Function
+SoyHiLink soyNamespaceName Function
+SoyHiLink soyExprVar Type
+SoyHiLink soyNamespaceArg Type
+SoyHiLink soyTemplateArg Type
+SoyHiLink soyCallArg Type
+SoyHiLink soyParamArg Type
+SoyHiLink soyMsgArg Type
+SoyHiLink soyDocumentationType Type
+SoyHiLink soyPluralArg Type
+SoyHiLink soyBraces Statement
+SoyHiLink soyCharConstants Constant
+SoyHiLink soyExprOperator Operator
+SoyHiLink soyLoopSubCommand Repeat
+SoyHiLink soyEndCommand Statement
+SoyHiLink soyExprFunc Statement
+SoyHiLink soyDefaultCommand Statement
+SoyHiLink soyLiteralCommand Statement
+SoyHiLink soyAliasSubCommand Statement
+SoyHiLink soyCommentLinks Underlined
 
 let b:current_syntax = "soy"
-
-if main_syntax == 'soy'
-  unlet main_syntax
-endif
-
-" vim: ts=8
