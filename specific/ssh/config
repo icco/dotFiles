@@ -5,7 +5,8 @@ Host *.corp.google.com
 
 Host abode
   Hostname abode.lon.corp.google.com
-  RemoteForward 3000 localhost:1817
+  ForwardAgent yes
+  PreferredAuthentications publickey,gssapi-with-mic,hostbased,keyboard-interactive,password
 
 Host work-tunnel
   Hostname arcplug.dls.corp.google.com
@@ -16,7 +17,8 @@ Host work-tunnel
 
 Host arcplug
   Hostname arcplug.dls.corp.google.com
-  RemoteForward 3000 localhost:1817
+  ForwardAgent yes
+  PreferredAuthentications publickey,gssapi-with-mic,hostbased,keyboard-interactive,password
 
 Host pgp.io
  Hostname 173.255.117.243
