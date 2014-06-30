@@ -1,5 +1,7 @@
 # Bashrc for my macbookair
 
+export TZ="UTC"
+
 # Try and fix PATH
 export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 
