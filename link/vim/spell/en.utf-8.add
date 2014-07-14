@@ -8,6 +8,7 @@ Artman
 backend
 Bainbridge
 barista
+Bigcluster
 BigCluster
 bioinformatics
 BitTorrent
@@ -20,6 +21,8 @@ cartesian
 changelist
 changelists
 Cohen
+config
+configs
 consequentialism
 consequentialist
 copasetic
@@ -31,8 +34,8 @@ CSS
 curation
 Dehn
 deontological
-Deontology
 deontology
+Deontology
 Desai
 Django
 DosBox
@@ -55,9 +58,9 @@ GitHub
 GitHub's
 Gius
 golgi
-Google's
 Googleplex
 Googler
+Google's
 Grantland
 Haight
 Heroku
@@ -72,8 +75,8 @@ indie
 infosphere
 infosphere's
 iPhone
-IRC
 irc
+IRC
 Javascript
 JSON
 Kayvon
@@ -89,6 +92,7 @@ Mikkeller
 Mollo
 MongoDB
 MongoMapper
+MPM
 Mullenweg
 MySQL
 natwelch
@@ -116,6 +120,8 @@ phospholipid
 phospholipids
 PHP
 platformer
+playbook
+playbooks
 playlist
 Poly's
 prokaryotes
@@ -128,9 +134,11 @@ Punchd
 Punchd's
 Rawls
 readme
-readme's
 readmes
+readme's
 rentees
+rollout
+rollouts
 RSS
 S3
 sashimi
