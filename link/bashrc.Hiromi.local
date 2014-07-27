@@ -22,6 +22,8 @@ alias redis="redis-server /usr/local/etc/redis.conf"
 
 # Android
 export ANDROID_HOME=`brew --prefix android`
+# Install from http://www.oracle.com/technetwork/java/javase/downloads/
+export JAVA_HOME=`/usr/libexec/java_home -v 1.7`
 
 # Postgres.app
 export PATH="/Applications/Postgres.app/Contents/Versions/9.3/bin:$PATH"
