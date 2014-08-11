@@ -1,0 +1,17 @@
+#! /usr/bin/env ruby
+
+require 'redcarpet'
+
+markdown = Redcarpet::Markdown.new(
+    Redcarpet::Render::HTML,
+    autolink: true,
+    tables: true,
+    no_intra_emphasis: true,
+    strikethrough: true,
+    fenced_code_blocks: true)
+
+text = ARGF.read
+
+puts
+puts
+puts markdown.render(text)
