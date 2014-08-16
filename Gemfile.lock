@@ -17,7 +17,7 @@ GEM
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     netrc (0.7.7)
-    octokit (3.1.0)
+    octokit (3.3.0)
       sawyer (~> 0.5.3)
     sawyer (0.5.4)
       addressable (~> 2.3.5)
