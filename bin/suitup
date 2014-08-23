@@ -27,6 +27,7 @@ sync_dir () {
       return 0;
     elif [ -f $PROJ$f/VERSION_MAP ]; then
       g4 sync -q
+      g4 nothave
       return 0;
     # Duplicated because I can't get the or stmt to work.
     elif [ -f $PROJ$f/.p4config ]; then
