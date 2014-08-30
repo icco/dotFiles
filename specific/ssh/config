@@ -32,7 +32,7 @@ Host icco.me
 
 Host snowball
   Hostname snowball.icco.me
-  Port 4022
+  Port 22
   User nat
   Compression yes
   KeepAlive yes
