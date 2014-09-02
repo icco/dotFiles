@@ -1,14 +1,15 @@
 " Vim syntax file
 " Language:	Markdown
 " Maintainer:	Ben Williams <benw@plasticboy.com>
-" URL:		http://plasticboy.com/markdown-vim-mode/
-" Version:	9
-" Last Change:  2009 May 18 
+" URL: http://plasticboy.com/markdown-vim-mode/
+" Version: 9
+" Last Change: 2009 May 18
 " Remark:	Uses HTML syntax file
 " Remark:	I don't do anything with angle brackets (<>) because that would too easily
 "		easily conflict with HTML syntax
+"	Remark: Has edits by nat@natwelch.com
+"
 " TODO: 	Handle stuff contained within stuff (e.g. headings within blockquotes)
-
 
 " Read the HTML syntax to start with
 if version < 600
@@ -117,4 +118,5 @@ setlocal comments=b:*,b:+,b:-
 let b:current_syntax = "mkd"
 
 delcommand HtmlHiLink
+
 " vim: ts=8
