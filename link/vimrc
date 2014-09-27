@@ -116,6 +116,9 @@ au BufRead,BufNewFile *.proto set ft=proto
 au BufRead,BufNewFile *.dtl set ft=htmldjango
 au BufRead,BufNewFile *.template set ft=htmldjango
 
+" Go Templates
+au BufRead,BufNewFile *.tpl set ft=gotplhtml
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Key Bindings
 
