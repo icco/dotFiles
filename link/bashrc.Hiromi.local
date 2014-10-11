@@ -43,6 +43,9 @@ source '/Users/nat/google-cloud-sdk/path.bash.inc'
 # The next line enables bash completion for gcloud.
 source '/Users/nat/google-cloud-sdk/completion.bash.inc'
 
+# Homebrew Golang
+export PATH=$PATH:/usr/local/opt/go/libexec/bin
+
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 # vim: set filetype=sh:
