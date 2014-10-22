@@ -48,4 +48,7 @@ export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
+# added by travis gem
+[ -f /Users/nat/.travis/travis.sh ] && source /Users/nat/.travis/travis.sh
+
 # vim: set filetype=sh:
