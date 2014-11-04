@@ -12,5 +12,6 @@ if [ -z "$QUERY" ]; then
   exit 2
 fi
 
-curl --request POST 'https://api.todoist.com/API/addItem' --data "content=$QUERY&token=$TOKEN" 
+# Priorities are backwards in the API, just always set to lowest priority, 1...
+curl --request POST 'https://api.todoist.com/API/addItem' --data "content=$QUERY&token=$TOKEN&priority=1"
 echo
