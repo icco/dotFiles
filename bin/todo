@@ -1,0 +1,9 @@
+#! /bin/bash
+
+TOKEN=$(cat ~/.todoist)
+if [ -z "$TOKEN" ]; then
+  echo "You need to put your api token in ~/.todoist"
+  exit 1
+fi
+
+curl --request POST 'https://api.todoist.com/API/addItem' --data "content=$QUERY&token=$TOKEN" 
