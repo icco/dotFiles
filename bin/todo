@@ -6,4 +6,11 @@ if [ -z "$TOKEN" ]; then
   exit 1
 fi
 
+QUERY="$*"
+if [ -z "$QUERY" ]; then
+  echo "$0 'todo task here'"
+  exit 2
+fi
+
 curl --request POST 'https://api.todoist.com/API/addItem' --data "content=$QUERY&token=$TOKEN" 
+echo
