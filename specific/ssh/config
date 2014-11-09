@@ -60,3 +60,8 @@ Host cabin
   Hostname cabin.welch.io
   User pi
   Compression yes
+
+Host heroku.com
+  HostName heroku.com
+  IdentityFile ~/.ssh/id_rsa
+  IdentitiesOnly yes
