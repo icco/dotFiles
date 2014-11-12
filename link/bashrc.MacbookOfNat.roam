@@ -1,8 +1,5 @@
 # Bashrc for work macbookair
 
-# Try and fix PATH
-export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
-
 # Mac ls does not have color option...
 alias ls="`which ls`";
 
