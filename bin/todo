@@ -1,0 +1,17 @@
+#! /bin/bash
+
+TOKEN=$(cat ~/.todoist)
+if [ -z "$TOKEN" ]; then
+  echo "You need to put your api token in ~/.todoist"
+  exit 1
+fi
+
+QUERY="$*"
+if [ -z "$QUERY" ]; then
+  echo "$0 'todo task here'"
+  exit 2
+fi
+
+# Priorities are backwards in the API, just always set to lowest priority, 1...
+curl --request POST 'https://api.todoist.com/API/addItem' --data "content=$QUERY&token=$TOKEN&priority=1"
+echo

@@ -1,8 +1,5 @@
 # Bashrc for work macbookair
 
-# Try and fix PATH
-export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
-
 # Mac ls does not have color option...
 alias ls="`which ls`";
 
@@ -28,5 +25,8 @@ source '/Users/natwelch/tmp/google-cloud-sdk/path.bash.inc'
 source '/Users/natwelch/tmp/google-cloud-sdk/completion.bash.inc'
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
+
+# added by travis gem
+[ -f /Users/natwelch/.travis/travis.sh ] && source /Users/natwelch/.travis/travis.sh
 
 # vim: set filetype=sh:
