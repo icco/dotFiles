@@ -46,7 +46,7 @@ Host london
 
 Host athenaeum
   User root
-  ProxyCommand ssh -q snowball nc -q0 athenaeum.local 22
+  Hostname athenaeum.local
 
 Host cask
   User admin
