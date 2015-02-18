@@ -19,10 +19,10 @@ PATH="/Applications/Postgres.app/Contents/MacOS/bin:$PATH"
 export ANDROID_HOME=/usr/local/opt/android-sdk
 
 # The next line updates PATH for the Google Cloud SDK.
-source '/Users/natwelch/tmp/google-cloud-sdk/path.bash.inc'
+#source '/Users/natwelch/tmp/google-cloud-sdk/path.bash.inc'
 
 # The next line enables bash completion for gcloud.
-source '/Users/natwelch/tmp/google-cloud-sdk/completion.bash.inc'
+#source '/Users/natwelch/tmp/google-cloud-sdk/completion.bash.inc'
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
 
