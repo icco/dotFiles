@@ -7,7 +7,7 @@
 # Google Specific stuff.
 if [ -x /google/data/ro/projects/loas/loas_check ]; then
   if ! /google/data/ro/projects/loas/loas_check &> /dev/null; then
-    prodaccess -g
+    prodaccess -g -s
   fi
 
   # Delete unneeded clients!
