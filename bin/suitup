@@ -4,16 +4,6 @@
 #
 # Author: Nat Welch (nat@natwelch.com)
 
-# Google Specific stuff.
-if [ -x /google/data/ro/projects/loas/loas_check ]; then
-  if ! /google/data/ro/projects/loas/loas_check &> /dev/null; then
-    prodaccess -g -s
-  fi
-
-  # Delete unneeded clients!
-  citctools cleanup -q
-fi
-
 # First Param is directory name
 sync_dir () {
   f=$1
@@ -24,14 +14,6 @@ sync_dir () {
     if [ -d $PROJ$f/.git/ ]; then
       git pull;
       git status -sb
-      return 0;
-    elif [ -f $PROJ$f/VERSION_MAP ]; then
-      g4 sync -q
-      g4 nothave
-      return 0;
-    # Duplicated because I can't get the or stmt to work.
-    elif [ -f $PROJ$f/.p4config ]; then
-      g4 sync
       return 0;
     elif [ -d $PROJ$f/.svn/ ]; then
       svn up
@@ -53,16 +35,6 @@ if [ -d $PROJ ]; then
 fi
 
 PROJ=~/Sites/
-if [ -d $PROJ ]; then
-  for e in $(ls $PROJ | sort -f); do
-    sync_dir $e
-    if [ $? -eq 1 ]; then
-      echo "No known version control."
-    fi
-  done;
-fi
-
-PROJ=/google/src/cloud/$USER/
 if [ -d $PROJ ]; then
   for e in $(ls $PROJ | sort -f); do
     sync_dir $e
