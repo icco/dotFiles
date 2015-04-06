@@ -1,25 +1,3 @@
-Host *.corp.google.com
-  Compression no
-  Cipher blowfish-cbc
-  User natwelch
-
-Host abode
-  Hostname abode.lon.corp.google.com
-  ForwardAgent yes
-  PreferredAuthentications publickey,gssapi-with-mic,hostbased,keyboard-interactive,password
-
-Host work-tunnel
-  Hostname arcplug.dls.corp.google.com
-  DynamicForward 2001
-  ExitOnForwardFailure yes
-  ServerAliveInterval 5
-  ServerAliveCountMax 3
-
-Host arcplug
-  Hostname arcplug.dls.corp.google.com
-  ForwardAgent yes
-  PreferredAuthentications publickey,gssapi-with-mic,hostbased,keyboard-interactive,password
-
 Host pgp.io
  Hostname 173.255.117.243
  IdentityFile ~/.ssh/google_compute_engine
