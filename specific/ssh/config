@@ -15,20 +15,9 @@ Host snowball
   Compression yes
   KeepAlive yes
 
-Host london
-  Hostname london.welch.io
-  Port 22
-  User nat
-  Compression yes
-  KeepAlive yes
-
-Host athenaeum
+Host athenaeum.local
   User root
-  Hostname athenaeum.local
-
-Host athenaeum.remote
-  User root
-  ProxyCommand ssh -q snowball nc -q0 athenaeum.local 22
+  ProxyCommand ssh -o Compression=no snowball netcat -w 3 %h %p
 
 Host cask
   User admin
