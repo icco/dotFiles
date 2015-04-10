@@ -27,6 +27,7 @@ Host athenaeum
   Hostname athenaeum.local
 
 Host athenaeum.remote
+  User root
   ProxyCommand ssh -q snowball nc -q0 athenaeum.local 22
 
 Host cask
