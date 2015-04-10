@@ -18,6 +18,7 @@ Host snowball
 Host athenaeum.local
   User root
   ProxyCommand ssh -o Compression=no snowball netcat -w 3 %h %p
+  Compression yes
 
 Host cask
   User admin
