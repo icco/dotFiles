@@ -15,6 +15,11 @@ Host snowball
   Compression yes
   KeepAlive yes
 
+Host hyperspace
+  Hostname playhyperspace.com
+  User hyperspace
+  Compression yes
+
 Host athenaeum
   User root
   Hostname athenaeum.local
