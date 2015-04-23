@@ -2,6 +2,9 @@
 " .vimrc -- the way it ought to be: Ha. It rhymes!
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+" Adds in https://kien.github.io/ctrlp.vim/
+set runtimepath^=~/.vim/bundle/ctrlp.vim
+
 set encoding=utf-8
 behave xterm
 set nocompatible       " no compatibility with vi
