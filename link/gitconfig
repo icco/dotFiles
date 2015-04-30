@@ -23,7 +23,6 @@
 	user = icco
 [branch]
 	autosetupmerge = true
-	autosetuprebase = always
 [pager]
 	color = true
 [merge]
