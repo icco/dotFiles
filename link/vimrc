@@ -5,6 +5,7 @@
 " Adds in https://kien.github.io/ctrlp.vim/
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|git|svn))$'
 :nnoremap ff :CtrlP<CR>
 
 " Basics
