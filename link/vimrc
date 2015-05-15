@@ -8,6 +8,9 @@ set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|git|svn))$'
 :nnoremap ff :CtrlP<CR>
 
+" Adds in Ag
+set runtimepath^=~/.vim/bundle/ag
+
 " Basics
 set encoding=utf-8
 behave xterm
