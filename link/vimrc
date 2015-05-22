@@ -131,7 +131,7 @@ au BufRead,BufNewFile *.tpl set ft=gotplhtml
 
 " Remove trailing spaces from lines w/ F6:
 " http://vim.wikia.com/wiki/Remove_unwanted_spaces
-:nnoremap <Leader>6 :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
+:nnoremap <Leader>l :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
 " Shawn's code was cool, but this works on all vcs'
 :nnoremap <Leader>b :VCSBlame<CR>
