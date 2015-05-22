@@ -6,10 +6,11 @@
 set runtimepath^=~/.vim/bundle/ctrlp.vim
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip
 let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|git|svn))$'
-:nnoremap ff :CtrlP<CR>
+nnoremap ff :CtrlP<CR>
 
 " Adds in Ag
 set runtimepath^=~/.vim/bundle/ag
+nnoremap <Leader>z :Ag <C-r><C-w>
 
 " Basics
 set encoding=utf-8
@@ -69,11 +70,7 @@ set directory=/tmp
 " Color Stuff
 
 syntax enable
-set background=dark
-"colorscheme koehler
-"colorscheme elflord
 colorscheme darknat
-"colorscheme solarized
 
 " Highlights long lines (Turned off...)
 "highlight OverLength term=standout cterm=bold ctermfg=1
@@ -134,48 +131,38 @@ au BufRead,BufNewFile *.tpl set ft=gotplhtml
 
 " Remove trailing spaces from lines w/ F6:
 " http://vim.wikia.com/wiki/Remove_unwanted_spaces
-:nnoremap <silent> <F6> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
+:nnoremap <Leader>6 :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
 
 " Shawn's code was cool, but this works on all vcs'
-:nnoremap <C-b><C-b> :VCSBlame<CR>
+:nnoremap <Leader>b :VCSBlame<CR>
 
 " Because we like our line numbers sometimes...
-:nnoremap <C-N><C-N> :set invnumber<CR>
+:nnoremap <Leader>n :set invnumber<CR>
 
 " But we don't always wanna wrap
-:nnoremap <C-w><C-w> :set invwrap<CR>
+:nnoremap <Leader>r :set invwrap<CR>
 
 " And all the cool kids need to paste
-:nnoremap <C-p><C-p> :set invpaste<CR>
+:nnoremap <Leader>p :set invpaste<CR>
 
 " Use the space key to open and close code folds
 :vnoremap <space> zf<CR>
 :nnoremap <space> zd<CR>
 
 " Toggle spell checking.
-:map <f7> :set spell!<cr>
+:map <Leader>7 :set spell!<cr>
 
 " Clear search buffer with Ctrl+l
 :noremap <silent> <c-l> :nohls<cr><c-l>
 
-" Tab fun - Tabs can be fun too!
-" @author David Patierno
+" Tab Party, originally by @dmpatierno
 :nnoremap ,. :tabnew<CR>
 :nnoremap ., :tabclose<CR>
 
 " And this is how pros navigate splits and tabs.
-:nnoremap .q :tabp<CR>
-:nnoremap .e :tabn<CR>
-:nnoremap .w <c-w><Up><CR>
-:nnoremap .s <c-w><Down><CR>
-:nnoremap .a <c-w><Left><CR>
-:nnoremap .d <c-w><Right><CR>
-:nnoremap .1 :tabn 1<CR>
-:nnoremap .2 :tabn 2<CR>
-:nnoremap .3 :tabn 3<CR>
-:nnoremap .4 :tabn 4<CR>
-:nnoremap .5 :tabn 5<CR>
-:nnoremap .6 :tabn 6<CR>
-:nnoremap .7 :tabn 7<CR>
-:nnoremap .8 :tabn 8<CR>
-:nnoremap .9 :tabn 9<CR>
+:nnoremap <Leader>q :tabp<CR>
+:nnoremap <Leader>e :tabn<CR>
+:nnoremap <Leader>w <c-w><Up><CR>
+:nnoremap <Leader>s <c-w><Down><CR>
+:nnoremap <Leader>a <c-w><Left><CR>
+:nnoremap <Leader>d <c-w><Right><CR>
