@@ -11,7 +11,7 @@ nnoremap ff :CtrlP<CR>
 " Adds in Ag
 set runtimepath^=~/.vim/bundle/ag
 nnoremap <Leader>z :Ag <C-r><C-w>
-nnoremap :Ag :ag
+"nnoremap :ag :Ag
 
 " Basics
 set encoding=utf-8
