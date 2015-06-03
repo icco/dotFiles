@@ -45,3 +45,7 @@ Host heroku.com
   HostName heroku.com
   IdentityFile ~/.ssh/id_rsa
   IdentitiesOnly yes
+
+Host welchfamilyweb.com
+  User dlnwelch
+  Port 2222
