@@ -44,6 +44,7 @@ set ruler              " display row, column and % of document
 set showcmd            " show partial commands in the status line
 set showmatch          " show matching () {} etc.
 set showmode           " show current mode
+set hidden             " Allow for hidden buffers
 
 set spellfile=$HOME/.vim/spell/en.utf-8.add
 
@@ -158,13 +159,7 @@ au BufRead,BufNewFile *.tpl set ft=gotplhtml
 " Clear search buffer with Ctrl+l
 :noremap <silent> <c-l> :nohls<cr><c-l>
 
-" Tab Party, originally by @dmpatierno
-:nnoremap ,. :tabnew<CR>
-:nnoremap ., :tabclose<CR>
-
-" And this is how pros navigate splits and tabs.
-:nnoremap <Leader>q :tabp<CR>
-:nnoremap <Leader>e :tabn<CR>
+" Buffer navigation shortcuts
 :nnoremap <Leader>w <c-w><Up><CR>
 :nnoremap <Leader>s <c-w><Down><CR>
 :nnoremap <Leader>a <c-w><Left><CR>
