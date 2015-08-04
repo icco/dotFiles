@@ -1,22 +1,22 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.3.7)
-    cloudapp_api (0.4.0)
-      httparty
-      mime-types
+    addressable (2.3.8)
+    cloudapp_api (0.5.0)
+      httparty (~> 0.13.5)
+      mime-types (>= 1.16)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
-    httparty (0.13.3)
+    httparty (0.13.5)
       json (~> 1.8)
       multi_xml (>= 0.5.2)
     io-console (0.4.3)
-    json (1.8.2)
-    mime-types (2.4.3)
+    json (1.8.3)
+    mime-types (2.6.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     netrc (0.10.3)
-    octokit (3.8.0)
+    octokit (4.0.1)
       sawyer (~> 0.6.0, >= 0.5.3)
     sawyer (0.6.0)
       addressable (~> 2.3.5)
@@ -30,3 +30,6 @@ DEPENDENCIES
   io-console
   netrc
   octokit
+
+BUNDLED WITH
+   1.10.6
