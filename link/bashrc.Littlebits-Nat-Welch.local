@@ -29,4 +29,13 @@ export ANDROID_HOME=/usr/local/opt/android-sdk
 # added by travis gem
 [ -f /Users/natwelch/.travis/travis.sh ] && source /Users/natwelch/.travis/travis.sh
 
+# Stolen from Logan
+alias addssh="ssh-add -D;ssh-add ~/.ssh/id_rsa"
+function lb_depl {
+  # First arg is server, second is branch
+  echo "Deploying $2 branch to $1.littlebits.cc:"
+  eval "addssh; bundle exec cap deploy -S host=$1.littlebits.cc -S branch=$2"
+}
+
+
 # vim: set filetype=sh:
