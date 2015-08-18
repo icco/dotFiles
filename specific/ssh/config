@@ -49,3 +49,13 @@ Host heroku.com
 Host welchfamilyweb.com
   User dlnwelch
   Port 2222
+
+Host sshgw
+  Hostname ec2-54-152-136-3.compute-1.amazonaws.com
+  User nat
+  ForwardAgent yes
+
+Host *.littlebits.net
+  User deploy
+  ForwardAgent yes
+  ProxyCommand ssh sshgw exec nc %h %p
