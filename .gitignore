@@ -8,3 +8,4 @@ link/gkrellm/data/*/*
 .DS_Store
 .bundle
 link/vim/view/~*
+link/vim/bundle/ag/.netrwhist
