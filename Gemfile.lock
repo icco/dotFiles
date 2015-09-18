@@ -12,11 +12,11 @@ GEM
       multi_xml (>= 0.5.2)
     io-console (0.4.3)
     json (1.8.3)
-    mime-types (2.6.1)
+    mime-types (2.6.2)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     netrc (0.10.3)
-    octokit (4.0.1)
+    octokit (4.1.0)
       sawyer (~> 0.6.0, >= 0.5.3)
     sawyer (0.6.0)
       addressable (~> 2.3.5)
@@ -32,4 +32,4 @@ DEPENDENCIES
   octokit
 
 BUNDLED WITH
-   1.10.6
+   1.10.2
