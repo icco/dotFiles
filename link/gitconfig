@@ -19,6 +19,7 @@
 	whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
 [core]
 	autocrlf = input
+	abbrev = 12
 [github]
 	user = icco
 [branch]
