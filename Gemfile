@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby '2.2.3'
+
 gem 'cloudapp_api'
 gem 'io-console', :require => 'io/console'
 gem 'netrc'
