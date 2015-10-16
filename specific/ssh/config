@@ -51,7 +51,7 @@ Host welchfamilyweb.com
   Port 2222
 
 Host sshgw
-  Hostname ec2-54-152-136-3.compute-1.amazonaws.com
+  Hostname sshgw.littlebits.net
   User nat
   ForwardAgent yes
 
