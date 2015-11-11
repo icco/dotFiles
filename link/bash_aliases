@@ -71,8 +71,4 @@ function setenv () {
   export $1="$2"
 }
 
-if [ -x `which forman` ]; then
- alias fs='foreman start --port=9393'
-fi
-
 # vim: set filetype=sh:
