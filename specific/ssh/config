@@ -59,3 +59,9 @@ Host *.littlebits.net
   User deploy
   ForwardAgent yes
   ProxyCommand ssh sshgw exec nc %h %p
+
+Host whatbox.ca
+  User icco
+  Hostname challenger.whatbox.ca
+  Compression yes
+  KeepAlive yes
