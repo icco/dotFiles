@@ -43,6 +43,10 @@ export rvm_make_flags="-j4"
 #
 # export rvm_rbx_opt
 
+# Disable grabbing rvm binaries
+#
+export rvm_disable_binary_flag=1
+
 # Disable automatic system configuration of RVM via /etc/profile.d/rvm.sh:
 #
 # export rvm_etc_profile_flag=0
