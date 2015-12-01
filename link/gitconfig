@@ -42,3 +42,5 @@
 	uploadarch = true
 [push]
 	default = current
+[http]
+	cookiefile = ~/.gitcookies
