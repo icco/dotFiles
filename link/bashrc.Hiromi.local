@@ -37,6 +37,9 @@ export ANDROID_KEYSTORE="/Users/nat/Dropbox/android_keys.jks"
 # Homebrew Golang
 export PATH=$PATH:/usr/local/opt/go/libexec/bin
 
+# https://github.com/golang/go/wiki/PackageManagementTools
+export GO15VENDOREXPERIMENT=1
+
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 # added by travis gem
