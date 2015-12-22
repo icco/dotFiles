@@ -11,6 +11,7 @@
 	lola = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %C(blue)by %an%Creset - %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --all
 	serve = daemon --verbose --export-all --base-path=.git --reuseaddr --strict-paths .git/
 	st = status -sb
+	delete-merged = !git branch --merged | grep -v \"\\*\" | xargs -n 1 git branch -d
 [color]
 	ui = auto
 [color "diff"]
