@@ -13,6 +13,7 @@ sync_dir () {
     cd $PROJ$f;
     if [ -d $PROJ$f/.git/ ]; then
       git pull;
+      git delete-merged
       git status -sb
       return 0;
     elif [ -d $PROJ$f/.svn/ ]; then
