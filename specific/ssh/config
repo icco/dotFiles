@@ -20,13 +20,9 @@ Host hyperspace
   User hyperspace
   Compression yes
 
-Host athenaeum
-  User root
-  Hostname athenaeum.local
-
 Host athenaeum.remote
   User root
-  ProxyCommand ssh -q snowball nc -q0 athenaeum.local %p
+  ProxyCommand ssh -q cabin nc -q0 athenaeum %p
 
 Host cask
   User admin
