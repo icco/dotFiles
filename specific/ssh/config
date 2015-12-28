@@ -58,7 +58,7 @@ Host *.littlebits.net
 
 Host whatbox.ca
   User icco
-  Hostname challenger.whatbox.ca
+  Hostname odyssey.whatbox.ca
   Compression yes
   KeepAlive yes
 
