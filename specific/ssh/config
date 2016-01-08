@@ -6,14 +6,6 @@ Host pgp.io
 Host icco.me
   User nat
   IdentityFile ~/Dropbox/Keys/gce_key
-  #Hostname 192.158.28.236
-
-Host snowball
-  Hostname snowball.icco.me
-  Port 22
-  User nat
-  Compression yes
-  KeepAlive yes
 
 Host hyperspace
   Hostname playhyperspace.com
@@ -35,6 +27,11 @@ Host gambit
 Host cabin
   Hostname cabin.welch.io
   User pi
+  Compression yes
+
+Host losgatos
+  Hostname losgatos.welch.io
+  User nat
   Compression yes
 
 Host heroku.com
