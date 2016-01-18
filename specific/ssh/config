@@ -34,6 +34,11 @@ Host losgatos
   User nat
   Compression yes
 
+Host newyork
+  Hostname newyork.welch.io
+  User nat
+  Compression yes
+
 Host heroku.com
   HostName heroku.com
   IdentityFile ~/.ssh/id_rsa
