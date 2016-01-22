@@ -25,4 +25,7 @@ export ANDROID_HOME=/usr/local/opt/android-sdk
 
 source /usr/local/bin/virtualenvwrapper.sh
 
+export NVM_DIR="/Users/nathanielwelch/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
 # vim: set filetype=sh:
