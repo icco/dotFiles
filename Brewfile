@@ -1,5 +1,7 @@
 # https://robots.thoughtbot.com/brewfile-a-gemfile-but-for-homebrew
 
+brew 'ffmpeg'
+brew 'gcc'
 brew 'git'
 brew 'htop'
 brew 'nmap'
