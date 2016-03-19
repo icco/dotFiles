@@ -40,6 +40,9 @@ export PATH=$PATH:/usr/local/opt/go/libexec/bin
 # https://github.com/golang/go/wiki/PackageManagementTools
 export GO15VENDOREXPERIMENT=1
 
+# GOPATH!
+GOPATH=$HOME
+
 # The next line updates PATH for the Google Cloud SDK.
 source '/Users/nat/google-cloud-sdk/path.bash.inc'
 
