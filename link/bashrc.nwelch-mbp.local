@@ -31,4 +31,7 @@ export NVM_DIR="/Users/nathanielwelch/.nvm"
 # added by travis gem
 [ -f /Users/nathanielwelch/.travis/travis.sh ] && source /Users/nathanielwelch/.travis/travis.sh
 
+# added by iterm2
+test -e ${HOME}/.iterm2_shell_integration.bash && source ${HOME}/.iterm2_shell_integration.bash
+
 # vim: set filetype=sh:
