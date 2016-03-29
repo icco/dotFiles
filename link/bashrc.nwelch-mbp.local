@@ -34,4 +34,6 @@ export NVM_DIR="/Users/nathanielwelch/.nvm"
 # added by iterm2
 test -e ${HOME}/.iterm2_shell_integration.bash && source ${HOME}/.iterm2_shell_integration.bash
 
+export AWS_REGION=us-east-1
+
 # vim: set filetype=sh:
