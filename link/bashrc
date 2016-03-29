@@ -108,6 +108,10 @@ fi
 # We do this late in the file so it takes priority.
 [ -d ~/bin ] && export PATH=~/bin:$PATH
 
+# This is for KEEN.IO
+export KEEN_PROJECT_ID=56acdbec90e4bd1b6d8d55f0
+export KEEN_READ_KEY=e544a10cc8979d26397e6bfcfc702f0ae24f74a9aafb7afbb6a73e01eaf9cfc62f2cae57009396071e7372b357120328ab9f38f8a77e97973863b59a8eca48c8af04f8c57e55c0101361b0df9f5e8808cdcc2b9c39f91abab815130157b0a63f
+
 # For certain machines add an additional bashrc
 if [ -f ~/.bashrc.`hostname` ]; then
    . ~/.bashrc.`hostname`
