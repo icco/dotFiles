@@ -71,4 +71,6 @@ function setenv () {
   export $1="$2"
 }
 
+alias fuck="sudo $(history -p \!\!)"
+
 # vim: set filetype=sh:
