@@ -89,12 +89,13 @@ Host flatiron
 #
 # You should not hand-edit this section, unless you are deleting it.
 #
-Host test.europe-west1-b.icco-cloud
-    HostName 104.155.94.42
-    IdentityFile /Users/nat/.ssh/google_compute_engine
+Host civ-v.us-east1-c.icco-cloud
+    HostName 104.196.38.123
+    IdentityFile /Users/nathanielwelch/.ssh/google_compute_engine
     UserKnownHostsFile=/dev/null
     IdentitiesOnly=yes
     CheckHostIP=no
     StrictHostKeyChecking=no
+    Compression=no
 
 # End of Google Compute Engine Section

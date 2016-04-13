@@ -37,3 +37,9 @@ test -e ${HOME}/.iterm2_shell_integration.bash && source ${HOME}/.iterm2_shell_i
 export AWS_REGION=us-east-1
 
 # vim: set filetype=sh:
+
+# The next line updates PATH for the Google Cloud SDK.
+source '/Users/nathanielwelch/google-cloud-sdk/path.bash.inc'
+
+# The next line enables shell command completion for gcloud.
+source '/Users/nathanielwelch/google-cloud-sdk/completion.bash.inc'
