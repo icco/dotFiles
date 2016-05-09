@@ -16,7 +16,7 @@ Host gambit
 
 Host cabin
   Hostname cabin.welch.io
-  User pi
+  User nat
   Compression yes
 
 Host losgatos
