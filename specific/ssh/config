@@ -18,6 +18,14 @@ Host gambit
   User nat
   Hostname Gambit.local
 
+Host magik
+  User nat
+  Hostname magik.local
+
+Host mini
+  User nat
+  Hostname mini.local
+
 Host cabin
   Hostname cabin.welch.io
   User nat
