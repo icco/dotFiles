@@ -6,6 +6,10 @@ Host athenaeum.remote
   User root
   ProxyCommand ssh -q cabin nc -q0 athenaeum %p
 
+Host cask.remote
+  User nat
+  ProxyCommand ssh -q newyork nc -q0 athenaeum %p
+
 Host cask
   User admin
   Hostname cask.local
