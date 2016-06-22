@@ -1,5 +1,5 @@
-0 4 * * * gunzip -q /Volumes/Data/Clouds/Dropbox/xbmc-userdata.backup.tar.gz; tar uPf /Volumes/Data/Clouds/Dropbox/xbmc-userdata.backup.tar --exclude='*.jpg' --exclude='*.png' /Users/nat/Library/Application\ Support/Kodi/userdata && gzip /Volumes/Data/Clouds/Dropbox/xbmc-userdata.backup.tar
-0 7 * * * curl -s https://www.iblocklist.com/lists.php | grep -i input | sed -E "s/.*value=\'(http:.*)\'.*/\1/p" | grep http | sed "s/\&amp;/\&/g" | sed "s/http/\"http/g" | sed "s/gz/gz\"/g" | xargs curl -sL | gunzip | egrep -v '^#' > /tmp/blocklist.txt && gzip -c /tmp/blocklist.txt > /Volumes/Data/Clouds/Dropbox/blocklist.txt.gz
+#0 4 * * * gunzip -q /Volumes/Data/Clouds/Dropbox/xbmc-userdata.backup.tar.gz; tar uPf /Volumes/Data/Clouds/Dropbox/xbmc-userdata.backup.tar --exclude='*.jpg' --exclude='*.png' /Users/nat/Library/Application\ Support/Kodi/userdata && gzip /Volumes/Data/Clouds/Dropbox/xbmc-userdata.backup.tar
+#0 7 * * * curl -s https://www.iblocklist.com/lists.php | grep -i input | sed -E "s/.*value=\'(http:.*)\'.*/\1/p" | grep http | sed "s/\&amp;/\&/g" | sed "s/http/\"http/g" | sed "s/gz/gz\"/g" | xargs curl -sL | gunzip | egrep -v '^#' > /tmp/blocklist.txt && gzip -c /tmp/blocklist.txt > /Volumes/Data/Clouds/Dropbox/blocklist.txt.gz
 #12 2-12 * * * /Users/nat/bin/update-xbmc.sh
 0 5 * * * cd ~/Projects/inspiration && ./update.sh
-0 6 * * * cd ~/Projects/ineedmix && ./update.sh
+#0 6 * * * cd ~/Projects/ineedmix && ./update.sh
