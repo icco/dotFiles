@@ -52,7 +52,7 @@ Host welchfamilyweb.com
 
 Host whatbox.ca
   User icco
-  Hostname odyssey.whatbox.ca
+  Hostname enterprise.whatbox.ca
   Compression yes
   KeepAlive yes
 
