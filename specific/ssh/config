@@ -58,10 +58,8 @@ Host whatbox.ca
 
 Host bastion
   User ubuntu
-  Hostname hfa-bastion.prod.hillaryclinton.com
   ForwardAgent yes
 
 Host flatiron
   User natwelch
-  Hostname flatiron.hfa.local
   KeepAlive yes
