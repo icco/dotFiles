@@ -13,35 +13,11 @@ fi
 
 ## some more ls aliases
 alias ll='ls -lh'
+alias lt='ls -lth'
 alias la='ls -A'
 alias l='ls -CF'
 
-## For finding stuff in a directory.
-gfind () {
-   if [ $# -lt 2 ]; then
-      files="*";
-      search="${1}";
-   else
-      files="${1}";
-      search="${2}";
-   fi;
-   find . -name "$files" -a ! -wholename '*/.*' -exec grep -Hin ${3} "$search" {} \; ;
-}
-
 pidof () { ps -Acw | egrep -i $@ | awk '{print $1}'; }
-
-clean() {
-  cleanies=`ls \#* *~ .*~ *.bak .*.bak  *.tmp .*.tmp core a.out .DS_Store *.toc *.aux *.log *.cp *.fn *.tp *.vr *.pg *.ky`;
-  echo "Will delete $(echo $cleanies | wc -l | tr -d ' ') files."
-  echo -n "Really clean this directory? ";
-  read yorn;
-  if test "$yorn" = "y"; then
-    rm -vf $cleanies;
-    echo "Cleaned.";
-  else
-    echo "Not cleaned.";
-  fi
-}
 
 # Job Stuff
 alias h='history'
@@ -53,9 +29,6 @@ alias po="popd"
 
 ## duh
 alias motd="cat /etc/motd"
-
-## pgpio
-alias pgpio="~/Projects/pgpio/pgpio"
 
 # For epic typing fail
 alias bim="vim"
