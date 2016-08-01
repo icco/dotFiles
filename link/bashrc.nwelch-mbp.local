@@ -1,5 +1,7 @@
 # Bashrc for work macbookair
 
+TZ='UTC'; export TZ
+
 # Mac ls does not have color option...
 alias ls="`which ls`";
 
