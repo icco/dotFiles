@@ -60,9 +60,3 @@ Host bastion
   Hostname hfa-bastion.prod.hillaryclinton.com
   User ubuntu
   ForwardAgent yes
-
-Host flatiron
-  Hostname flatiron.hfa.io
-  User natwelch
-  KeepAlive yes
-  ForwardAgent yes
