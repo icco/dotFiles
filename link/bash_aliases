@@ -53,4 +53,19 @@ dotenv () {
 
 alias fuck='sudo $(history -p \!\!)'
 
+function aws_session() {
+  local username=$(aws iam get-user --query User.UserName --output text)
+  local device=$(aws iam list-mfa-devices --user-name $username --query MFADevices[0].SerialNumber --output text)
+  echo -n "Authentication code for ${device}: "
+
+  local code
+  read code
+
+  local sts=$(aws sts get-session-token --duration-seconds 3600 --serial-number $device --token-code $code --output text)
+
+  export AWS_ACCESS_KEY_ID=$(echo "$sts" | cut -f 2)
+  export AWS_SECRET_ACCESS_KEY=$(echo "$sts" | cut -f 4)
+  export AWS_SESSION_TOKEN=$(echo "$sts" | cut -f 5)
+}
+
 # vim: set filetype=sh:
