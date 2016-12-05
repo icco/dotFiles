@@ -54,8 +54,10 @@ source '/Users/nat/google-cloud-sdk/completion.bash.inc'
 # added by travis gem
 [ -f /Users/nat/.travis/travis.sh ] && source /Users/nat/.travis/travis.sh
 
-# added by iterm2
+export NVM_DIR="$HOME/.nvm"
+. "/usr/local/opt/nvm/nvm.sh"
 
+# added by iterm2
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
 # vim: set filetype=sh:
