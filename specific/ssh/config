@@ -1,15 +1,3 @@
-Host icco.me
-  User nat
-  IdentityFile ~/Dropbox/Keys/gce_key
-
-Host athenaeum.remote
-  User root
-  ProxyCommand ssh -q cabin nc -q0 athenaeum %p
-
-Host cask.remote
-  User nat
-  ProxyCommand ssh -q newyork nc -q0 athenaeum %p
-
 Host cask
   User admin
   Hostname cask.local
@@ -28,11 +16,6 @@ Host mini
 
 Host cabin
   Hostname cabin.welch.io
-  User nat
-  Compression yes
-
-Host losgatos
-  Hostname losgatos.welch.io
   User nat
   Compression yes
 
@@ -55,8 +38,3 @@ Host whatbox.ca
   Hostname enterprise.whatbox.ca
   Compression yes
   KeepAlive yes
-
-Host bastion
-  Hostname hfa-bastion.prod.hillaryclinton.com
-  User ubuntu
-  ForwardAgent yes
