@@ -27,4 +27,7 @@ export PATH="$PATH:$HOME/.rvm/bin"
 # added by travis gem
 [ -f /Users/nat/.travis/travis.sh ] && source /Users/nat/.travis/travis.sh
 
+# For jumping
+[ -f /usr/local/etc/profile.d/z.sh ] && source /usr/local/etc/profile.d/z.sh
+
 # vim: set filetype=sh:
