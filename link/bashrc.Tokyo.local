@@ -1,5 +1,8 @@
 # Bashrc for my macbookair
 
+# Add iterm2 support
+test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+
 # Try and fix PATH
 export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 
