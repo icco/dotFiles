@@ -54,7 +54,7 @@ dotenv () {
 alias fuck='sudo $(history -p \!\!)'
 
 function aws_session() {
-  local profile=campaign-billing
+  local profile=flm
   local username=$(aws iam get-user --profile=$profile --query User.UserName --output text)
   local device=$(aws iam list-mfa-devices --profile=$profile --user-name $username --query MFADevices[0].SerialNumber --output text)
   echo -n "Authentication code for ${device} (${profile}/${username}): "
