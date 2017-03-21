@@ -1,11 +1,13 @@
 # https://robots.thoughtbot.com/brewfile-a-gemfile-but-for-homebrew
 
 brew 'bash-completion'
+brew 'coreutils'
 brew 'ffmpeg'
 brew 'gcc'
 brew 'git'
 brew 'grc'
 brew 'htop'
+brew 'jq'
 brew 'nmap'
 brew 'openssl'
 brew 'rclone'
