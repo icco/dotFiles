@@ -3,6 +3,11 @@
 # This checks if you need an AWS Session, and then tries to assume the role you
 # want.
 
+# Clear out existing AWS session environment, or the awscli call will fail
+unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN AWS_SECURITY_TOKEN
+# Old ec2 tools use other env vars
+unset AWS_ACCESS_KEY AWS_SECRET_KEY AWS_DELEGATION_TOKEN
+
 function aws_session() {
   local profile=$1
   local username=$(aws iam get-user --profile=$profile --query User.UserName --output text)
@@ -31,7 +36,7 @@ if [ "$#" -eq 0 ]; then
   echo "output = json"
   echo "region = us-east-1"
   echo
-  echo "[profile flm-dev/ops-admin]"
+  echo "[profile ops-admin]"
   echo "role_arn = arn:aws:iam::123456789123:role/role-name"
   echo "source_profile = default"
   echo
