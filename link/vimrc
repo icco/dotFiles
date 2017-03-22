@@ -138,6 +138,9 @@ au BufRead,BufNewFile *.template set ft=htmldjango
 " Go Templates
 au BufRead,BufNewFile *.tpl set ft=gotplhtml
 
+" Turn off terraform auto fmt
+let g:tf_fmt_autosave = 0
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Key Bindings
 
