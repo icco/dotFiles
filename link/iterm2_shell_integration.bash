@@ -298,3 +298,4 @@ if [[ "$TERM" != screen && "$ITERM_SHELL_INTEGRATION_INSTALLED" = "" && "$-" == 
   iterm2_print_state_data
   iterm2_print_version_number
 fi
+alias imgcat=~/.iterm2/imgcat; alias it2dl=~/.iterm2/it2dl
