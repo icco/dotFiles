@@ -98,4 +98,6 @@ function aws_session() {
     export AWS_SESSION_TOKEN=$(echo "$sts" | cut -f 5)
   fi
 }
+alias aws-session=aws_session
+
 # vim: set filetype=sh:
