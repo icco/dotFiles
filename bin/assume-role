@@ -1,0 +1,49 @@
+#! /bin/bash
+
+# This checks if you need an AWS Session, and then tries to assume the role you
+# want.
+
+function aws_session() {
+  local profile=$1
+  local username=$(aws iam get-user --profile=$profile --query User.UserName --output text)
+  local device=$(aws iam list-mfa-devices --profile=$profile --user-name $username --query MFADevices[0].SerialNumber --output text)
+  echo -n "Authentication code for ${device} (${profile}/${username}): "
+
+  local code
+  read code
+
+  local sts=$(aws sts get-session-token --profile=$profile --duration-seconds 3600 --serial-number $device --token-code $code --output text)
+
+  export AWS_ACCESS_KEY_ID=$(echo "$sts" | cut -f 2)
+  export AWS_SECRET_ACCESS_KEY=$(echo "$sts" | cut -f 4)
+  export AWS_SESSION_TOKEN=$(echo "$sts" | cut -f 5)
+}
+
+if [ "$#" -eq 0 ]; then
+  echo "Usage: $0 profile_name"
+  echo ""
+  echo "Creates a session for the specified profile. The profile must be"
+  echo "defined in ~/.aws/config."
+  echo
+  echo "Suggested config:"
+  echo
+  echo "[profile default]"
+  echo "output = json"
+  echo "region = us-east-1"
+  echo
+  echo "[profile flm-dev/ops-admin]"
+  echo "role_arn = arn:aws:iam::123456789123:role/role-name"
+  echo "source_profile = default"
+  echo
+  echo "And in ~/.aws/credentials"
+  echo
+  echo "[default]"
+  echo "aws_access_key_id = AKIABLAHBLAHBLAH1234"
+  echo "aws_secret_access_key = asdjhlkjhljkhlsajkdhjkldhajhlkajhdkjlshd"
+  echo
+else
+  aws_session $1
+fi
+
+
+
