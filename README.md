@@ -9,8 +9,19 @@ This repository holds my config files for just about everything. Use this to set
 
 Originally I did this entirely with shell scripts. Now I use rake. Make sure to `gem install rake` and install ruby 1.9.2 before going ahead with `rake infect`
 
- * For more colors for things like `ls` on OSX, install grc: `brew install grc`.
- * Don't be a chump, use [rvm](http://rvm.beginrescueend.com).
+To install all the needed OSX packages, `brew bundle` in the top directory.
+
+To switch to homebrew's version of Bash ([according to this doc](https://johndjameson.com/blog/updating-your-shell-with-homebrew/))
+
+```
+echo /usr/local/bin/bash | sudo tee /etc/shells
+chsh -s /usr/local/bin/bash
+```
+
+### Things to remember
+
+ * For more colors for things like `ls` on OSX, install grc: `brew install grc` (included in Brewfile).
+ * Don't be a chump, use [rvm](https://rvm.io/).
 
 ## Notes
 
