@@ -1,5 +1,6 @@
 # https://robots.thoughtbot.com/brewfile-a-gemfile-but-for-homebrew
 
+brew 'bash'
 brew 'bash-completion'
 brew 'coreutils'
 brew 'ffmpeg'
