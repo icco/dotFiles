@@ -61,7 +61,7 @@ function aws_session() {
   unset AWS_ACCESS_KEY AWS_SECRET_KEY AWS_DELEGATION_TOKEN
 
   if [ "$#" -eq 0 ]; then
-    echo "Usage: $0 profile_name"
+    echo "Usage: aws_session profile_name"
     echo ""
     echo "Creates a session for the specified profile. The profile must be"
     echo "defined in ~/.aws/config."
