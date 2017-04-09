@@ -21,5 +21,4 @@
 # 
 # m h  dom mon dow   command
 @hourly /home/nat/bin/set_ip newyork.welch.io
-12 5 * * * cd ~/Projects/inspiration && ./update.sh
 14 3 * * * cd ~/Projects/blog-backup && ./update.sh
