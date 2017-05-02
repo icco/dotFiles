@@ -2,7 +2,7 @@
 	name = Nat Welch
 	email = nat@natwelch.com
 	# 55F4 7ABE 2101 E282 5908	7826 E2F7 3798 BCDC 9C73
-	signingkey = "Nat Welch <nat@natwelch.com>"
+	signingkey = C4EEF77F
 [alias]
 	ci = commit
 	co = checkout
@@ -48,3 +48,5 @@
 	cookiefile = ~/.gitcookies
 [diff]
 	submodule = log
+[commit]
+	gpgsign = true
