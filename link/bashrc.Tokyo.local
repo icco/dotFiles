@@ -1,5 +1,7 @@
 # Bashrc for my macbookair
 
+export TZ="UTC"
+
 # Add iterm2 support
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
