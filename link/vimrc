@@ -16,6 +16,9 @@ cnoreabbrev aG Ack
 cnoreabbrev Ag Ack
 cnoreabbrev AG Ack
 
+" Install tickscript
+set runtimepath^=~/.vim/bundle/vim-tickscript
+
 " Basics
 set encoding=utf-8
 behave xterm
