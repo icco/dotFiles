@@ -22,6 +22,7 @@ Host cabin
 Host newyork
   Hostname newyork.welch.io
   User nat
+  Port 4022
   Compression yes
 
 Host heroku.com
