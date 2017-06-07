@@ -35,9 +35,6 @@ alias bim="vim"
 alias cim="vim"
 alias vi='vim'
 
-# pgp.io
-alias pgpio="~/Projects/pgpio/pgpio"
-
 # Csh compatability:
 alias unsetenv=unset
 function setenv () {
