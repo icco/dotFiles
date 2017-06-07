@@ -9,3 +9,4 @@ link/gkrellm/data/*/*
 .bundle
 link/vim/view/~*
 link/vim/bundle/ag/.netrwhist
+link/vim/bundle/vim-tickscript/.netrwhist
