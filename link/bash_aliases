@@ -100,4 +100,22 @@ function aws_session() {
 }
 alias aws-session=aws_session
 
+function aws-assume-role() {
+  if [ "$#" -eq 0 ]; then
+    echo "TODO: Write usage"
+  else
+    local profile=$1
+    local role=$2
+    aws-session $profile
+
+    local sts=$(aws sts assume-role --role-arn $role --role-session-name $USER)
+
+    export AWS_ACCESS_KEY_ID=$(echo "$sts" | jq -r .Credentials.AccessKeyId)
+    export AWS_SECRET_ACCESS_KEY=$(echo "$sts" | jq -r .Credentials.SecretAccessKey)
+    export AWS_SESSION_TOKEN=$(echo "$sts" | jq -r .Credentials.SessionToken)
+
+    echo $sts | jq .AssumedRoleUser
+  fi
+}
+
 # vim: set filetype=sh:
