@@ -34,10 +34,6 @@ Host heroku.com
   IdentityFile ~/.ssh/id_rsa
   IdentitiesOnly yes
 
-Host welchfamilyweb.com
-  User dlnwelch
-  Port 2222
-
 Host whatbox.ca
   User icco
   Hostname enterprise.whatbox.ca
