@@ -1,7 +1,6 @@
-#################################3
-## File used for defining $PS1
-##
-## Nat's Colored Prompt
+# File used for defining $PS1: Nat's Colored Prompt
+#
+# Docs on escape chars: http://tldp.org/HOWTO/Bash-Prompt-HOWTO/bash-prompt-escape-sequences.html
 
 bash_prompt_command() {
     # How many characters of the $PWD should be kept
