@@ -2,12 +2,6 @@
 " .vimrc -- the way it ought to be: Ha. It rhymes!
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Adds in https://kien.github.io/ctrlp.vim/
-set runtimepath^=~/.vim/bundle/ctrlp.vim
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip
-let g:ctrlp_custom_ignore = '\v[\/](node_modules|target|dist)|(\.(swp|git|svn))$'
-nnoremap ff :CtrlP<CR>
-
 " Install tickscript
 set runtimepath^=~/.vim/bundle/vim-tickscript
 
@@ -15,6 +9,7 @@ set runtimepath^=~/.vim/bundle/vim-tickscript
 " TODO: Make this work on non-os-x things
 set runtimepath^=/usr/local/opt/fzf
 set runtimepath^=~/.vim/bundle/fzf.vim
+nnoremap ff :FZF<CR>
 
 " Basics
 set encoding=utf-8
