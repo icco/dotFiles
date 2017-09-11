@@ -11,7 +11,9 @@ nnoremap ff :CtrlP<CR>
 " Install tickscript
 set runtimepath^=~/.vim/bundle/vim-tickscript
 
-" Install fzf
+" Install fzf 
+" TODO: Make this work on non-os-x things
+set runtimepath^=/usr/local/opt/fzf
 set runtimepath^=~/.vim/bundle/fzf.vim
 
 " Basics
