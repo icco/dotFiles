@@ -41,13 +41,14 @@ if [ -f '/Users/nat/google-cloud-sdk/path.bash.inc' ]; then source '/Users/nat/g
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/nat/google-cloud-sdk/completion.bash.inc' ]; then source '/Users/nat/google-cloud-sdk/completion.bash.inc'; fi
 
-# No, gpg-agent not available; start gpg-agent
-eval `gpg-agent --enable-ssh-support --daemon --no-grab --write-env-file $HOME/.gpg-agent-info`
-. "${HOME}/.gpg-agent-info"
-
-GPG_TTY=$(tty)
-export GPG_TTY
-export GPG_AGENT_INFO
-export SSH_AUTH_SOCK
+# For yubikey life
+function init_gpg_ssh {
+  source ~/.gnupg/gpg-agent-info;
+  for key in $( cat ~/.gnupg/gpg-agent-info | cut -d = -f 1 ); do
+    eval "export $key"
+  done
+  ssh-add -l 2> /dev/null
+}
+init_gpg_ssh
 
 # vim: set filetype=sh:
