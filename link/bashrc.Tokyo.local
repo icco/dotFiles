@@ -41,4 +41,13 @@ if [ -f '/Users/nat/google-cloud-sdk/path.bash.inc' ]; then source '/Users/nat/g
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/nat/google-cloud-sdk/completion.bash.inc' ]; then source '/Users/nat/google-cloud-sdk/completion.bash.inc'; fi
 
+# No, gpg-agent not available; start gpg-agent
+eval `gpg-agent --enable-ssh-support --daemon --no-grab --write-env-file $HOME/.gpg-agent-info`
+. "${HOME}/.gpg-agent-info"
+
+GPG_TTY=$(tty)
+export GPG_TTY
+export GPG_AGENT_INFO
+export SSH_AUTH_SOCK
+
 # vim: set filetype=sh:
