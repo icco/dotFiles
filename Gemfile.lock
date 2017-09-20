@@ -1,16 +1,16 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.5.0)
-      public_suffix (~> 2.0, >= 2.0.2)
-    faraday (0.11.0)
+    addressable (2.5.2)
+      public_suffix (>= 2.0.2, < 4.0)
+    faraday (0.13.1)
       multipart-post (>= 1.2, < 3)
     io-console (0.4.6)
     multipart-post (2.0.0)
     netrc (0.11.0)
-    octokit (4.6.2)
+    octokit (4.7.0)
       sawyer (~> 0.8.0, >= 0.5.3)
-    public_suffix (2.0.5)
+    public_suffix (3.0.0)
     redcarpet (3.4.0)
     sawyer (0.8.1)
       addressable (>= 2.3.5, < 2.6)
@@ -29,4 +29,4 @@ RUBY VERSION
    ruby 2.4.0p0
 
 BUNDLED WITH
-   1.14.6
+   1.15.4
