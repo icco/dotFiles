@@ -43,8 +43,8 @@ if [ -f '/Users/nat/google-cloud-sdk/completion.bash.inc' ]; then source '/Users
 
 # For yubikey life
 function init_gpg_ssh {
-  source ~/.gnupg/gpg-agent-info;
-  for key in $( cat ~/.gnupg/gpg-agent-info | cut -d = -f 1 ); do
+  source ~/.gpg-agent-info;
+  for key in $( cat ~/.gpg-agent-info | cut -d = -f 1 ); do
     eval "export $key"
   done
   ssh-add -l 2> /dev/null
