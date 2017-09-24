@@ -1,4 +1,4 @@
-# Bashrc for my macbookair
+# Bashrc for mac mini
 
 # Try and fix PATH
 export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
@@ -16,5 +16,8 @@ export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"  # This loads RVM into a shell session.
+
+# For jumping
+[ -f /usr/local/etc/profile.d/z.sh ] && source /usr/local/etc/profile.d/z.sh
 
 # vim: set filetype=sh:

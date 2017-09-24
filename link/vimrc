@@ -5,6 +5,9 @@
 " Install tickscript
 set runtimepath^=~/.vim/bundle/vim-tickscript
 
+" Install vim-rooter
+set runtimepath^=~/.vim/bundle/vim-rooter
+
 " Install fzf 
 " TODO: Make this work on non-os-x things
 set runtimepath^=/usr/local/opt/fzf
