@@ -14,6 +14,7 @@
 	serve = daemon --verbose --export-all --base-path=.git --reuseaddr --strict-paths .git/
 	st = status -sb
 	praise = blame
+	branches = for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/remotes
 [color]
 	ui = auto
 [color "diff"]
