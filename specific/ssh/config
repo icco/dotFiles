@@ -41,5 +41,5 @@ Host whatbox.ca
   KeepAlive yes
 
 Host prod
-  Hostname qvrv7nlkf7a2y22ysju1cugoo.canarytokens.com
+  Hostname h7xhuml12mta41edxbi06jil9.canarytokens.com
   User ec2-user
