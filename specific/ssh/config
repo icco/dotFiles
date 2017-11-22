@@ -39,3 +39,7 @@ Host whatbox.ca
   Hostname enterprise.whatbox.ca
   Compression no
   KeepAlive yes
+
+Host prod
+  Hostname qvrv7nlkf7a2y22ysju1cugoo.canarytokens.com
+  User ec2-user
