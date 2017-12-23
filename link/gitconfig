@@ -42,7 +42,7 @@
 [help]
 	autocorrect = 1
 [credential]
-	helper = cache
+	helper = store
 [daemon]
 	uploadarch = true
 [push]
