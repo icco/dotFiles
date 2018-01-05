@@ -51,4 +51,7 @@ function init_gpg_ssh {
 }
 init_gpg_ssh
 
+export NVM_DIR="$HOME/.nvm"
+. "/usr/local/opt/nvm/nvm.sh"
+
 # vim: set filetype=sh:
