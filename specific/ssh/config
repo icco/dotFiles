@@ -36,7 +36,7 @@ Host heroku.com
 
 Host whatbox.ca
   User icco
-  Hostname enterprise.whatbox.ca
+  Hostname mariner.whatbox.ca
   Compression no
   KeepAlive yes
 
