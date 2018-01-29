@@ -6,9 +6,9 @@ Host cask
   User admin
   Hostname cask.local
 
-Host gambit
+Host storm
   User nat
-  Hostname Gambit.local
+  Hostname storm.local
 
 Host magik
   User nat
@@ -36,7 +36,7 @@ Host heroku.com
 
 Host whatbox.ca
   User icco
-  Hostname enterprise.whatbox.ca
+  Hostname mariner.whatbox.ca
   Compression no
   KeepAlive yes
 
