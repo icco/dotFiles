@@ -10,7 +10,7 @@ GEM
     netrc (0.11.0)
     octokit (4.8.0)
       sawyer (~> 0.8.0, >= 0.5.3)
-    public_suffix (3.0.1)
+    public_suffix (3.0.2)
     redcarpet (3.4.0)
     sawyer (0.8.1)
       addressable (>= 2.3.5, < 2.6)
