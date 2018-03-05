@@ -41,4 +41,17 @@ if [ -f '/Users/nat/google-cloud-sdk/path.bash.inc' ]; then source '/Users/nat/g
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/nat/google-cloud-sdk/completion.bash.inc' ]; then source '/Users/nat/google-cloud-sdk/completion.bash.inc'; fi
 
+# For yubikey life
+function init_gpg_ssh {
+  source ~/.gpg-agent-info;
+  for key in $( cat ~/.gpg-agent-info | cut -d = -f 1 ); do
+    eval "export $key"
+  done
+  ssh-add -l 2> /dev/null
+}
+init_gpg_ssh
+
+export NVM_DIR="$HOME/.nvm"
+. "/usr/local/opt/nvm/nvm.sh"
+
 # vim: set filetype=sh:

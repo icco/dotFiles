@@ -1,16 +1,26 @@
 GEM
   remote: https://rubygems.org/
   specs:
+<<<<<<< HEAD
     addressable (2.5.1)
       public_suffix (~> 2.0, >= 2.0.2)
     faraday (0.12.2)
+=======
+    addressable (2.5.2)
+      public_suffix (>= 2.0.2, < 4.0)
+    faraday (0.14.0)
+>>>>>>> 268ec13e9a43a4bf3e6620ee93285e28bef6b518
       multipart-post (>= 1.2, < 3)
     io-console (0.4.6)
     multipart-post (2.0.0)
     netrc (0.11.0)
+<<<<<<< HEAD
     octokit (4.7.0)
+=======
+    octokit (4.8.0)
+>>>>>>> 268ec13e9a43a4bf3e6620ee93285e28bef6b518
       sawyer (~> 0.8.0, >= 0.5.3)
-    public_suffix (2.0.5)
+    public_suffix (3.0.1)
     redcarpet (3.4.0)
     sawyer (0.8.1)
       addressable (>= 2.3.5, < 2.6)
@@ -26,7 +36,11 @@ DEPENDENCIES
   redcarpet
 
 RUBY VERSION
-   ruby 2.4.0p0
+   ruby 2.4.1p111
 
 BUNDLED WITH
+<<<<<<< HEAD
    1.15.3
+=======
+   1.16.1
+>>>>>>> 268ec13e9a43a4bf3e6620ee93285e28bef6b518
