@@ -1,6 +1,6 @@
 #! /bin/bash
 
-IP=`curl -s 'http://checkip.dyndns.org' | sed 's/.*Current IP Address: \([0-9\.]*\).*/\1/g'`
+IP=$(curl -s 'https://api.ipify.org')
 
 if [[ -z "$IP" ]]; then
   echo "IP is empty."
