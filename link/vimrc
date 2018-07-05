@@ -139,6 +139,9 @@ au BufRead,BufNewFile *.template set ft=htmldjango
 " Go Templates
 au BufRead,BufNewFile *.tpl set ft=gotplhtml
 
+" Go Lint
+set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
+
 " Turn on terraform auto fmt
 let g:tf_fmt_autosave = 1
 

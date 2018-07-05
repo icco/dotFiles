@@ -19,6 +19,9 @@ alias l='ls -CF'
 
 pidof () { ps -Acw | egrep -i $@ | awk '{print $1}'; }
 
+# A better which
+#alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-tilde'
+
 # Job Stuff
 alias h='history'
 alias j="jobs -l"

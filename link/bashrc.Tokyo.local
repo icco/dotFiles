@@ -51,6 +51,9 @@ function init_gpg_ssh {
 }
 init_gpg_ssh
 
+# A better which
+alias which='alias | /usr/local/bin/gwhich --tty-only --read-alias --show-dot --show-tilde'
+
 export NVM_DIR="$HOME/.nvm"
 . "/usr/local/opt/nvm/nvm.sh"
 
