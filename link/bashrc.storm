@@ -2,4 +2,8 @@
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
+# Golang
+export GOPATH=~/Projects/
+export PATH="~/Projects/bin:$PATH"
+
 . /home/nat/Projects/z/z.sh
