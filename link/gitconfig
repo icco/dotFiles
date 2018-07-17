@@ -25,6 +25,7 @@
 [core]
 	autocrlf = input
 	abbrev = 12
+	commitGraph = true
 [github]
 	user = icco
 [branch]
