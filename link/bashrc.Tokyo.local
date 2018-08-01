@@ -33,7 +33,9 @@ export PATH="$PATH:$HOME/.rvm/bin"
 [ -f /Users/nat/.travis/travis.sh ] && source /Users/nat/.travis/travis.sh
 
 # For jumping
-[ -f /usr/local/etc/profile.d/z.sh ] && source /usr/local/etc/profile.d/z.sh
+[ -f /usr/local/etc/profile.d/z.sh ] && . /usr/local/etc/profile.d/z.sh
+#[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
+#alias z=j
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/nat/google-cloud-sdk/path.bash.inc' ]; then source '/Users/nat/google-cloud-sdk/path.bash.inc'; fi
