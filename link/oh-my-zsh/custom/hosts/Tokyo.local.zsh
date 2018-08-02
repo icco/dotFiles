@@ -1,20 +1,15 @@
-# Bashrc for my macbookair
+# zshrc for my MBP
 
 export TZ="UTC"
 
 # Add iterm2 support
-test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+#test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
 # Try and fix PATH
 export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 
 # Mac ls does not have color option...
 alias ls="`which ls`";
-
-# bash completion in osx, thanks to homebrew
-if [ -f `brew --prefix`/etc/bash_completion ]; then
-  . `brew --prefix`/etc/bash_completion
-fi
 
 # Colors
 export CLICOLOR=1
@@ -34,14 +29,12 @@ export PATH="$PATH:$HOME/.rvm/bin"
 
 # For jumping
 [ -f /usr/local/etc/profile.d/z.sh ] && . /usr/local/etc/profile.d/z.sh
-#[ -f /usr/local/etc/profile.d/autojump.sh ] && . /usr/local/etc/profile.d/autojump.sh
-#alias z=j
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/nat/google-cloud-sdk/path.bash.inc' ]; then source '/Users/nat/google-cloud-sdk/path.bash.inc'; fi
+#if [ -f '/Users/nat/google-cloud-sdk/path.bash.inc' ]; then source '/Users/nat/google-cloud-sdk/path.bash.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/nat/google-cloud-sdk/completion.bash.inc' ]; then source '/Users/nat/google-cloud-sdk/completion.bash.inc'; fi
+#if [ -f '/Users/nat/google-cloud-sdk/completion.bash.inc' ]; then source '/Users/nat/google-cloud-sdk/completion.bash.inc'; fi
 
 # For yubikey life
 function init_gpg_ssh {
@@ -59,4 +52,26 @@ alias which='alias | /usr/local/bin/gwhich --tty-only --read-alias --show-dot --
 export NVM_DIR="$HOME/.nvm"
 . "/usr/local/opt/nvm/nvm.sh"
 
-# vim: set filetype=sh:
+# place this after nvm initialization!
+autoload -U add-zsh-hook
+load-nvmrc() {
+  local node_version="$(nvm version)"
+  local nvmrc_path="$(nvm_find_nvmrc)"
+
+  if [ -n "$nvmrc_path" ]; then
+    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+
+    if [ "$nvmrc_node_version" = "N/A" ]; then
+      nvm install
+    elif [ "$nvmrc_node_version" != "$node_version" ]; then
+      nvm use
+    fi
+  elif [ "$node_version" != "$(nvm version default)" ]; then
+    echo "Reverting to nvm default version"
+    nvm use default
+  fi
+}
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc
+
+# vim: set filetype=zsh:
