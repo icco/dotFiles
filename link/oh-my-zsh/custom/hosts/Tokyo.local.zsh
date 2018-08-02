@@ -9,7 +9,7 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
 
 # Mac ls does not have color option...
-alias ls="`which ls`";
+alias ls="/bin/ls";
 
 # Colors
 export CLICOLOR=1
