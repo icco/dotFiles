@@ -3,7 +3,7 @@
 export TZ="UTC"
 
 # Add iterm2 support
-#test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # Try and fix PATH
 export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
@@ -29,12 +29,6 @@ export PATH="$PATH:$HOME/.rvm/bin"
 
 # For jumping
 [ -f /usr/local/etc/profile.d/z.sh ] && . /usr/local/etc/profile.d/z.sh
-
-# The next line updates PATH for the Google Cloud SDK.
-#if [ -f '/Users/nat/google-cloud-sdk/path.bash.inc' ]; then source '/Users/nat/google-cloud-sdk/path.bash.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-#if [ -f '/Users/nat/google-cloud-sdk/completion.bash.inc' ]; then source '/Users/nat/google-cloud-sdk/completion.bash.inc'; fi
 
 # For yubikey life
 function init_gpg_ssh {
