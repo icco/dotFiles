@@ -118,4 +118,6 @@ function aws-assume-role() {
   fi
 }
 
-# vim: set filetype=sh:
+echo "===> Loaded aliases.zsh";
+
+# vim: set filetype=zsh:
