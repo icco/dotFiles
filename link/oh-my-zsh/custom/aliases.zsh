@@ -23,8 +23,8 @@ pidof () { ps -Acw | egrep -i $@ | awk '{print $1}'; }
 #alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-tilde'
 
 # Job Stuff
-#alias h='history'
-#alias j="jobs -l"
+alias h='history'
+alias j="jobs -l"
 
 # Directory jumping
 alias pu="pushd"
