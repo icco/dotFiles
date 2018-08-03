@@ -1,6 +1,22 @@
-# user, host, full path, and time/date
-# on two lines for easier vgrepping
-# entry in a nice long thread on the Arch Linux forums: http://bbs.archlinux.org/viewtopic.php?pid=521888#p521888
-PROMPT=$'%{\e[0;34m%}%B┌─[%b%{\e[0m%}%{\e[1;32m%}%n%{\e[1;30m%}@%{\e[0m%}%{\e[0;36m%}%m%{\e[0;34m%}%B]%b%{\e[0m%} - %b%{\e[0;34m%}%B[%b%{\e[1;37m%}%~%{\e[0;34m%}%B]%b%{\e[0m%} - %{\e[0;34m%}%B[%b%{\e[0;33m%}'%D{"%a %b %d, %H:%M"}%b$'%{\e[0;34m%}%B]%b%{\e[0m%}
-%{\e[0;34m%}%B└─%B[%{\e[1;35m%}$%{\e[0;34m%}%B] <$(git_prompt_info)>%{\e[0m%}%b '
+get_pwd() {
+  # How many characters of the $PWD should be kept
+  local pwdmaxlen=23
+  # Indicate that there has been dir truncation
+  local trunc_symbol="..."
+  local dir=${PWD##*/}
+  pwdmaxlen=$(( ( pwdmaxlen < ${#dir} ) ? ${#dir} : pwdmaxlen ))
+  local NEW_PWD=${PWD/#$HOME/\~}
+  local pwdoffset=$(( ${#NEW_PWD} - pwdmaxlen ))
+  if [ ${pwdoffset} -gt "0" ]; then
+    NEW_PWD=${NEW_PWD:$pwdoffset:$pwdmaxlen}
+    NEW_PWD=${trunc_symbol}/${NEW_PWD#*/}
+  fi
+
+  echo $NEW_PWD
+}
+
+PROMPT=$'\n[ $fg_bold[red]%D{%a %b %d %H:%M:%S}$reset_color ] $(git_prompt_info) \n[ %b%n@%m $fg_bold[blue]$(get_pwd)$reset_color ]\\$ '
+
 PS2=$' \e[0;34m%}%B>%{\e[0m%}%b '
+
+# vim: set filetype=zsh:
