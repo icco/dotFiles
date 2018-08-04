@@ -1,0 +1,115 @@
+# https://facebook.github.io/graphql/October2016/#sec-Int-Value
+Given graphql (Integers):
+  0
+  -1
+
+Execute (Integer assertions):
+  AssertEqual 'graphqlNumber', SyntaxOf('0')
+  AssertEqual 'graphqlNumber', SyntaxOf('-1')
+
+# https://facebook.github.io/graphql/October2016/#sec-Float-Value
+Given graphql (Floats):
+  1.0
+  -1.0
+  1e10
+  1E10
+  1e-10
+  1e+10
+  1.0e10
+
+Execute (Float assertions):
+  AssertEqual 'graphqlNumber', SyntaxOf('1.0')
+  AssertEqual 'graphqlNumber', SyntaxOf('-1.0')
+  AssertEqual 'graphqlNumber', SyntaxOf('1e10')
+  AssertEqual 'graphqlNumber', SyntaxOf('1E10')
+  AssertEqual 'graphqlNumber', SyntaxOf('1e-10')
+  AssertEqual 'graphqlNumber', SyntaxOf('1e+10')
+  AssertEqual 'graphqlNumber', SyntaxOf('1.0e10')
+
+# https://facebook.github.io/graphql/October2016/#sec-Boolean-Value
+Given graphql (Booleans):
+  true
+  false
+
+Execute (Boolean assertions):
+  AssertEqual 'graphqlBoolean', SyntaxOf('true')
+  AssertEqual 'graphqlBoolean', SyntaxOf('false')
+
+# https://facebook.github.io/graphql/October2016/#sec-String-Value
+Given graphql (Strings):
+  ""
+  "Hello World"
+  """Triple-quoted
+  string"""
+
+Execute (String assertions):
+  AssertEqual 'graphqlString', SyntaxOf('""')
+  AssertEqual 'graphqlString', SyntaxOf('"Hello World"')
+  AssertEqual 'graphqlString', SyntaxOf('"""Triple-quoted\nstring"""')
+
+# https://facebook.github.io/graphql/October2016/#sec-Language.Arguments
+Given graphql (Arguments):
+  query queryName($site: Site = MOBILE) {
+    user(id: 4) {
+      profilePic(size: 100)
+    }
+  }
+
+Execute (Argument assertions):
+  AssertEqual 'graphqlName', SyntaxOf('queryName')
+  AssertEqual 'graphqlVariable', SyntaxOf('$site')
+  AssertEqual 'graphqlType', SyntaxOf('Site')
+  AssertEqual 'graphqlConstant', SyntaxOf('MOBILE')
+  AssertEqual 'graphqlName', SyntaxOf('id')
+  AssertEqual 'graphqlNumber', SyntaxOf('4')
+  AssertEqual 'graphqlName', SyntaxOf('size')
+  AssertEqual 'graphqlNumber', SyntaxOf('100')
+
+# https://facebook.github.io/graphql/October2016/#sec-Type-Conditions
+Given graphql (Type Conditions):
+  query FragmentTyping {
+    profiles(handles: ["zuck", "cocacola"]) {
+      id
+      ...userFragment
+    }
+  }
+
+  fragment userFragment on User {
+    friends {
+      count
+    }
+  }
+
+Execute (Type Condition assertions):
+  AssertEqual 'graphqlOperator', SyntaxOf('\M...')
+  AssertEqual 'graphqlName', SyntaxOf('userFragment')
+  AssertEqual 'graphqlStructure', SyntaxOf('fragment')
+  AssertEqual 'graphqlKeyword', SyntaxOf('on')
+  AssertEqual 'graphqlType', SyntaxOf('User')
+
+# https://facebook.github.io/graphql/October2016/#sec-Inline-Fragments
+Given graphql (Inline Framents):
+  query inlineFragmentTyping {
+    profiles(handles: ["zuck", "cocacola"]) {
+      id
+      ... on User {
+        name
+      }
+    }
+  }
+
+Execute (Inline Fragment assertions):
+  AssertEqual 'graphqlOperator', SyntaxOf('\M...')
+  AssertEqual 'graphqlKeyword', SyntaxOf('on')
+  AssertEqual 'graphqlType', SyntaxOf('User')
+
+Given graphql (Schema):
+  schema {
+    query: QueryType
+    mutation: MutationType
+  }
+
+Execute (Schema assertions):
+  AssertEqual 'graphqlStructure', SyntaxOf('schema')
+  AssertEqual 'graphqlName', SyntaxOf('query')
+  AssertEqual 'graphqlType', SyntaxOf('QueryType')
