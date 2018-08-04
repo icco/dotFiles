@@ -17,11 +17,14 @@ export LSCOLORS=ExFxCxDxBxegedabagacad
 
 # Golang
 export GOPATH=~/Projects/
-export PATH="~/Projects/bin:$PATH"
+export PATH="$GOPATH/bin:$PATH"
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+# Add GVM
+[[ -s "$HOME/.gvm/scripts/gvm" ]] && source "${HOME}/.gvm/scripts/gvm"
 
 # added by travis gem
 [ -f /Users/nat/.travis/travis.sh ] && source /Users/nat/.travis/travis.sh
