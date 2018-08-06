@@ -19,9 +19,9 @@ export LSCOLORS=ExFxCxDxBxegedabagacad
 export GOPATH="$HOME/Projects"
 export PATH="$GOPATH/bin:$PATH"
 
-# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
-export PATH="$PATH:$HOME/.rvm/bin"
+# RVM
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+export PATH="$PATH:$HOME/.rvm/bin"
 
 # Add GVM
 #[[ -s "$HOME/.gvm/scripts/gvm" ]] && source "${HOME}/.gvm/scripts/gvm"
@@ -31,16 +31,6 @@ export PATH="$PATH:$HOME/.rvm/bin"
 
 # For jumping
 [ -f /usr/local/etc/profile.d/z.sh ] && . /usr/local/etc/profile.d/z.sh
-
-## For yubikey life
-#function init_gpg_ssh {
-#  source ~/.gpg-agent-info;
-#  for key in $( cat ~/.gpg-agent-info | cut -d = -f 1 ); do
-#    eval "export $key"
-#  done
-#  ssh-add -l 2> /dev/null
-#}
-#init_gpg_ssh
 
 # A better which
 alias which='alias | /usr/local/bin/gwhich --tty-only --read-alias --show-dot --show-tilde'
