@@ -1,6 +1,5 @@
 .viminfo
 .bash_history
-link/vim/.net*
 *.spl
 *.swp
 link/gkrellm/data/*/*
@@ -10,3 +9,4 @@ link/gkrellm/data/*/*
 link/vim/view/~*
 link/vim/bundle/ag/.netrwhist
 link/vim/bundle/vim-tickscript/.netrwhist
+.netrwhist
