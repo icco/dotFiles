@@ -31,7 +31,6 @@ CASE_SENSITIVE="true"
 plugins=(
   screen
   gpg-agent
-  git
   colorize
   npm
   command-not-found
