@@ -8,6 +8,7 @@
 	co = checkout
 	delete-merged = !git branch --merged | grep -v \"\\*\" | xargs -n 1 git branch -d
 	l = log --oneline --graph --decorate --date-order
+	one = log --pretty=format:'%H' -1
 	lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %C(blue)by %an%Creset - %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
 	lola = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %C(blue)by %an%Creset - %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --all
 	pr = "!_git_pr() { git fetch origin pull/$1/head:pr-$1 && git checkout pr-$1; }; _git_pr"
@@ -33,6 +34,7 @@
 [pager]
 	color = true
 	diff = false
+	log = false
 [merge]
 	stat = true
 [diff "zip"]
