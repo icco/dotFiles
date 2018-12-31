@@ -76,14 +76,14 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
-# gpg ssh
-eval $(gpg-agent --daemon)
-GPG_TTY=$(tty)
-export GPG_TTY
-if [ -f "${HOME}/.gpg-agent-info" ]; then
-    . "${HOME}/.gpg-agent-info"
-    export GPG_AGENT_INFO
-    export SSH_AUTH_SOCK
-fi
+# For yubikey life
+function init_gpg_ssh {
+  source ~/.gpg-agent-info;
+  for key in $( cat ~/.gpg-agent-info | cut -d = -f 1 ); do
+    eval "export $key"
+  done
+  ssh-add -l 2> /dev/null
+}
+init_gpg_ssh
 
 # vim: set filetype=zsh:
