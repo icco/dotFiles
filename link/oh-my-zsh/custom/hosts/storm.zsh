@@ -6,4 +6,9 @@
 export GOPATH=~/Projects/
 export PATH="~/Projects/bin:$PATH"
 
+# GPG
+PINENTRY_USER_DATA="USE_CURSES=1"
+GPG_TTY=$(tty)
+export GPG_TTY
+
 . /home/nat/Projects/z/z.sh
