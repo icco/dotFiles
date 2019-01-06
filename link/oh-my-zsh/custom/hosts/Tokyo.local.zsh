@@ -23,13 +23,6 @@ export GOPATH="$HOME/Projects"
 export PATH="$GOPATH/bin:$PATH"
 export GO111MODULE=on
 
-# RVM
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-export PATH="$PATH:$HOME/.rvm/bin"
-
-# Add GVM
-#[[ -s "$HOME/.gvm/scripts/gvm" ]] && source "${HOME}/.gvm/scripts/gvm"
-
 # added by travis gem
 [ -f /Users/nat/.travis/travis.sh ] && source /Users/nat/.travis/travis.sh
 
@@ -85,5 +78,11 @@ function init_gpg_ssh {
   ssh-add -l 2> /dev/null
 }
 init_gpg_ssh
+
+# RVM
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
 
 # vim: set filetype=zsh:
