@@ -6,6 +6,10 @@
 export GOPATH=~/Projects/
 export PATH="~/Projects/bin:$PATH"
 
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
 # GPG
 PINENTRY_USER_DATA="USE_CURSES=1"
 GPG_TTY=$(tty)
