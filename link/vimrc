@@ -55,6 +55,10 @@ set spellfile=$HOME/.vim/spell/en.utf-8.add
 
 "set tw=100            " When you type gq to wrap a paragraph, wrap to 100 characters.
 
+" Creates unlimited undos
+set undofile
+set undodir=~/.vim/undodir
+
 " Settings for autoindentation, comments, and what-have-you
 set expandtab          " expand tabs with spaces
 set tabstop=2          " <Tab> move three characters
