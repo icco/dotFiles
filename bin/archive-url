@@ -1,0 +1,6 @@
+#!/bin/bash
+#
+# archive-url
+# Archive selected URL at the Internet Archive
+
+curl -s -I -H "Accept: application/json" "https://web.archive.org/save/${1}" | grep '^x-cache-key:' | sed "s,https,&://,; s,\(${1}\).*$,\1,"
