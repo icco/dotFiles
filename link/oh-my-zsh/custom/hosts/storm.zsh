@@ -14,5 +14,6 @@ GPG_TTY=$(tty)
 export GPG_TTY
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source /usr/share/doc/fzf/examples/key-bindings.zsh
 
 . /home/nat/Projects/z/z.sh
