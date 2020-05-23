@@ -18,6 +18,18 @@ Host mini
   User nat
   Hostname mini.local
 
+Host tokei
+  User pi
+  Hostname tokei.local
+
+Host ink
+  User pi
+  Hostname ink.local
+
+Host linear
+  User pi
+  Hostname linear.local
+
 Host cabin
   Hostname cabin.welch.io
   User nat
