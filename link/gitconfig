@@ -64,3 +64,5 @@
 	helper = gcloud.sh
 [pull]
 	rebase = false
+[status]
+	submodulesummary = 1
