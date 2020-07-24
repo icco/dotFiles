@@ -3,6 +3,7 @@
 # Golang
 export GOPATH=~/Projects/
 export PATH="~/Projects/bin:$PATH"
+export PATH="/snap/bin:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
