@@ -1,0 +1,4 @@
+#! /bin/zsh
+
+cd ~/Projects/etu-cli
+go run . $@
