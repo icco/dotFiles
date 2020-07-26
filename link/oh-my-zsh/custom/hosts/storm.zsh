@@ -2,7 +2,9 @@
 
 # Golang
 export GOPATH=~/Projects/
-export PATH="~/Projects/bin:$PATH"
+export PATH="$GOPATH/bin:$PATH"
+export GO111MODULE=on
+
 export PATH="/snap/bin:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
