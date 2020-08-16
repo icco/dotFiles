@@ -8,7 +8,7 @@ set runtimepath^=~/.vim/bundle/vim-tickscript
 " Install vim-rooter
 set runtimepath^=~/.vim/bundle/vim-rooter
 
-" Install fzf 
+" Install fzf
 " TODO: Make this work on non-os-x things
 set runtimepath^=/usr/local/opt/fzf
 set runtimepath^=~/.vim/bundle/fzf.vim
@@ -152,7 +152,8 @@ au BufRead,BufNewFile *.tpl set ft=gotplhtml
 set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
 
 " Turn on terraform auto fmt
-let g:tf_fmt_autosave = 1
+let g:terraform_fmt_on_save=1
+let g:terraform_align=1
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Key Bindings
