@@ -1,7 +1,7 @@
 [user]
 	name = Nat Welch
-	email = nat@natwelch.com
-	signingkey = 27E1EC35A2C3822379094DB5A931B605C4EEF77F
+	email = nat@timebyping.com
+	signingkey = F1977DF8
 [alias]
 	ci = commit
 	co = checkout
@@ -55,7 +55,7 @@
 [diff]
 	submodule = log
 [commit]
-	gpgsign = false
+	gpgsign = true
 [fetch]
 	prune = true
 [url "git@github.com:"]
