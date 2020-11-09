@@ -55,7 +55,7 @@
 [diff]
 	submodule = log
 [commit]
-	gpgsign = true
+	gpgsign = false
 [fetch]
 	prune = true
 [url "git@github.com:"]
