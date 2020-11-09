@@ -47,25 +47,3 @@ if [ -d $PROJ ]; then
     fi
   done;
 fi
-
-echo "# $GOPATH/src/github.com/icco/"
-PROJ=$GOPATH/src/github.com/icco/
-if [ -d $PROJ ]; then
-  for e in $(ls $PROJ | sort -f); do
-    sync_dir $e
-    if [ $? -eq 1 ]; then
-      echo "No known version control."
-    fi
-  done;
-fi
-
-echo "# $GOPATH/src/github.com/firstlookmedia/"
-PROJ=$GOPATH/src/github.com/firstlookmedia/
-if [ -d $PROJ ]; then
-  for e in $(ls $PROJ | sort -f); do
-    sync_dir $e
-    if [ $? -eq 1 ]; then
-      echo "No known version control."
-    fi
-  done;
-fi
