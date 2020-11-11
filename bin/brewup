@@ -1,0 +1,9 @@
+#! /bin/zsh
+
+brew update
+brew upgrade
+brew cleanup
+
+gcloud components update -q
+
+rvm get stable
