@@ -6,4 +6,4 @@
 	url = https://github.com/hashivim/vim-terraform.git
 [submodule "link/vim/bundle/vim-wakatime"]
 	path = link/vim/bundle/vim-wakatime
-	url = git://github.com/wakatime/vim-wakatime.git
+	url = https://github.com/wakatime/vim-wakatime.git
