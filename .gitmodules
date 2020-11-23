@@ -4,3 +4,6 @@
 [submodule "link/vim/pack/plugins/start/vim-terraform"]
 	path = link/vim/pack/plugins/start/vim-terraform
 	url = https://github.com/hashivim/vim-terraform.git
+[submodule "link/vim/bundle/link/vim/bundle/vim-wakatime"]
+	path = link/vim/bundle/link/vim/bundle/vim-wakatime
+	url = git://github.com/wakatime/vim-wakatime.git
