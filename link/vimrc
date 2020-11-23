@@ -2,6 +2,8 @@
 " .vimrc -- the way it ought to be: Ha. It rhymes!
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+execute pathogen#infect()
+
 " Install tickscript
 set runtimepath^=~/.vim/bundle/vim-tickscript
 
