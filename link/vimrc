@@ -2,23 +2,10 @@
 " .vimrc -- the way it ought to be: Ha. It rhymes!
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-execute pathogen#infect()
-
-" Install tickscript
-set runtimepath^=~/.vim/bundle/vim-tickscript
-
-" Install vim-rooter
-set runtimepath^=~/.vim/bundle/vim-rooter
-
 " Install fzf
 " TODO: Make this work on non-os-x things
 set runtimepath^=/usr/local/opt/fzf
-set runtimepath^=~/.vim/bundle/fzf.vim
 nnoremap ff :FZF<CR>
-
-" Install vim-graphql
-" https://github.com/jparise/vim-graphql
-set runtimepath^=~/.vim/bundle/vim-graphql
 
 " Basics
 set encoding=utf-8
@@ -28,6 +15,8 @@ filetype on            " recognize syntax by file extension
 filetype plugin on     " Look at .vim/ftplugin
 filetype indent on     " check for indent file
 syntax on              " syntax highlighting
+
+execute pathogen#infect()
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
@@ -152,6 +141,9 @@ au BufRead,BufNewFile *.tpl set ft=gotplhtml
 
 " Go Lint
 set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
+
+" Go Fmt
+au BufWritePre,FileWritePre *.go :GoFmt
 
 " Turn on terraform auto fmt
 let g:terraform_fmt_on_save=1
