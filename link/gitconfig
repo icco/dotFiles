@@ -16,6 +16,7 @@
 	praise = blame
 	local-branches = for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
 	remote-branches = for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/remotes
+	clean-branches = !git branch | grep -ve " (master|main)$" | xargs git branch -D
 [color]
 	ui = auto
 [color "diff"]
