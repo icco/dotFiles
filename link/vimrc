@@ -26,7 +26,6 @@ if &t_Co > 2 || has("gui_running")
 endif
 
 set ai " Auto indent
-set si " smart indenting
 
 set backspace=2        " allow <BS> to go past last insert
 set gdefault           " assume :s uses /g
