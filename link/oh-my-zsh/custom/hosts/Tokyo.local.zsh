@@ -69,16 +69,6 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
-# For yubikey life
-function init_gpg_ssh {
-  source ~/.gpg-agent-info;
-  for key in $( cat ~/.gpg-agent-info | cut -d = -f 1 ); do
-    eval "export $key"
-  done
-  ssh-add -l 2> /dev/null
-}
-init_gpg_ssh
-
 # RVM
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
