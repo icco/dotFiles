@@ -10,3 +10,6 @@
 [submodule "link/oh-my-zsh/custom/plugins/wakatime"]
 	path = link/oh-my-zsh/custom/plugins/wakatime
 	url = https://github.com/sobolevn/wakatime-zsh-plugin.git
+[submodule "link/vim/pack/typescript/start/typescript-vim"]
+	path = link/vim/pack/typescript/start/typescript-vim
+	url = https://github.com/leafgarland/typescript-vim.git
