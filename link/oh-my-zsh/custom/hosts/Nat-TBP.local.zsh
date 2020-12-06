@@ -73,4 +73,6 @@ if [ -f '/Users/nat/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/nat/go
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/nat/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/nat/google-cloud-sdk/completion.zsh.inc'; fi
 
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
 # vim: set filetype=zsh:
