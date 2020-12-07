@@ -114,6 +114,9 @@ au BufRead,BufNewFile [Mm]akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,
 " F#
 au BufRead,BufNewFile *.fs set ft=fs
 
+" tsx https://github.com/peitalin/vim-jsx-typescript
+autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
+
 " Text Files
 "au BufRead,BufNewFile *.txt highlight clear OverLength
 "au BufRead,BufNewFile *.txt set textwidth=80
