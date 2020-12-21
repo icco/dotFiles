@@ -15,4 +15,4 @@ source /usr/share/doc/fzf/examples/key-bindings.zsh
 # python
 export PATH="$PATH:$HOME/.local/bin"
 
-. /home/nat/Projects/z/z.sh
+. ~/Projects/z/z.sh
