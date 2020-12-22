@@ -30,6 +30,10 @@ Host linear
   User pi
   Hostname linear.local
 
+Host piaware
+  User pi
+  Hostname piaware.local
+
 Host cabin
   Hostname cabin.welch.io
   User nat
