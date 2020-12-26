@@ -16,7 +16,7 @@ Host magik
 
 Host micro
   User pi
-  Hostname mini.local
+  Hostname micro.local
 
 Host mini
   User pi
