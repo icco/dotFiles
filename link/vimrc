@@ -4,7 +4,8 @@
 
 " Install fzf
 " TODO: Make this work on non-os-x things
-set runtimepath^=/usr/local/opt/fzf
+set rtp+=/usr/local/opt/fzf
+set rtp+=/usr/share/doc/fzf/examples/
 nnoremap ff :FZF<CR>
 
 " Basics
