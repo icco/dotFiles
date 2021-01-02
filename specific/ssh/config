@@ -14,8 +14,12 @@ Host magik
   User nat
   Hostname magik.local
 
+Host micro
+  User pi
+  Hostname micro.local
+
 Host mini
-  User nat
+  User pi
   Hostname mini.local
 
 Host tokei
