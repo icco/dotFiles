@@ -67,3 +67,5 @@
 	rebase = false
 [status]
 	submodulesummary = 1
+[init]
+	defaultBranch = main
