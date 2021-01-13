@@ -1,8 +1,8 @@
 #! /bin/zsh
 
 ETU_DIR=~/Projects/etu
-[ ! -d $ETU_DIR ] && git clone github.com/icco/etu $ETU_DIR
+[ ! -d $ETU_DIR ] && git clone git@github.com:icco/etu.git $ETU_DIR
 cd $ETU_DIR
-git pull
+git pull -q
 go run ./cmd/etu $@
 cd -
