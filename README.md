@@ -33,7 +33,6 @@ Apparently other people have made similar things to my infect script.
 
 This only initializes the configuration of a user. I assume you've used something like [Fog](http://fog.io) to automate your system deployment and configuration.
 
-
 ## Assumptions
 
 This repo assumes you are managing a variety of machines. It makes some trade-offs because it assumes you use multiple machines daily.
