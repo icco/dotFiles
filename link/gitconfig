@@ -1,7 +1,7 @@
 [user]
 	name = Nat Welch
+	signingkey = C4EEF77F
 	email = nat@natwelch.com
-	signingkey = 27E1EC35A2C3822379094DB5A931B605C4EEF77F
 [alias]
 	ci = commit
 	co = checkout
@@ -16,7 +16,7 @@
 	praise = blame
 	local-branches = for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
 	remote-branches = for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/remotes
-	clean-branches = !git branch | grep -ve " (master|main)$" | xargs git branch -D
+	clean-branches = !git branch | grep -ve ' (master|main)$' | xargs git branch -D
 [color]
 	ui = auto
 [color "diff"]

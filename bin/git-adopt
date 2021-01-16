@@ -1,0 +1,32 @@
+#! /bin/zsh
+
+function reset() {
+  git config --local --unset-all user.email
+  git config --local --unset-all user.signingkey
+  git config --local --unset-all commit.gpgsign
+}
+
+case $1 in
+tbp)
+  reset
+  git config --add user.email nat@timebyping.com
+  git config --add user.signingkey F1977DF8
+  git config --add commit.gpgsign true
+  ;;
+icco)
+  reset
+  git config --add user.email nat@natwelch.com
+  git config --add user.signingkey C4EEF77F
+  git config --add commit.gpgsign true
+  ;;
+google)
+  reset
+  git config --add user.email natwelch@google.com
+  git config --add commit.gpgsign false
+  ;;
+clear)
+  reset
+  ;;
+esac
+
+echo "Current user $(git config --get user.email)"
