@@ -1,7 +1,7 @@
 [user]
 	name = Nat Welch
-	email = nat@timebyping.com
-	signingkey = F1977DF8
+	signingkey = C4EEF77F
+	email = nat@natwelch.com
 [alias]
 	ci = commit
 	co = checkout
