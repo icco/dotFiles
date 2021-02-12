@@ -75,4 +75,6 @@ if [ -f '/Users/nat/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+alias tf="terraform"
+
 # vim: set filetype=zsh:
