@@ -54,6 +54,12 @@ Host heroku.com
   IdentityFile ~/.ssh/id_rsa
   IdentitiesOnly yes
 
+Host beta.aptible.com
+  HostName beta.aptible.com
+  User git
+  IdentityFile ~/.ssh/id_rsa_aptible
+  IdentitiesOnly yes
+
 Host whatbox.ca
   User icco
   Hostname maven.whatbox.ca
