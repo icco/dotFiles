@@ -1,0 +1,4 @@
+#! /bin/zsh
+
+docker run --rm -t $@ $(docker build -q .)
+
