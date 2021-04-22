@@ -62,7 +62,7 @@ Host beta.aptible.com
 
 Host whatbox.ca
   User icco
-  Hostname maven.whatbox.ca
+  Hostname dawn.whatbox.ca
   Compression no
   KeepAlive yes
 
