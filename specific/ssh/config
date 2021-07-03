@@ -38,6 +38,10 @@ Host piaware
   User pi
   Hostname piaware.local
 
+Host magicmirroros
+  User pi
+  Hostname magicmirroros.local
+
 Host cabin
   Hostname cabin.welch.io
   User nat
@@ -48,11 +52,6 @@ Host newyork
   User nat
   Port 4022
   Compression yes
-
-Host heroku.com
-  HostName heroku.com
-  IdentityFile ~/.ssh/id_rsa
-  IdentitiesOnly yes
 
 Host beta.aptible.com
   HostName beta.aptible.com
