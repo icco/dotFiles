@@ -1,6 +1,7 @@
 # ZSH config for work mbp
 
 export TZ="UTC"
+export APTIBLE_OUTPUT_FORMAT=json
 
 # Add iterm2 support
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
