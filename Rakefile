@@ -12,6 +12,15 @@ task :default => 'infect'
 desc "Sort and clean the vim dictionary."
 task :vim do
   Kernel.exec("cat link/vim/spell/en.utf-8.add | sort -if | uniq > t && mv t link/vim/spell/en.utf-8.add && git diff")
+  Kernel.exec("git ci -a -m 'vim spell sort'")
+
+  repos = %w(junegunn/fzf.vim jparise/vim-graphql airblade/vim-rooter mhinz/vim-signify nathanielc/vim-tickscript wakatime/vim-wakatime)
+  repos.each do |repo|
+    dir = "link/vim/bundle/#{repo.split("/").last}"
+    FileUtils.rm_rf(dir)
+    Kernel.exec("git clone git@github.com:#{repo}.git dir")
+  end
+  Kernel.exec("git ci -a -m 'vim upgrades'")
 end
 
 desc "Test to make sure everything works ok."
