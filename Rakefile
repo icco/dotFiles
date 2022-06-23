@@ -20,7 +20,7 @@ task :vim do
     p repo
     dir = "link/vim/bundle/#{repo.split("/").last}"
     FileUtils.rm_rf(dir)
-    `git clone git@github.com:#{repo}.git dir`
+    `git clone git@github.com:#{repo}.git #{dir}`
   end
   `git ci -a -m 'vim upgrades'`
 end
