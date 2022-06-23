@@ -1,0 +1,25 @@
+Before:
+  source ../after/indent/javascript.vim
+  source ../after/syntax/javascriptreact/graphql.vim
+
+Execute (Expected syntax groups):
+  Assert graphql#has_syntax_group('graphqlTemplateExpression')
+  Assert graphql#has_syntax_group('graphqlTemplateString')
+
+Given javascriptreact (Template):
+  const query = gql`{}`;
+
+Execute (Syntax assertions):
+  AssertEqual 'graphqlTaggedTemplate', SyntaxOf('gql')
+  AssertEqual 'graphqlBraces', SyntaxOf('{}')
+
+Given javascript.jsx (Template):
+  const query = gql`{}`;
+
+Execute (Syntax assertions):
+  AssertEqual 'graphqlTaggedTemplate', SyntaxOf('gql')
+  AssertEqual 'graphqlBraces', SyntaxOf('{}')
+
+Execute (Indent assertions):
+  Assert exists('*GetGraphQLIndent')
+  Assert exists('*GetJavascriptGraphQLIndent')

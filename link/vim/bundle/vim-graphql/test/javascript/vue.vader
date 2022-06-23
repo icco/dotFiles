@@ -1,0 +1,56 @@
+Before:
+  Save &runtimepath
+  filetype off
+  set runtimepath+=../.bundle/vim-javascript/
+  filetype plugin indent on
+  syntax enable
+
+  setlocal shiftwidth=2
+  source ../after/indent/javascript.vim
+  source ../after/syntax/vue/graphql.vim
+
+After:
+  filetype off
+  Restore &runtimepath
+  filetype plugin indent on
+  syntax enable
+
+Execute (Expected syntax groups):
+  Assert graphql#has_syntax_group('graphqlTemplateExpression')
+  Assert graphql#has_syntax_group('graphqlTemplateString')
+
+Given vue (Template):
+  <script>
+  export default {
+    apollo: {
+      hello: gql`query {
+        firstName
+        lastName
+      }`,
+    },
+  }
+  </script>
+
+Execute (Syntax assertions):
+  AssertEqual 'graphqlTaggedTemplate', SyntaxOf('gql')
+  AssertEqual 'graphqlStructure', SyntaxOf('query')
+
+Execute (Indent assertions):
+  Assert exists('*GetGraphQLIndent')
+  Assert exists('*GetJavascriptIndent')
+  Assert exists('*GetJavascriptGraphQLIndent')
+
+Do (re-indent buffer):
+  gg=G
+
+Expect (propertly indented):
+  <script>
+  export default {
+    apollo: {
+      hello: gql`query {
+        firstName
+        lastName
+      }`,
+    },
+  }
+  </script>
