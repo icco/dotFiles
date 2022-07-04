@@ -1,5 +1,8 @@
 custom=${ZSH}/custom/hosts
-if [[ -f $custom/`hostname`.zsh ]]; then
-   . $custom/`hostname`.zsh
-   echo "===> Loaded `hostname`.zsh";
+
+# strip router bullshit
+host=$(hostname | sed 's/\./ /g' | awk '{ print $1 }')
+if [[ -f $custom/$host.zsh ]]; then
+   . $custom/$host.zsh
+   echo "===> Loaded $host.zsh";
 fi
