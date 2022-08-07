@@ -1,3 +1,5 @@
+Include ~/.ssh/bzero-bz-config
+
 # Since the first obtained value for each parameter is used, more host-specific
 # declarations should be given near the beginning of the file, and general
 # defaults at the end.

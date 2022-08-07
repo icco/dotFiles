@@ -1,4 +1,2 @@
+.bundle/
 doc/tags
-test/vader.vim/
-test/vim-javascript/
-test/yats.vim/
