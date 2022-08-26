@@ -15,7 +15,7 @@ task :vim do
   `cat link/vim/spell/en.utf-8.add | sort -if | uniq > t && mv t link/vim/spell/en.utf-8.add`
   `git ci -a -m 'vim spell sort'`
 
-  repos = %w(junegunn/fzf.vim jparise/vim-graphql airblade/vim-rooter mhinz/vim-signify nathanielc/vim-tickscript wakatime/vim-wakatime hashivim/vim-terraform)
+  repos = %w(junegunn/fzf.vim jparise/vim-graphql airblade/vim-rooter mhinz/vim-signify nathanielc/vim-tickscript wakatime/vim-wakatime hashivim/vim-terraform fatih/vim-go)
   repos.each do |repo|
     p repo
     dir = "link/vim/bundle/#{repo.split("/").last}"
