@@ -1,13 +1,10 @@
-" vim: et sw=2 sts=2
+" vim: et sw=2 sts=2 fdm=marker
 
 scriptencoding utf-8
 
-" Function: #next_hunk {{{1
+" #next_hunk {{{1
 function! sy#jump#next_hunk(count)
-  if !exists('b:sy')
-    echomsg 'signify: I cannot detect any changes!'
-    return
-  endif
+  execute sy#util#return_if_no_changes()
 
   let lnum = line('.')
   let hunks = filter(copy(b:sy.hunks), 'v:val.start > lnum')
@@ -16,14 +13,15 @@ function! sy#jump#next_hunk(count)
   if !empty(hunk)
     execute 'sign jump '. hunk.ids[0] .' buffer='. b:sy.buffer
   endif
+
+  if exists('#User#SignifyHunk')
+    doautocmd <nomodeline> User SignifyHunk
+  endif
 endfunction
 
-" Function: #prev_hunk {{{1
+" #prev_hunk {{{1
 function! sy#jump#prev_hunk(count)
-  if !exists('b:sy')
-    echomsg 'signify: I cannot detect any changes!'
-    return
-  endif
+  execute sy#util#return_if_no_changes()
 
   let lnum = line('.')
   let hunks = filter(copy(b:sy.hunks), 'v:val.start < lnum')
@@ -31,5 +29,9 @@ function! sy#jump#prev_hunk(count)
 
   if !empty(hunk)
     execute 'sign jump '. hunk.ids[0] .' buffer='. b:sy.buffer
+  endif
+
+  if exists('#User#SignifyHunk')
+    doautocmd <nomodeline> User SignifyHunk
   endif
 endfunction

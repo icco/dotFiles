@@ -1,22 +1,20 @@
-" vim: et sw=2 sts=2
+" vim: et sw=2 sts=2 fdm=marker
 
 scriptencoding utf-8
 
-" Init: values {{{1
-if get(g:, 'signify_sign_show_text', 1)
-  let s:sign_add               = get(g:, 'signify_sign_add',               '+')
-  let s:sign_delete_first_line = get(g:, 'signify_sign_delete_first_line', '‾')
-  let s:sign_change            = get(g:, 'signify_sign_change',            '!')
-  let s:sign_changedelete      = get(g:, 'signify_sign_changedelete',      s:sign_change)
-else
-  let s:sign_add               = ' '
-  let s:sign_delete_first_line = ' '
-  let s:sign_change            = ' '
-  let s:sign_changedelete      = ' '
+" Variables {{{1
+let s:sign_add               = get(g:, 'signify_sign_add',               '+')
+let s:sign_delete_first_line = get(g:, 'signify_sign_delete_first_line', '‾')
+let s:sign_change            = get(g:, 'signify_sign_change',            '!')
+let s:sign_change_delete     = get(g:, 'signify_sign_change_delete', s:sign_change . s:sign_delete_first_line)
+if strdisplaywidth(s:sign_change_delete) > 2
+  call sy#verbose(printf('Changing g:signify_sign_change_delete from %s to !- to avoid E239', s:sign_change_delete))
+  let s:sign_change_delete = '!-'
 endif
-let s:sign_show_count        = get(g:, 'signify_sign_show_count',        1)
+let s:sign_show_count = get(g:, 'signify_sign_show_count', 1)
+" 1}}}
 
-" Function: #setup {{{1
+" #setup {{{1
 function! sy#highlight#setup() abort
   highlight default link SignifyLineAdd             DiffAdd
   highlight default link SignifyLineDelete          DiffDelete
@@ -31,51 +29,25 @@ function! sy#highlight#setup() abort
   highlight default link SignifySignChangeDelete    SignifySignChange
 endfunction
 
-" Function: #line_enable {{{1
+" #line_enable {{{1
 function! sy#highlight#line_enable() abort
-  execute 'sign define SignifyAdd text='. s:sign_add 'texthl=SignifySignAdd linehl=SignifyLineAdd'
-  execute 'sign define SignifyChange text='. s:sign_change 'texthl=SignifySignChange linehl=SignifyLineChange'
-  execute 'sign define SignifyRemoveFirstLine text='. s:sign_delete_first_line 'texthl=SignifySignDeleteFirstLine linehl=SignifyLineDeleteFirstLine'
-
-  if s:sign_show_count
-    let s:sign_changedelete = substitute(s:sign_changedelete, '^.\zs.*', '', '')
-    for n in range(1, 9)
-      execute 'sign define SignifyChangeDelete'. n 'text='. s:sign_changedelete . n 'texthl=SignifySignChangeDelete linehl=SignifyLineChangeDelete'
-    endfor
-    execute 'sign define SignifyChangeDeleteMore text='. s:sign_changedelete .'> texthl=SignifySignChangeDelete linehl=SignifyLineChangeDelete'
-  else
-    for n in range(1, 9)
-      execute 'sign define SignifyChangeDelete'. n 'text='. s:sign_changedelete 'texthl=SignifySignChangeDelete linehl=SignifyLineChangeDelete'
-    endfor
-    execute 'sign define SignifyChangeDeleteMore text='. s:sign_changedelete 'texthl=SignifySignChangeDelete linehl=SignifyLineChangeDelete'
-  endif
-
+  execute 'sign define SignifyAdd text='. s:sign_add ' texthl=SignifySignAdd linehl=SignifyLineAdd '. sy#util#numhl('SignifySignAdd')
+  execute 'sign define SignifyChange text='. s:sign_change ' texthl=SignifySignChange linehl=SignifyLineChange '. sy#util#numhl('SignifySignChange')
+  execute 'sign define SignifyChangeDelete text='. s:sign_change_delete ' texthl=SignifySignChangeDelete linehl=SignifyLineChangeDelete '. sy#util#numhl('SignifySignChangeDelete')
+  execute 'sign define SignifyRemoveFirstLine text='. s:sign_delete_first_line ' texthl=SignifySignDeleteFirstLine linehl=SignifyLineDeleteFirstLine '. sy#util#numhl('SignifySignDeleteFirstLine')
   let g:signify_line_highlight = 1
 endfunction
 
-" Function: #line_disable {{{1
+" #line_disable {{{1
 function! sy#highlight#line_disable() abort
-  execute 'sign define SignifyAdd text='. s:sign_add 'texthl=SignifySignAdd linehl='
-  execute 'sign define SignifyChange text='. s:sign_change 'texthl=SignifySignChange linehl='
-  execute 'sign define SignifyRemoveFirstLine text='. s:sign_delete_first_line 'texthl=SignifySignDeleteFirstLine linehl='
-
-  if s:sign_show_count
-    let s:sign_changedelete = substitute(s:sign_changedelete, '^.\zs.*', '', '')
-    for n in range(1, 9)
-      execute 'sign define SignifyChangeDelete'. n 'text='. s:sign_changedelete . n 'texthl=SignifySignChangeDelete linehl='
-    endfor
-    execute 'sign define SignifyChangeDeleteMore text='. s:sign_changedelete .'> texthl=SignifySignChangeDelete linehl='
-  else
-    for n in range(1, 9)
-      execute 'sign define SignifyChangeDelete'. n 'text='. s:sign_changedelete 'texthl=SignifySignChangeDelete linehl='
-    endfor
-    execute 'sign define SignifyChangeDeleteMore text='. s:sign_changedelete 'texthl=SignifySignChangeDelete linehl='
-  endif
-
+  execute 'sign define SignifyAdd text='. s:sign_add ' texthl=SignifySignAdd linehl= '. sy#util#numhl('SignifySignAdd')
+  execute 'sign define SignifyChange text='. s:sign_change ' texthl=SignifySignChange linehl= '. sy#util#numhl('SignifySignChange')
+  execute 'sign define SignifyChangeDelete text='. s:sign_change_delete ' texthl=SignifySignChangeDelete linehl= '. sy#util#numhl('SignifySignChangeDelete')
+  execute 'sign define SignifyRemoveFirstLine text='. s:sign_delete_first_line ' texthl=SignifySignDeleteFirstLine linehl= '. sy#util#numhl('SignifySignDeleteFirstLine')
   let g:signify_line_highlight = 0
 endfunction
 
-" Function: #line_toggle {{{1
+" #line_toggle {{{1
 function! sy#highlight#line_toggle() abort
   if get(g:, 'signify_line_highlight')
     call sy#highlight#line_disable()

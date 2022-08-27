@@ -1,8 +1,8 @@
-" vim: et sw=2 sts=2
+" vim: et sw=2 sts=2 fdm=marker
 
 scriptencoding utf-8
 
-" Function: #escape {{{1
+" #escape {{{1
 function! sy#util#escape(path) abort
   if exists('+shellslash')
     let old_ssl = &shellslash
@@ -22,7 +22,7 @@ function! sy#util#escape(path) abort
   return path
 endfunction
 
-" Function: #refresh_windows {{{1
+" #refresh_windows {{{1
 function! sy#util#refresh_windows() abort
   if exists('*win_getid')
     let winid = win_getid()
@@ -31,7 +31,11 @@ function! sy#util#refresh_windows() abort
   endif
 
   if !get(g:, 'signify_cmdwin_active')
-    windo if exists('b:sy') | call sy#start() | endif
+    for bufnr in tabpagebuflist()
+      if sy#buffer_is_active(bufnr)
+        call sy#start({'bufnr': bufnr})
+      endif
+    endfor
   endif
 
   if exists('winid')
@@ -41,16 +45,15 @@ function! sy#util#refresh_windows() abort
   endif
 endfunction
 
-" Function: #hunk_text_object {{{1
+" #hunk_text_object {{{1
 function! sy#util#hunk_text_object(emptylines) abort
-  if !exists('b:sy')
-    return
-  endif
+  execute sy#util#return_if_no_changes()
 
   let lnum  = line('.')
   let hunks = filter(copy(b:sy.hunks), 'v:val.start <= lnum && v:val.end >= lnum')
 
   if empty(hunks)
+    echomsg 'signify: Here is no hunk.'
     return
   endif
 
@@ -68,7 +71,7 @@ function! sy#util#hunk_text_object(emptylines) abort
   endif
 endfunction
 
-" Function: #shell_redirect {{{1
+" #shell_redirect {{{1
 function! sy#util#shell_redirect(path) abort
   " if shellredir contains a %s it is replaced with the path
   " otherwise, just append it (from :help shellredir:
@@ -82,10 +85,147 @@ function! sy#util#shell_redirect(path) abort
   endif
 endfunction
 
-" Function: #chdir {{{1
+" #chdir {{{1
 function! sy#util#chdir() abort
   let chdir = haslocaldir()
         \ ? 'lcd'
         \ : (exists(':tcd') && haslocaldir(-1, 0)) ? 'tcd' : 'cd'
   return [getcwd(), chdir]
+endfunction
+
+" #return_if_no_changes {{{1
+function! sy#util#return_if_no_changes() abort
+  let sy = getbufvar(bufnr(''), 'sy')
+  if empty(sy) || empty(sy.hunks)
+    echomsg 'signify: There are no changes.'
+    return 'return'
+  endif
+  return ''
+endfunction
+
+" #execute {{{1
+function! sy#util#execute(cmd) abort
+  let lang = v:lang
+  redir => output
+    silent! execute a:cmd
+  redir END
+  silent! execute 'language message' lang
+  return output
+endfunction
+
+let s:popup_window = 0
+
+" #get_hunk_stats {{{1
+function! sy#util#get_hunk_stats() abort
+  execute sy#util#return_if_no_changes()
+
+  let curline = line('.')
+  let total_hunks = len(b:sy.hunks)
+
+  for i in range(total_hunks)
+    if b:sy.hunks[i].start <= curline && b:sy.hunks[i].end >= curline
+      return { 'total_hunks': total_hunks, 'current_hunk': i + 1 }
+    endif
+  endfor
+
+  return {}
+endfunction
+
+" #popup_close {{{1
+function! sy#util#popup_close() abort
+  if s:popup_window
+    call nvim_win_close(s:popup_window, 1)
+    let s:popup_window = 0
+  endif
+endfunction
+
+" #popup_create {{{1
+function! sy#util#popup_create(hunkdiff) abort
+  let offset      = s:offset()
+  let winline     = winline()
+  let min_height  = 6
+  let max_height  = winheight('%') - winline
+  let diff_height = len(a:hunkdiff)
+  let height      = min([diff_height, max_height])
+
+  if diff_height > max_height && max_height < min_height
+    let max_scroll = min_height - max_height
+    let scroll     = min([max_scroll, diff_height - max_height])
+    " Old versions don't have feedkeys(..., 'x')
+    execute 'normal!' scroll.''
+    let winline -= scroll
+    let height  += scroll
+  endif
+
+  let padding = repeat(' ', offset - 1)
+
+  if exists('*nvim_open_win')
+    call sy#util#popup_close()
+    let buf = nvim_create_buf(0, 1)
+    call nvim_buf_set_option(buf, 'syntax', 'diff')
+    call nvim_buf_set_lines(buf, 0, -1, 0, map(a:hunkdiff, 'v:val[0].padding.v:val[1:]'))
+    let s:popup_window = nvim_open_win(buf, v:false, {
+          \ 'relative': 'win',
+          \ 'row': winline,
+          \ 'col': 0,
+          \ 'width': winwidth('%'),
+          \ 'height': height,
+          \ })
+    call nvim_win_set_option(s:popup_window, 'cursorline', v:false)
+    call nvim_win_set_option(s:popup_window, 'foldcolumn', has('nvim-0.5') ? '0' : 0)
+    call nvim_win_set_option(s:popup_window, 'foldenable', v:false)
+    call nvim_win_set_option(s:popup_window, 'number', v:false)
+    call nvim_win_set_option(s:popup_window, 'relativenumber', v:false)
+    call nvim_win_set_option(s:popup_window, 'wrap', v:true)
+    autocmd CursorMoved <buffer> ++once call sy#util#popup_close()
+  elseif exists('*popup_create')
+    let s:popup_window = popup_create(map(a:hunkdiff, 'v:val[0].padding.v:val[1:]'), {
+          \ 'line': 'cursor+1',
+          \ 'col': 0,
+          \ 'minwidth': winwidth('%'),
+          \ 'maxheight': height,
+          \ 'moved': 'any',
+          \ 'zindex': 1000,
+          \ })
+    call setbufvar(winbufnr(s:popup_window), '&syntax', 'diff')
+  else
+    return 0
+  endif
+
+  return 1
+endfunction
+
+" #numhl {{{1
+try
+  sign define SyTest numhl=Number
+  let s:use_numhl = 1
+  sign undefine SyTest
+catch
+  let s:use_numhl = 0
+endtry
+
+function! sy#util#numhl(hlgroup) abort
+  if !s:use_numhl
+    return ''
+  endif
+
+  if get(g:, 'signify_number_highlight')
+    return printf('numhl=%s', a:hlgroup)
+  else
+    return 'numhl='
+  endif
+endfunction
+
+" s:offset {{{1
+function! s:offset() abort
+  let offset = &foldcolumn
+  let offset += 2  " FIXME: Find better way to calculate the sign column width.
+  if &number
+    let l = len(line('$')) + 1
+    let offset += (&numberwidth > l) ? &numberwidth : l
+  elseif &relativenumber
+    let l = len(winheight('%')) + 1
+    let offset += (&numberwidth > l) ? &numberwidth : l
+  endif
+  return offset
 endfunction

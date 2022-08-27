@@ -4,6 +4,8 @@ brew update
 brew upgrade
 brew cleanup
 
+cd ~/Projects/dotfiles && brew bundle && cd -
+
 gcloud components update -q
 
 rvm get stable
