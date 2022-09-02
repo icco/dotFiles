@@ -4,7 +4,12 @@ brew update
 brew upgrade
 brew cleanup
 
-cd ~/Projects/dotfiles && brew bundle && cd -
+cd ~/Projects/dotfiles && \
+  brew bundle && \
+  git add Brewfile.lock.json && \
+  git ci -m 'update brewfile' && \
+  git push && \
+  cd -
 
 gcloud components update -q
 
