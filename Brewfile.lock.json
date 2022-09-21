@@ -1151,17 +1151,11 @@
   "system": {
     "macos": {
       "monterey": {
-        "HOMEBREW_VERSION": "3.6.1-58-g7a14ae6",
+        "HOMEBREW_VERSION": "3.6.2",
         "HOMEBREW_PREFIX": "/usr/local",
-<<<<<<< HEAD
-        "Homebrew/homebrew-core": "b2023fdd791abf91ca9bd7ab5555f293837412e0",
+        "Homebrew/homebrew-core": "099e206c24b8925aaad04c663fb48172dac596f3",
         "CLT": "14.0.0.0.1.1661618636",
         "Xcode": "14.0",
-=======
-        "Homebrew/homebrew-core": "9867ff0ec5fa7c2e51b8e82bfea4cd9007f4334c",
-        "CLT": "13.4.0.0.1.1651278267",
-        "Xcode": "13.4.1",
->>>>>>> eea1397ee0033bdc20d51ce0be7b6cbadefc37a9
         "macOS": "12.5.1"
       }
     }
