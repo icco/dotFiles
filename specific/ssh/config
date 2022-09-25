@@ -4,6 +4,10 @@ Include ~/.ssh/bzero-bz-config
 # declarations should be given near the beginning of the file, and general
 # defaults at the end.
 
+Host norns
+  User we
+  Hostname 192.168.1.201
+
 Host cask
   User admin
   Hostname cask.local
