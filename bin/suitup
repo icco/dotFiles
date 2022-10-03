@@ -11,6 +11,7 @@ sync_dir () {
   if [ -d $PROJ$f ]; then
     echo "--------> $f"
     cd $PROJ$f;
+    rm -f .DS_Store
     if [ -d $PROJ$f/.git/ ]; then
       git fetch --prune
       git pull
