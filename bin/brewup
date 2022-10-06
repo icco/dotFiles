@@ -5,6 +5,7 @@ brew upgrade
 brew cleanup
 
 cd ~/Projects/dotfiles && \
+  git pull &&
   brew bundle && \
   git add Brewfile.lock.json && \
   git ci -m 'update brewfile' && \
