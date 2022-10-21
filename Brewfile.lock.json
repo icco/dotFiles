@@ -626,7 +626,7 @@
         }
       },
       "openssl": {
-        "version": "3.0.6",
+        "version": "3.0.5",
         "bottle": {
           "rebuild": 0,
           "root_url": "https://ghcr.io/v2/homebrew/core",
@@ -1151,9 +1151,9 @@
   "system": {
     "macos": {
       "monterey": {
-        "HOMEBREW_VERSION": "3.6.6",
+        "HOMEBREW_VERSION": "3.6.6-34-gfaa9950",
         "HOMEBREW_PREFIX": "/usr/local",
-        "Homebrew/homebrew-core": "e7f9cd25d59db3533c2b061dde1cd7239d66ec5c",
+        "Homebrew/homebrew-core": "02196965da4fac652b758de3334b7060f97b89e3",
         "CLT": "14.0.0.0.1.1661618636",
         "Xcode": "14.0.1",
         "macOS": "12.6"
