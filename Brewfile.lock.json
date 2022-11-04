@@ -1281,10 +1281,10 @@
   "system": {
     "macos": {
       "monterey": {
-        "HOMEBREW_VERSION": "3.6.8",
+        "HOMEBREW_VERSION": "3.6.8-18-g84caae3",
         "HOMEBREW_PREFIX": "/usr/local",
         "Homebrew/homebrew-core": "f0a57e9d6af030b3c8daee72b91ca541e1683543",
-        "CLT": "14.1.0.0.1.1666437224",
+        "CLT": "14.0.0.0.1.1661618636",
         "Xcode": "14.1",
         "macOS": "12.6"
       }
