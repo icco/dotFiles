@@ -16,6 +16,10 @@ Host storm
   User nat
   Hostname storm.local
 
+Host rope
+  User nat
+  Hostname rope.local
+
 Host magik
   User nat
   Hostname magik.local
@@ -74,11 +78,3 @@ Host whatbox.ca
 Host prod
   Hostname h7xhuml12mta41edxbi06jil9.canarytokens.com
   User ec2-user
-
-#spring.cluster.recurse.com
-#mercer.cluster.recurse.com
-#crosby.cluster.recurse.com
-#broome.cluster.recurse.com
-Host recurse.com
-  Hostname spring.cluster.recurse.com
-  User natwelch
