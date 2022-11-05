@@ -1283,7 +1283,7 @@
       "monterey": {
         "HOMEBREW_VERSION": "3.6.8",
         "HOMEBREW_PREFIX": "/usr/local",
-        "Homebrew/homebrew-core": "1fd11e364eff10d4043a111c64a894de257d564a",
+        "Homebrew/homebrew-core": "0c29673a5e8d3a184bdc0b5edc240a73b5e694be",
         "CLT": "14.1.0.0.1.1666437224",
         "Xcode": "14.1",
         "macOS": "12.6"
