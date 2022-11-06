@@ -4,6 +4,14 @@ brew update
 brew upgrade
 brew cleanup
 
+cd ~/Projects/dotfiles && \
+  git pull &&
+  brew bundle && \
+  git add Brewfile.lock.json && \
+  git ci -m 'update brewfile' && \
+  git push && \
+  cd -
+
 gcloud components update -q
 
 rvm get stable

@@ -1,6 +1,12 @@
+Include ~/.ssh/bzero-bz-config
+
 # Since the first obtained value for each parameter is used, more host-specific
 # declarations should be given near the beginning of the file, and general
 # defaults at the end.
+
+Host norns
+  User we
+  Hostname 192.168.1.201
 
 Host cask
   User admin
@@ -38,6 +44,10 @@ Host piaware
   User pi
   Hostname piaware.local
 
+Host magicmirroros
+  User pi
+  Hostname magicmirroros.local
+
 Host cabin
   Hostname cabin.welch.io
   User nat
@@ -49,11 +59,6 @@ Host newyork
   Port 4022
   Compression yes
 
-Host heroku.com
-  HostName heroku.com
-  IdentityFile ~/.ssh/id_rsa
-  IdentitiesOnly yes
-
 Host beta.aptible.com
   HostName beta.aptible.com
   User git
@@ -62,7 +67,7 @@ Host beta.aptible.com
 
 Host whatbox.ca
   User icco
-  Hostname maven.whatbox.ca
+  Hostname dawn.whatbox.ca
   Compression no
   KeepAlive yes
 

@@ -148,6 +148,9 @@ set rtp+=$GOPATH/src/github.com/golang/lint/misc/vim
 " Go Fmt
 au BufWritePre,FileWritePre *.go :GoFmt
 
+" JSON Fmt
+autocmd FileType json autocmd BufWritePre <buffer> %!jq .
+
 " Turn on terraform auto fmt
 let g:terraform_fmt_on_save=1
 let g:terraform_align=1

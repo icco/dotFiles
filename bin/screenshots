@@ -1,3 +1,5 @@
 #! /bin/zsh
 
-mv ~/Desktop/Screen\ Shot* ~/Dropbox/Screenshots/
+mv -v ~/Desktop/screencapture* ~/Dropbox/Screenshots/
+mv -v ~/Downloads/screencapture* ~/Dropbox/Screenshots/
+mv -v ~/Desktop/Screen\ Shot* ~/Dropbox/Screenshots/
