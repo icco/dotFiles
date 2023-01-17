@@ -6,9 +6,9 @@ if type "etu" > /dev/null; then
 fi
 
 # git_prompt_info is a shell function from /Users/nat/.oh-my-zsh/lib/git.zsh
-GIT=" $(git_prompt_info)"
+GIT_INFO=" $(git_prompt_info)"
 
-PROMPT=$'\n[ %{$fg[red]%}%D{%a %b %d %H:%M:%S}%{$reset_color%} ]%{$fg[grey]%}$ETU%{$reset_color%}$GIT\n[ %b%n@%m %{$fg[blue]%}$(shrink_path -f)%{$reset_color%} ]\\$ '
+PROMPT=$'\n[ %{$fg[red]%}%D{%a %b %d %H:%M:%S}%{$reset_color%} ]%{$fg[grey]%}$ETU%{$reset_color%}$GIT_INFO\n[ %b%n@%m %{$fg[blue]%}$(shrink_path -f)%{$reset_color%} ]\\$ '
 
 PS2=$' \e[0;34m%}%B>%{\e[0m%}%b '
 
