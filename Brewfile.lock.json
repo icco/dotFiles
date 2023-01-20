@@ -1366,7 +1366,7 @@
       "ventura": {
         "HOMEBREW_VERSION": "3.6.20",
         "HOMEBREW_PREFIX": "/usr/local",
-        "Homebrew/homebrew-core": "d7732112097031221e0cc962289b7ed36240411c",
+        "Homebrew/homebrew-core": "0656b851d3e70706fc1a548bea902567d74dce08",
         "CLT": "",
         "Xcode": "14.2",
         "macOS": "13.1"
