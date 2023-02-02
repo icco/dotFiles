@@ -902,15 +902,15 @@
         }
       },
       "ssh-copy-id": {
-        "version": "9.1p1",
+        "version": "9.2p1",
         "bottle": {
           "rebuild": 0,
           "root_url": "https://ghcr.io/v2/homebrew/core",
           "files": {
             "all": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/ssh-copy-id/blobs/sha256:adbfffa452595c8b3c0a4f491200f0d1ccbe95f54df180001ba3e10e7286d227",
-              "sha256": "adbfffa452595c8b3c0a4f491200f0d1ccbe95f54df180001ba3e10e7286d227"
+              "url": "https://ghcr.io/v2/homebrew/core/ssh-copy-id/blobs/sha256:cd9050531e6042842d4ec7c05d7387168b9cd16b6134868b83d52e730c1e8bef",
+              "sha256": "cd9050531e6042842d4ec7c05d7387168b9cd16b6134868b83d52e730c1e8bef"
             }
           }
         }
@@ -1366,7 +1366,7 @@
       "ventura": {
         "HOMEBREW_VERSION": "3.6.20",
         "HOMEBREW_PREFIX": "/usr/local",
-        "Homebrew/homebrew-core": "d25b967faad5257a3ff15324a2838b4917d984ea",
+        "Homebrew/homebrew-core": "08637e57abc875603d4f8043024886a8c41a4b8e",
         "CLT": "",
         "Xcode": "14.2",
         "macOS": "13.1"
