@@ -67,12 +67,6 @@ Host newyork
   Port 4022
   Compression yes
 
-Host beta.aptible.com
-  HostName beta.aptible.com
-  User git
-  IdentityFile ~/.ssh/id_rsa_aptible
-  IdentitiesOnly yes
-
 Host whatbox.ca
   User icco
   Hostname dawn.whatbox.ca
