@@ -6,7 +6,7 @@
 " Website:     https://wakatime.com/
 " ============================================================================
 
-let s:VERSION = '9.0.1'
+let s:VERSION = '10.0.0'
 
 
 " Init {{{
@@ -55,6 +55,7 @@ let s:VERSION = '9.0.1'
     let s:has_reltime = has('reltime') && localtime() - 1 < split(split(reltimestr(reltime()))[0], '\.')[0]
     let s:config_file_already_setup = s:false
     let s:debug_mode_already_setup = s:false
+    let s:cli_already_setup = s:false
     let s:is_debug_on = s:false
     let s:local_cache_expire = 10  " seconds between reading s:shared_state_file
     let s:last_heartbeat = {'last_activity_at': 0, 'last_heartbeat_at': 0, 'file': ''}
@@ -78,7 +79,7 @@ let s:VERSION = '9.0.1'
 
         " Get redraw setting from wakatime.cfg file
         let vi_redraw = s:GetIniSetting('settings', 'vi_redraw')
-        if vi_redraw != ''
+        if !empty(vi_redraw)
             if vi_redraw == 'enabled'
                 let s:redraw_setting = 'enabled'
             endif
@@ -181,20 +182,31 @@ let s:VERSION = '9.0.1'
                 let job = jobstart(job_cmd, job_opts)
             elseif s:IsWindows()
                 if s:is_debug_on
-                    let stdout = system('(' . s:JoinArgs(cmd) . ')')
+                    let stdout = s:StripWhitespace(system('(' . s:JoinArgs(cmd) . ')'))
+                    if !empty(stdout)
+                        echo printf('[WakaTime] error installing wakatime-cli for Windows: %s\nWill retry using Vim built-in Python.', stdout)
+                        call s:InstallCLI(s:false)
+                    endif
                 else
                     exec 'silent !start /b cmd /c "' . s:JoinArgs(cmd) . ' > nul 2> nul"'
                 endif
             else
                 if s:is_debug_on
-                    let stdout = system(s:JoinArgs(cmd))
+                    let stdout = s:StripWhitespace(system(s:JoinArgs(cmd)))
+                    if !empty(stdout)
+                        echo printf('[WakaTime] error installing wakatime-cli: %s\nWill retry using Vim built-in Python.', stdout)
+                        call s:InstallCLI(s:false)
+                    endif
                 else
-                    let stdout = system(s:JoinArgs(cmd) . ' &')
+                    let stdout = s:StripWhitespace(system(s:JoinArgs(cmd) . ' &'))
+                    if !empty(stdout)
+                        call s:InstallCLI(s:false)
+                    endif
                 endif
             endif
-        elseif s:Executable(v:progname) && (has('python3') || has('python'))
+        elseif s:Executable(v:progname) && (has('python3') || has('python') || has('python3_dynamic') || has('python_dynamic'))
             call s:InstallCLIRoundAbout()
-        elseif has('python3')
+        elseif has('python3') || has('python3_dynamic')
             python3 << EOF
 import sys
 import vim
@@ -203,7 +215,7 @@ sys.path.insert(0, abspath(join(vim.eval('s:plugin_root_folder'), 'scripts')))
 from install_cli import main
 main(home=vim.eval('s:home'))
 EOF
-        elseif has('python')
+        elseif has('python') || has('python_dynamic')
             python << EOF
 import sys
 import vim
@@ -213,13 +225,41 @@ from install_cli import main
 main(home=vim.eval('s:home'))
 EOF
         elseif !filereadable(s:wakatime_cli)
-            let url = 'https://github.com/wakatime/wakatime-cli/releases'
-            echo printf("Download wakatime-cli and extract into the ~/.wakatime/ folder:\n%s", url)
+
+            " use Powershell to install wakatime-cli because NeoVim doesn't
+            " come installed with Python bundled (https://github.com/wakatime/vim-wakatime/issues/147)
+            if s:IsWindows()
+                echo "Downloading wakatime-cli to ~/.wakatime/... this may take a while but only needs to be done once..."
+
+                let cmd = 'if ((Get-WmiObject win32_operatingsystem | select osarchitecture).osarchitecture -eq "64-bit") { Write "amd64" } else { Write "386" }'
+                let arch = s:Chomp(system(['powershell.exe', '-noprofile', '-command'] + [cmd]))
+
+                let url = "https://github.com/wakatime/wakatime-cli/releases/download/v1.60.4/wakatime-cli-windows-" . arch . ".zip"
+                let zipfile = s:home . "/.wakatime/wakatime-cli.zip"
+
+                let cmd = 'Invoke-WebRequest -Uri ' . url . ' -OutFile ' . shellescape(zipfile)
+                call system(['powershell.exe', '-noprofile', '-command'] + [cmd])
+
+                let cmd = 'Add-Type -AssemblyName System.IO.Compression.FileSystem; [System.IO.Compression.ZipFile]::ExtractToDirectory(' . shellescape(zipfile) . ', ' . shellescape(s:home . '/.wakatime') . ')'
+                call system(['powershell.exe', '-noprofile', '-command'] + [cmd])
+
+                let cmd = 'Rename-Item -Path ' . shellescape(s:home . '/.wakatime/wakatime-cli-windows-amd64.exe') . ' -NewName ' . shellescape(s:home . '/.wakatime/wakatime-cli.exe')
+                call system(['powershell.exe', '-noprofile', '-command'] + [cmd])
+
+                call delete(fnameescape(zipfile))
+
+                echo "Finished installing wakatime-cli."
+
+            " last resort, ask to manually download wakatime-cli
+            else
+                let url = 'https://github.com/wakatime/wakatime-cli/releases'
+                echo printf("Download wakatime-cli and extract into the ~/.wakatime/ folder:\n%s", url)
+            endif
         endif
     endfunction
 
     function! s:InstallCLIRoundAbout()
-        if has('python3')
+        if has('python3') || has('python3_dynamic')
             let py = 'python3'
         else
             let py = 'python'
@@ -284,15 +324,30 @@ EOF
 
             " Make sure config file has api_key
             let found_api_key = s:false
-            if s:GetIniSetting('settings', 'api_key') != '' || s:GetIniSetting('settings', 'apikey') != ''
+            if !empty(s:GetIniSetting('settings', 'api_key')) || !empty(s:GetIniSetting('settings', 'apikey'))
                 let found_api_key = s:true
             endif
+
+            if !found_api_key
+                let vault_cmd = s:GetIniSetting('settings', 'api_key_vault_cmd')
+                if !empty(vault_cmd) && !empty(s:Chomp(system(vault_cmd)))
+                    let found_api_key = s:true
+                endif
+            endif
+
             if !found_api_key
                 call s:PromptForApiKey()
                 echo "[WakaTime] Setup complete! Visit https://wakatime.com to view your coding activity."
             endif
 
             let s:config_file_already_setup = s:true
+        endif
+    endfunction
+
+    function! s:SetupCLI()
+        if !s:cli_already_setup
+            let s:cli_already_setup = s:true
+            call s:InstallCLI(s:true)
         endif
     endfunction
 
@@ -315,7 +370,7 @@ EOF
         let currentSection = ''
         for line in lines
             let line = s:StripWhitespace(line)
-            if matchstr(line, '^\[') != '' && matchstr(line, '\]$') != ''
+            if !empty(matchstr(line, '^\[')) && !empty(matchstr(line, '\]$'))
                 let currentSection = substitute(line, '^\[\(.\{-}\)\]$', '\1', '')
             else
                 if currentSection == a:section
@@ -338,7 +393,7 @@ EOF
             let currentSection = ''
             for line in lines
                 let entry = s:StripWhitespace(line)
-                if matchstr(entry, '^\[') != '' && matchstr(entry, '\]$') != ''
+                if !empty(matchstr(entry, '^\[')) && !empty(matchstr(entry, '\]$'))
                     if currentSection == a:section && !keyFound
                         let output = output + [join([a:key, a:val], '=')]
                         let keyFound = s:true
@@ -450,10 +505,10 @@ EOF
 
     function! s:AppendHeartbeat(file, now, is_write, last)
         let file = a:file
-        if file == ''
+        if empty(file)
             let file = a:last.file
         endif
-        if file != ''
+        if !empty(file)
             let heartbeat = {}
             let heartbeat.entity = file
             let heartbeat.time = s:CurrentTimeStr()
@@ -506,7 +561,7 @@ EOF
         if has_key(heartbeat, 'language')
             let cmd = cmd + ['--alternate-language', heartbeat.language]
         endif
-        if extra_heartbeats != ''
+        if !empty(extra_heartbeats)
             let cmd = cmd + ['--extra-heartbeats']
         endif
 
@@ -527,7 +582,7 @@ EOF
             let job = job_start(job_cmd, {
                 \ 'stoponexit': '',
                 \ 'callback': {channel, output -> s:AsyncHandler(output, cmd)}})
-            if extra_heartbeats != ''
+            if !empty(extra_heartbeats)
                 let channel = job_getchannel(job)
                 call ch_sendraw(channel, extra_heartbeats . "\n")
             endif
@@ -546,12 +601,12 @@ EOF
                 let job_opts['detach'] = 1
             endif
             let job = jobstart(job_cmd, job_opts)
-            if extra_heartbeats != ''
+            if !empty(extra_heartbeats)
                 call jobsend(job, extra_heartbeats . "\n")
             endif
         elseif s:IsWindows()
             if s:is_debug_on
-                if extra_heartbeats != ''
+                if !empty(extra_heartbeats)
                     let stdout = system('(' . s:JoinArgs(cmd) . ')', extra_heartbeats)
                 else
                     let stdout = system('(' . s:JoinArgs(cmd) . ')')
@@ -564,13 +619,13 @@ EOF
             endif
         else
             if s:is_debug_on
-                if extra_heartbeats != ''
+                if !empty(extra_heartbeats)
                     let stdout = system(s:JoinArgs(cmd), extra_heartbeats)
                 else
                     let stdout = system(s:JoinArgs(cmd))
                 endif
             else
-                if extra_heartbeats != ''
+                if !empty(extra_heartbeats)
                     let stdout = system(s:JoinArgs(cmd) . ' &', extra_heartbeats)
                 else
                     let stdout = system(s:JoinArgs(cmd) . ' &')
@@ -594,7 +649,7 @@ EOF
             endif
         endif
 
-        if s:is_debug_on && stdout != ''
+        if s:is_debug_on && !empty(stdout)
             echoerr '[WakaTime] Command: ' . s:JoinArgs(cmd) . "\n[WakaTime] Error: " . stdout
         endif
     endfunction
@@ -676,7 +731,7 @@ EOF
     function! s:PromptForApiKey()
         let api_key = s:false
         let api_key = s:GetIniSetting('settings', 'api_key')
-        if api_key == ''
+        if empty(api_key)
             let api_key = s:GetIniSetting('settings', 'apikey')
         endif
 
@@ -712,6 +767,7 @@ EOF
     function! s:InitAndHandleActivity(is_write)
         call s:SetupDebugMode()
         call s:SetupConfigFile()
+        call s:SetupCLI()
         call s:HandleActivity(a:is_write)
     endfunction
 
@@ -744,8 +800,9 @@ EOF
         endif
     endfunction
 
-    function! g:WakaTimeToday()
+    function! g:WakaTimeToday(callback)
         let cmd = [s:wakatime_cli, '--today']
+        let s:async_callback_today = a:callback
 
         if s:has_async
             if !s:IsWindows()
@@ -774,8 +831,102 @@ EOF
             let s:nvim_async_output_today = ['']
             let job = jobstart(job_cmd, job_opts)
         else
-            echo "Today: " .  s:Chomp(system(s:JoinArgs(cmd)))
+            call a:callback(s:Chomp(system(s:JoinArgs(cmd))))
         endif
+    endfunction
+
+    function! g:WakaTimeFileExpert(callback)
+        let file = s:GetCurrentFile()
+        if empty(file)
+            let file = s:GetLastHeartbeat().file
+        endif
+        let cmd = [s:wakatime_cli, '--file-experts', '--entity', file]
+        let s:async_callback_file_expert = a:callback
+
+        if s:has_async
+            if !s:IsWindows()
+                let job_cmd = [&shell, &shellcmdflag, s:JoinArgs(cmd)]
+            elseif &shell =~ 'sh\(\.exe\)\?$'
+                let job_cmd = [&shell, '-c', s:JoinArgs(cmd)]
+            else
+                let job_cmd = [&shell, &shellcmdflag] + cmd
+            endif
+            let job = job_start(job_cmd, {
+                \ 'stoponexit': '',
+                \ 'callback': {channel, output -> s:AsyncFileExpertHandler(output, cmd)}})
+        elseif s:nvim_async
+            if s:IsWindows()
+                let job_cmd = cmd
+            else
+                let job_cmd = [&shell, &shellcmdflag, s:JoinArgs(cmd)]
+            endif
+            let job_opts = {
+                \ 'on_stdout': function('s:NeovimAsyncFileExpertOutputHandler'),
+                \ 'on_stderr': function('s:NeovimAsyncFileExpertOutputHandler'),
+                \ 'on_exit': function('s:NeovimAsyncFileExpertExitHandler')}
+            if !s:IsWindows()
+                let job_opts['detach'] = 1
+            endif
+            let s:nvim_async_output_file_expert = ['']
+            let job = jobstart(job_cmd, job_opts)
+        else
+            call a:callback(s:Chomp(system(s:JoinArgs(cmd))))
+        endif
+    endfunction
+
+    function! g:WakaTimeCliLocation(callback)
+        call a:callback(s:wakatime_cli)
+    endfunction
+
+    function! g:WakaTimeCliVersion(callback)
+        let cmd = [s:wakatime_cli, '--version']
+        let s:async_callback_version = a:callback
+
+        if s:has_async
+            if !s:IsWindows()
+                let job_cmd = [&shell, &shellcmdflag, s:JoinArgs(cmd)]
+            elseif &shell =~ 'sh\(\.exe\)\?$'
+                let job_cmd = [&shell, '-c', s:JoinArgs(cmd)]
+            else
+                let job_cmd = [&shell, &shellcmdflag] + cmd
+            endif
+            let job = job_start(job_cmd, {
+                \ 'stoponexit': '',
+                \ 'callback': {channel, output -> s:AsyncVersionHandler(output, cmd)}})
+        elseif s:nvim_async
+            if s:IsWindows()
+                let job_cmd = cmd
+            else
+                let job_cmd = [&shell, &shellcmdflag, s:JoinArgs(cmd)]
+            endif
+            let job_opts = {
+                \ 'on_stdout': function('s:NeovimAsyncVersionOutputHandler'),
+                \ 'on_stderr': function('s:NeovimAsyncVersionOutputHandler'),
+                \ 'on_exit': function('s:NeovimAsyncVersionExitHandler')}
+            if !s:IsWindows()
+                let job_opts['detach'] = 1
+            endif
+            let s:nvim_async_output_version = ['']
+            let job = jobstart(job_cmd, job_opts)
+        else
+            call a:callback(s:Chomp(system(s:JoinArgs(cmd))))
+        endif
+    endfunction
+
+    function! s:Print(msg)
+        echo a:msg
+    endfunction
+
+    function! s:PrintToday(msg)
+        echo "Today: " . a:msg
+    endfunction
+
+    function! s:PrintFileExpert(msg)
+        let output = a:msg
+        if empty(output)
+            let output = 'No data on this file.'
+        endif
+        echo output
     endfunction
 
     function! s:Executable(path)
@@ -791,7 +942,7 @@ EOF
 " Async Handlers {{{
 
     function! s:AsyncHandler(output, cmd)
-        if s:is_debug_on && s:StripWhitespace(a:output) != ''
+        if s:is_debug_on && !empty(s:StripWhitespace(a:output))
             echoerr '[WakaTime] Command: ' . s:JoinArgs(a:cmd) . "\n[WakaTime] Error: " . a:output
         endif
     endfunction
@@ -806,13 +957,13 @@ EOF
         if a:exit_code == s:exit_code_api_key_error
             let output .= 'Invalid API Key'
         endif
-        if (s:is_debug_on || a:exit_code == s:exit_code_config_parse_error || a:exit_code == s:exit_code_api_key_error) && output != ''
+        if (s:is_debug_on || a:exit_code == s:exit_code_config_parse_error || a:exit_code == s:exit_code_api_key_error) && !empty(output)
             echoerr printf('[WakaTime] Error %d: %s', a:exit_code, output)
         endif
     endfunction
 
     function! s:AsyncTodayHandler(output, cmd)
-        echo "Today: " . a:output
+        call s:async_callback_today(a:output)
     endfunction
 
     function! s:NeovimAsyncTodayOutputHandler(job_id, output, event)
@@ -825,13 +976,45 @@ EOF
         if a:exit_code == s:exit_code_api_key_error
             let output .= 'Invalid API Key'
         endif
-        if output != ''
-            echo "Today: " . output
+        call s:async_callback_today(output)
+    endfunction
+
+    function! s:AsyncFileExpertHandler(output, cmd)
+        call s:async_callback_file_expert(a:output)
+    endfunction
+
+    function! s:NeovimAsyncFileExpertOutputHandler(job_id, output, event)
+        let s:nvim_async_output_file_expert[-1] .= a:output[0]
+        call extend(s:nvim_async_output_file_expert, a:output[1:])
+    endfunction
+
+    function! s:NeovimAsyncFileExpertExitHandler(job_id, exit_code, event)
+        let output = s:StripWhitespace(join(s:nvim_async_output_file_expert, "\n"))
+        if a:exit_code == s:exit_code_api_key_error
+            let output .= 'Invalid API Key'
         endif
+        call s:async_callback_file_expert(output)
+    endfunction
+
+    function! s:AsyncVersionHandler(output, cmd)
+        call s:async_callback_version(a:output)
+    endfunction
+
+    function! s:NeovimAsyncVersionHandler(job_id, output, event)
+        let s:nvim_async_output_version[-1] .= a:output[0]
+        call extend(s:nvim_async_output_version, a:output[1:])
+    endfunction
+
+    function! s:NeovimAsyncVersionExitHandler(job_id, exit_code, event)
+        let output = s:StripWhitespace(join(s:nvim_async_output_version, "\n"))
+        if a:exit_code == s:exit_code_api_key_error
+            let output .= 'Invalid API Key'
+        endif
+        call s:async_callback_version(output)
     endfunction
 
     function! s:AsyncInstallHandler(output)
-        if s:is_debug_on && s:StripWhitespace(a:output != '')
+        if s:is_debug_on && !empty(s:StripWhitespace(a:output))
             echo '[WakaTime] ' . a:output
             call s:InstallCLI(s:false)
         endif
@@ -844,7 +1027,7 @@ EOF
 
     function! s:NeovimAsyncInstallExitHandler(job_id, exit_code, event)
         let output = s:StripWhitespace(join(s:nvim_async_output, "\n"))
-        if s:is_debug_on && (a:exit_code != 0 || output != '')
+        if s:is_debug_on && (a:exit_code != 0 || !empty(output))
             echo printf('[WakaTime] %d: %s', a:exit_code, output)
             call s:InstallCLI(s:false)
         endif
@@ -854,14 +1037,13 @@ EOF
 
 
 call s:Init()
-call s:InstallCLI(s:true)
 
 
 " Autocommand Events {{{
 
     augroup Wakatime
         autocmd BufEnter,VimEnter * call s:InitAndHandleActivity(s:false)
-        autocmd CursorMoved,CursorMovedI * call s:HandleActivity(s:false)
+        autocmd CursorHold,CursorHoldI * call s:HandleActivity(s:false)
         autocmd BufWritePost * call s:HandleActivity(s:true)
         if exists('##QuitPre')
             autocmd QuitPre * call s:SendHeartbeats()
@@ -879,7 +1061,10 @@ call s:InstallCLI(s:true)
     :command -nargs=0 WakaTimeScreenRedrawDisable call s:DisableScreenRedraw()
     :command -nargs=0 WakaTimeScreenRedrawEnable call s:EnableScreenRedraw()
     :command -nargs=0 WakaTimeScreenRedrawEnableAuto call s:EnableScreenRedrawAuto()
-    :command -nargs=0 WakaTimeToday call g:WakaTimeToday()
+    :command -nargs=0 WakaTimeToday call g:WakaTimeToday(function('s:Print'))
+    :command -nargs=0 WakaTimeFileExpert call g:WakaTimeFileExpert(function('s:PrintFileExpert'))
+    :command -nargs=0 WakaTimeCliLocation call g:WakaTimeCliLocation(function('s:Print'))
+    :command -nargs=0 WakaTimeCliVersion call g:WakaTimeCliVersion(function('s:Print'))
 
 " }}}
 
