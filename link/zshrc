@@ -35,7 +35,10 @@ plugins=(
   command-not-found
   osx
   shrink-path
+  iterm2 
 )
+
+zstyle :omz:plugins:iterm2 shell-integration yes
 
 source $ZSH/oh-my-zsh.sh
 
@@ -60,8 +63,6 @@ if type brew &>/dev/null; then
   autoload -Uz compinit
   compinit
 fi
-
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 export GOPROXY="https://proxy.golang.org"
 
