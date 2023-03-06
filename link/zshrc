@@ -31,9 +31,7 @@ CASE_SENSITIVE="true"
 plugins=(
   zsh-z
   dotenv
-  colorize
   command-not-found
-  osx
   shrink-path
   iterm2 
 )
