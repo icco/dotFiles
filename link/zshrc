@@ -31,11 +31,8 @@ CASE_SENSITIVE="true"
 plugins=(
   zsh-z
   dotenv
-  screen
   colorize
-  npm
   command-not-found
-  ruby
   osx
   shrink-path
 )
