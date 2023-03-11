@@ -27,6 +27,8 @@
 	autocrlf = input
 	abbrev = 12
 	commitGraph = true
+[commit]
+	gpgsign = false
 [github]
 	user = icco
 [branch]
@@ -55,14 +57,10 @@
 	cookiefile = ~/.gitcookies
 [diff]
 	submodule = log
-[commit]
-	gpgsign = true
 [fetch]
 	prune = true
 [url "git@github.com:"]
 	insteadOf = https://github.com/
-[credential "https://source.developers.google.com"]
-	helper = gcloud.sh
 [pull]
 	rebase = false
 [status]
