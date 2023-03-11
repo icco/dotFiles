@@ -1,10 +1,10 @@
 # extract plugin
 
-This plugin defines a function called `extract` that extracts the archive file
-you pass it, and it supports a wide variety of archive filetypes.
+This plugin defines a function called `extract` that extracts the archive file you pass it, and it supports a
+wide variety of archive filetypes.
 
-This way you don't have to know what specific command extracts a file, you just
-do `extract <filename>` and the function takes care of the rest.
+This way you don't have to know what specific command extracts a file, you just do `extract <filename>` and
+the function takes care of the rest.
 
 To use it, add `extract` to the plugins array in your zshrc file:
 
@@ -15,13 +15,16 @@ plugins=(... extract)
 ## Supported file extensions
 
 | Extension         | Description                          |
-|:------------------|:-------------------------------------|
+| :---------------- | :----------------------------------- |
 | `7z`              | 7zip file                            |
 | `Z`               | Z archive (LZW)                      |
 | `apk`             | Android app file                     |
 | `aar`             | Android library file                 |
 | `bz2`             | Bzip2 file                           |
+| `cab`             | Microsoft cabinet archive            |
+| `cpio`            | Cpio archive                         |
 | `deb`             | Debian package                       |
+| `ear`             | Enterprise Application aRchive       |
 | `gz`              | Gzip file                            |
 | `ipa`             | iOS app package                      |
 | `ipsw`            | iOS firmware file                    |
@@ -29,6 +32,7 @@ plugins=(... extract)
 | `lrz`             | LRZ archive                          |
 | `lz4`             | LZ4 archive                          |
 | `lzma`            | LZMA archive                         |
+| `obscpio`         | cpio archive used on OBS             |
 | `rar`             | WinRAR archive                       |
 | `rpm`             | RPM package                          |
 | `sublime-package` | Sublime Text package                 |
@@ -52,6 +56,7 @@ plugins=(... extract)
 | `xz`              | LZMA2 archive                        |
 | `zip`             | Zip archive                          |
 | `zst`             | Zstandard file (zstd)                |
+| `zpaq`            | Zpaq file                            |
 
-See [list of archive formats](https://en.wikipedia.org/wiki/List_of_archive_formats) for
-more information regarding archive formats.
+See [list of archive formats](https://en.wikipedia.org/wiki/List_of_archive_formats) for more information
+regarding archive formats.

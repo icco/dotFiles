@@ -43,8 +43,10 @@ export PATH="$PATH:$HOME/.rvm/bin"
 # A better which
 alias which='alias | /usr/local/bin/gwhich --tty-only --read-alias --show-dot --show-tilde'
 
+# nvm
 export NVM_DIR="$HOME/.nvm"
-. "/usr/local/opt/nvm/nvm.sh"
+[ -s "/usr/local/opt/nvm/nvm.sh" ] && \. "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/usr/local/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
 # place this after nvm initialization!
 autoload -U add-zsh-hook
@@ -77,5 +79,6 @@ if [ -f '/Users/nat/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 alias tf="terraform"
+alias tfdocs="terraform-docs"
 
 # vim: set filetype=zsh:

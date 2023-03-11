@@ -63,6 +63,20 @@ trigger on directories.  For example:
 Default: '/,*'
 
 ------------------------------------------------------------------------------
+Which buffer types trigger Rooter                          *g:rooter_buftypes*
+
+Default: ['', 'nofile', 'nowrite', 'acwrite']
+
+Rooter only runs in 'buftype's where it makes sense to look for a root
+directory.
+
+A normal file has an empty 'buftype'.  Directory browsing plugins often set the
+'buftype' to "nofile", "nowrite", or "acwrite".  To stick to normal files:
+>
+    let g:rooter_buftypes = ['']
+<
+
+------------------------------------------------------------------------------
 How to identify a root directory                           *g:rooter_patterns*
 
 Default: ['.git', '_darcs', '.hg', '.bzr', '.svn', 'Makefile', 'package.json']

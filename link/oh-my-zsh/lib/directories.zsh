@@ -1,7 +1,15 @@
 # Changing/making/removing directory
+setopt auto_cd
 setopt auto_pushd
 setopt pushd_ignore_dups
 setopt pushdminus
+
+# add (uncommented):
+# zstyle ':omz:directories' aliases no
+# to your `zshrc` before loading `oh-my-zsh.sh`
+# to disable the following aliases and functions
+
+zstyle -T ':omz:directories' aliases || return 0
 
 alias -g ...='../..'
 alias -g ....='../../..'
@@ -9,7 +17,7 @@ alias -g .....='../../../..'
 alias -g ......='../../../../..'
 
 alias -- -='cd -'
-alias 1='cd -'
+alias 1='cd -1'
 alias 2='cd -2'
 alias 3='cd -3'
 alias 4='cd -4'
@@ -26,7 +34,7 @@ function d () {
   if [[ -n $1 ]]; then
     dirs "$@"
   else
-    dirs -v | head -10
+    dirs -v | head -n 10
   fi
 }
 compdef _dirs d

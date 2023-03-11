@@ -39,6 +39,7 @@ if get(g:, "go_def_mapping_enabled", 1)
   " these are default Vim mappings, we're overriding them to make them
   " useful again for Go source code
   nnoremap <buffer> <silent> gd :GoDef<cr>
+  nnoremap <buffer> <silent> gD :GoDefType<cr>
   nnoremap <buffer> <silent> <C-]> :GoDef<cr>
   nnoremap <buffer> <silent> <C-LeftMouse> <LeftMouse>:GoDef<cr>
   nnoremap <buffer> <silent> g<LeftMouse> <LeftMouse>:GoDef<cr>
@@ -113,10 +114,10 @@ augroup vim-go-buffer
     " clear SameIds when the buffer is unloaded from its last window so that
     " loading another buffer (especially of a different filetype) in the same
     " window doesn't highlight the most recently matched identifier's positions.
-    autocmd BufWinLeave <buffer> call go#guru#ClearSameIds()
+    autocmd BufWinLeave <buffer> call go#sameids#ClearSameIds()
     " clear SameIds when a new buffer is loaded in the window so that the
     " previous buffer's highlighting isn't used.
-    autocmd BufWinEnter <buffer> call go#guru#ClearSameIds()
+    autocmd BufWinEnter <buffer> call go#sameids#ClearSameIds()
 
     " clear diagnostics when the buffer is unloaded from its last window so that
     " loading another buffer (especially of a different filetype) in the same
