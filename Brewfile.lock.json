@@ -1341,7 +1341,7 @@
   "system": {
     "macos": {
       "monterey": {
-        "HOMEBREW_VERSION": "4.0.4-202-gb1ef41c",
+        "HOMEBREW_VERSION": "4.0.6-8-g0a6dffd",
         "HOMEBREW_PREFIX": "/usr/local",
         "Homebrew/homebrew-core": "api",
         "CLT": "14.2.0.0.1.1668646533",
