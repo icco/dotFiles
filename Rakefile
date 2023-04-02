@@ -52,7 +52,7 @@ task :infect => [:test, :structure] do
 
     if !File.directory? linkable
       dir = File.dirname file
-      if !Dir.exists? dir
+      if !Dir.exist? dir
         FileUtils.mkdir_p dir
       end
 
@@ -81,7 +81,7 @@ class NatFile
     overwrite = false
     backup = false
 
-    if File.exists?(target) || File.symlink?(target)
+    if File.exist?(target) || File.symlink?(target)
       # Backup
       `cp -r "#{target}" "#{target}.#{Time.now.to_i}.backup"`
       `mv "#{target}.#{Time.now.to_i}.backup" "$HOME/tmp/"`
