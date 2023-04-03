@@ -1427,11 +1427,11 @@
         "macOS": "12.6.3"
       },
       "ventura": {
-        "HOMEBREW_VERSION": "4.0.10",
+        "HOMEBREW_VERSION": "4.0.11",
         "HOMEBREW_PREFIX": "/usr/local",
         "Homebrew/homebrew-core": "api",
         "CLT": "14.2.0.0.1.1668646533",
-        "Xcode": "14.2",
+        "Xcode": "14.3",
         "macOS": "13.2.1"
       }
     }
