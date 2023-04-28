@@ -76,3 +76,8 @@ Host whatbox.ca
 Host prod
   Hostname h7xhuml12mta41edxbi06jil9.canarytokens.com
   User ec2-user
+
+Host github.com
+  Hostname github.com
+  User git
+  Compression yes
