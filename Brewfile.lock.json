@@ -1414,12 +1414,12 @@
   "system": {
     "macos": {
       "monterey": {
-        "HOMEBREW_VERSION": "4.0.16-43-gc1fdb59",
+        "HOMEBREW_VERSION": "4.0.18-107-g106a61c",
         "HOMEBREW_PREFIX": "/usr/local",
         "Homebrew/homebrew-core": "api",
         "CLT": "14.2.0.0.1.1668646533",
         "Xcode": "14.2",
-        "macOS": "12.6.3"
+        "macOS": "12.6.5"
       },
       "ventura": {
         "HOMEBREW_VERSION": "4.0.18",
