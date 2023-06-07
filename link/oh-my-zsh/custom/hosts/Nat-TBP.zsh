@@ -1,1 +1,0 @@
-Nat-TBP.local.zsh
