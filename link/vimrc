@@ -4,9 +4,8 @@
 
 " Install fzf
 " TODO: Make this work on non-os-x things
-set rtp+=/usr/local/opt/fzf
-set rtp+=/usr/share/doc/fzf/examples/
-nnoremap ff :FZF<CR>
+set rtp+=$HOMEBREW_PREFIX/opt/fzf
+nnoremap ff :Files<CR>
 
 " Basics
 set encoding=utf-8
