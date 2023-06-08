@@ -234,7 +234,7 @@ EOF
                 let cmd = 'if ((Get-WmiObject win32_operatingsystem | select osarchitecture).osarchitecture -eq "64-bit") { Write "amd64" } else { Write "386" }'
                 let arch = s:Chomp(system(['powershell.exe', '-noprofile', '-command'] + [cmd]))
 
-                let url = "https://github.com/wakatime/wakatime-cli/releases/download/v1.60.4/wakatime-cli-windows-" . arch . ".zip"
+                let url = "https://github.com/wakatime/wakatime-cli/releases/latest/download/wakatime-cli-windows-" . arch . ".zip"
                 let zipfile = s:home . "/.wakatime/wakatime-cli.zip"
 
                 let cmd = 'Invoke-WebRequest -Uri ' . url . ' -OutFile ' . shellescape(zipfile)
@@ -1016,7 +1016,7 @@ EOF
         call s:async_callback_version(a:output)
     endfunction
 
-    function! s:NeovimAsyncVersionHandler(job_id, output, event)
+    function! s:NeovimAsyncVersionOutputHandler(job_id, output, event)
         let s:nvim_async_output_version[-1] .= a:output[0]
         call extend(s:nvim_async_output_version, a:output[1:])
     endfunction
