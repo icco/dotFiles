@@ -7,7 +7,7 @@ export APTIBLE_OUTPUT_FORMAT=json
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # Try and fix PATH
-export PATH="/usr/local/sbin:/usr/local/bin:$PATH"
+export PATH="/opt/homebrew/bin:/usr/local/sbin:/usr/local/bin:$PATH"
 
 # Mac ls does not have color option...
 alias ls="/bin/ls";
@@ -41,7 +41,7 @@ export PATH="$PATH:$HOME/.rvm/bin"
 [ -f /usr/local/etc/profile.d/z.sh ] && . /usr/local/etc/profile.d/z.sh
 
 # A better which
-alias which='alias | /usr/local/bin/gwhich --tty-only --read-alias --show-dot --show-tilde'
+alias which='alias | gwhich --tty-only --read-alias --show-dot --show-tilde'
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
