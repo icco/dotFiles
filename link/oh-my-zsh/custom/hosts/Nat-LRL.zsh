@@ -27,12 +27,9 @@ export GOPATH="$HOME/Projects"
 export PATH="$GOPATH/bin:$PATH"
 export GO111MODULE="on"
 
-# RVM
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-export PATH="$PATH:$HOME/.rvm/bin"
-
-# Add GVM
-#[[ -s "$HOME/.gvm/scripts/gvm" ]] && source "${HOME}/.gvm/scripts/gvm"
+# search!
+alias fr='open -R "$(fzf)"'
+alias f='open "$(fzf)"'
 
 # added by travis gem
 [ -f /Users/nat/.travis/travis.sh ] && source /Users/nat/.travis/travis.sh
@@ -78,7 +75,12 @@ if [ -f '/Users/nat/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# Terraform
 alias tf="terraform"
 alias tfdocs="terraform-docs"
+
+# RVM
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+export PATH="$PATH:$HOME/.rvm/bin"
 
 # vim: set filetype=zsh:
