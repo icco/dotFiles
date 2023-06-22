@@ -31,6 +31,8 @@ export GO111MODULE="on"
 alias fr='open -R "$(fzf)"'
 alias f='open "$(fzf)"'
 
+alias gd=gallery-dl
+
 # added by travis gem
 [ -f /Users/nat/.travis/travis.sh ] && source /Users/nat/.travis/travis.sh
 
