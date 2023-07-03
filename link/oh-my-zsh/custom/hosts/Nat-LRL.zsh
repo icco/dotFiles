@@ -28,9 +28,12 @@ export PATH="$GOPATH/bin:$PATH"
 export GO111MODULE="on"
 
 # search!
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 alias fr='open -R "$(fzf)"'
 alias f='open "$(fzf)"'
 
+# gallery + ytdl
+alias python=python3
 alias gd=gallery-dl
 
 # added by travis gem
@@ -74,8 +77,6 @@ if [ -f '/Users/nat/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/nat/go
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/nat/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/nat/google-cloud-sdk/completion.zsh.inc'; fi
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Terraform
 alias tf="terraform"
