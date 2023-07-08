@@ -96,6 +96,8 @@ colorscheme darknat
 " One off prject stuff
 autocmd BufNewFile,BufRead ~/Projects/apom/* set tabstop=3 shiftwidth=3 softtabstop=3
 
+nmap <Leader>t :TagbarToggle<CR>
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Extra Language Support
 
