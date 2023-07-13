@@ -1405,45 +1405,45 @@
         }
       },
       "terraform": {
-        "version": "1.5.2",
+        "version": "1.5.3",
         "bottle": {
           "rebuild": 0,
           "root_url": "https://ghcr.io/v2/homebrew/core",
           "files": {
             "arm64_ventura": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/terraform/blobs/sha256:cfe44675e962fc5188ca51de8a71321cd54d9da86fc2d1ef245eb8e9d3bb652a",
-              "sha256": "cfe44675e962fc5188ca51de8a71321cd54d9da86fc2d1ef245eb8e9d3bb652a"
+              "url": "https://ghcr.io/v2/homebrew/core/terraform/blobs/sha256:4a3e955ec78a0f8b155bdfc157a7faa4b04822de7a625f3af023559bba8c630a",
+              "sha256": "4a3e955ec78a0f8b155bdfc157a7faa4b04822de7a625f3af023559bba8c630a"
             },
             "arm64_monterey": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/terraform/blobs/sha256:cfe44675e962fc5188ca51de8a71321cd54d9da86fc2d1ef245eb8e9d3bb652a",
-              "sha256": "cfe44675e962fc5188ca51de8a71321cd54d9da86fc2d1ef245eb8e9d3bb652a"
+              "url": "https://ghcr.io/v2/homebrew/core/terraform/blobs/sha256:4a3e955ec78a0f8b155bdfc157a7faa4b04822de7a625f3af023559bba8c630a",
+              "sha256": "4a3e955ec78a0f8b155bdfc157a7faa4b04822de7a625f3af023559bba8c630a"
             },
             "arm64_big_sur": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/terraform/blobs/sha256:cfe44675e962fc5188ca51de8a71321cd54d9da86fc2d1ef245eb8e9d3bb652a",
-              "sha256": "cfe44675e962fc5188ca51de8a71321cd54d9da86fc2d1ef245eb8e9d3bb652a"
+              "url": "https://ghcr.io/v2/homebrew/core/terraform/blobs/sha256:4a3e955ec78a0f8b155bdfc157a7faa4b04822de7a625f3af023559bba8c630a",
+              "sha256": "4a3e955ec78a0f8b155bdfc157a7faa4b04822de7a625f3af023559bba8c630a"
             },
             "ventura": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/terraform/blobs/sha256:147474dc46877700e3678b6e7c41e4136c02346efaab1155f0597358ae6c64c9",
-              "sha256": "147474dc46877700e3678b6e7c41e4136c02346efaab1155f0597358ae6c64c9"
+              "url": "https://ghcr.io/v2/homebrew/core/terraform/blobs/sha256:cdf10edf86be80f1642a2ad2b3e1074e5480fb449d036f7a343ada663175df5d",
+              "sha256": "cdf10edf86be80f1642a2ad2b3e1074e5480fb449d036f7a343ada663175df5d"
             },
             "monterey": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/terraform/blobs/sha256:147474dc46877700e3678b6e7c41e4136c02346efaab1155f0597358ae6c64c9",
-              "sha256": "147474dc46877700e3678b6e7c41e4136c02346efaab1155f0597358ae6c64c9"
+              "url": "https://ghcr.io/v2/homebrew/core/terraform/blobs/sha256:cdf10edf86be80f1642a2ad2b3e1074e5480fb449d036f7a343ada663175df5d",
+              "sha256": "cdf10edf86be80f1642a2ad2b3e1074e5480fb449d036f7a343ada663175df5d"
             },
             "big_sur": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/terraform/blobs/sha256:147474dc46877700e3678b6e7c41e4136c02346efaab1155f0597358ae6c64c9",
-              "sha256": "147474dc46877700e3678b6e7c41e4136c02346efaab1155f0597358ae6c64c9"
+              "url": "https://ghcr.io/v2/homebrew/core/terraform/blobs/sha256:cdf10edf86be80f1642a2ad2b3e1074e5480fb449d036f7a343ada663175df5d",
+              "sha256": "cdf10edf86be80f1642a2ad2b3e1074e5480fb449d036f7a343ada663175df5d"
             },
             "x86_64_linux": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/terraform/blobs/sha256:ec6ce8db5bca1230d193ad3107643d0e929e2f05ea7c075a5d4710a2434a211a",
-              "sha256": "ec6ce8db5bca1230d193ad3107643d0e929e2f05ea7c075a5d4710a2434a211a"
+              "url": "https://ghcr.io/v2/homebrew/core/terraform/blobs/sha256:25dd2a7a19de26dda0839666038c37548ad81235883fe116f580495bddade969",
+              "sha256": "25dd2a7a19de26dda0839666038c37548ad81235883fe116f580495bddade969"
             }
           }
         }
