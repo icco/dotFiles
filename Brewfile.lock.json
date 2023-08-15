@@ -1166,45 +1166,45 @@
         }
       },
       "wakatime-cli": {
-        "version": "1.73.4",
+        "version": "1.74.1",
         "bottle": {
           "rebuild": 0,
           "root_url": "https://ghcr.io/v2/homebrew/core",
           "files": {
             "arm64_ventura": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:15e18f0b33749185e5e4693c9d3be1ba5b63134ce7682ede390df89bcb81c6dd",
-              "sha256": "15e18f0b33749185e5e4693c9d3be1ba5b63134ce7682ede390df89bcb81c6dd"
+              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:6cc2d45571d0b31076943b88422404914fbb2e4289cf720775c325c69f7bdc7d",
+              "sha256": "6cc2d45571d0b31076943b88422404914fbb2e4289cf720775c325c69f7bdc7d"
             },
             "arm64_monterey": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:15e18f0b33749185e5e4693c9d3be1ba5b63134ce7682ede390df89bcb81c6dd",
-              "sha256": "15e18f0b33749185e5e4693c9d3be1ba5b63134ce7682ede390df89bcb81c6dd"
+              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:450508ca0a6daa9f870fb22891d759ee17930bfd0951a36c6fa8846558d70fec",
+              "sha256": "450508ca0a6daa9f870fb22891d759ee17930bfd0951a36c6fa8846558d70fec"
             },
             "arm64_big_sur": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:15e18f0b33749185e5e4693c9d3be1ba5b63134ce7682ede390df89bcb81c6dd",
-              "sha256": "15e18f0b33749185e5e4693c9d3be1ba5b63134ce7682ede390df89bcb81c6dd"
+              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:8cd39b7100861cd73f2d2ff4e6d3ace86f5116d39a8ae34882e7a5e1da6b8705",
+              "sha256": "8cd39b7100861cd73f2d2ff4e6d3ace86f5116d39a8ae34882e7a5e1da6b8705"
             },
             "ventura": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:f64e0a3a3163e79c8dee61b194274d88955991e10fce4d15568118ec7ff5b292",
-              "sha256": "f64e0a3a3163e79c8dee61b194274d88955991e10fce4d15568118ec7ff5b292"
+              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:7c8c612d6cbdf644c220ddce1737e42be32441cd401ce5e9d10048146c3a464a",
+              "sha256": "7c8c612d6cbdf644c220ddce1737e42be32441cd401ce5e9d10048146c3a464a"
             },
             "monterey": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:f64e0a3a3163e79c8dee61b194274d88955991e10fce4d15568118ec7ff5b292",
-              "sha256": "f64e0a3a3163e79c8dee61b194274d88955991e10fce4d15568118ec7ff5b292"
+              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:661b7317c2ef6824e00559810a7e23c3191a3d3adc282c583452f4ca88092817",
+              "sha256": "661b7317c2ef6824e00559810a7e23c3191a3d3adc282c583452f4ca88092817"
             },
             "big_sur": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:f64e0a3a3163e79c8dee61b194274d88955991e10fce4d15568118ec7ff5b292",
-              "sha256": "f64e0a3a3163e79c8dee61b194274d88955991e10fce4d15568118ec7ff5b292"
+              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:fc4aa42a1c12b6efae518cfca48ad7f2b60efa73e3f7a6abcfff1fa6d2b46813",
+              "sha256": "fc4aa42a1c12b6efae518cfca48ad7f2b60efa73e3f7a6abcfff1fa6d2b46813"
             },
             "x86_64_linux": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:28fc9644d0d5efb07f8141d1d41b729ba9e248837ae779cc4028f2f949c464ff",
-              "sha256": "28fc9644d0d5efb07f8141d1d41b729ba9e248837ae779cc4028f2f949c464ff"
+              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:de34ef7bcb727c1d00e0b3841521488d566be68f59452c2edf38b84e11ba46a2",
+              "sha256": "de34ef7bcb727c1d00e0b3841521488d566be68f59452c2edf38b84e11ba46a2"
             }
           }
         }
@@ -1698,7 +1698,7 @@
         "macOS": "12.6.5"
       },
       "ventura": {
-        "HOMEBREW_VERSION": "4.1.4",
+        "HOMEBREW_VERSION": "4.1.5",
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
         "CLT": "14.3.1.0.1.1683849156",
