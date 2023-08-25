@@ -1632,13 +1632,13 @@
     },
     "cask": {
       "1password": {
-        "version": "8.10.12",
+        "version": "8.10.13",
         "options": {
           "full_name": "1password"
         }
       },
       "1password-cli": {
-        "version": "2.19.0",
+        "version": "2.20.0",
         "options": {
           "full_name": "1password-cli"
         }
