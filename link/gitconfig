@@ -4,19 +4,20 @@
 	email = nat@natwelch.com
 [alias]
 	ci = commit
+	clean-branches = !git branch | grep -ve ' (master|main)$' | xargs git branch -D
 	co = checkout
 	delete-merged = !git branch --merged | grep -v \"\\*\" | xargs -n 1 git branch -d
 	l = log --oneline --graph --decorate --date-order
-	one = log --pretty=format:'%H' -1
+	latest-tag = !git tag | sort -V | tail -n 1
 	lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %C(blue)by %an%Creset - %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+	local-branches = for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
 	lola = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %C(blue)by %an%Creset - %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --all
+	one = log --pretty=format:'%H' -1
 	pr = "!_git_pr() { git fetch origin pull/$1/head:pr-$1 && git checkout pr-$1; }; _git_pr"
+	praise = blame
+	remote-branches = for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/remotes
 	serve = daemon --verbose --export-all --base-path=.git --reuseaddr --strict-paths .git/
 	st = status -sb
-	praise = blame
-	local-branches = for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
-	remote-branches = for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/remotes
-	clean-branches = !git branch | grep -ve ' (master|main)$' | xargs git branch -D
 [color]
 	ui = auto
 [color "diff"]
