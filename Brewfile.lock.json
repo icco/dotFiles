@@ -1281,6 +1281,11 @@
           "rebuild": 0,
           "root_url": "https://ghcr.io/v2/homebrew/core",
           "files": {
+            "arm64_sonoma": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:0f35273857962cf3c5ca02f7bdd750a9f48a41dcf18a5c8de68f6ded52e80417",
+              "sha256": "0f35273857962cf3c5ca02f7bdd750a9f48a41dcf18a5c8de68f6ded52e80417"
+            },
             "arm64_ventura": {
               "cellar": ":any_skip_relocation",
               "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:e70e0fe0e01da6505b00683d552d58cd532ab59fee1704d3f5dc6a47476eb52b",
@@ -1295,6 +1300,11 @@
               "cellar": ":any_skip_relocation",
               "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:33b06f5f06284223efc303e79c810131112ced2640bfcf4bd549cb3a8e5e95f3",
               "sha256": "33b06f5f06284223efc303e79c810131112ced2640bfcf4bd549cb3a8e5e95f3"
+            },
+            "sonoma": {
+              "cellar": ":any_skip_relocation",
+              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:c7c9f7b433e7e3e0932236e806f1b885642fb3c9e5491746118313c9c6fbb97f",
+              "sha256": "c7c9f7b433e7e3e0932236e806f1b885642fb3c9e5491746118313c9c6fbb97f"
             },
             "ventura": {
               "cellar": ":any_skip_relocation",
@@ -1832,7 +1842,7 @@
     },
     "cask": {
       "1password": {
-        "version": "8.10.15",
+        "version": "8.10.16",
         "options": {
           "full_name": "1password"
         }
@@ -1868,11 +1878,11 @@
         "macOS": "12.6.5"
       },
       "ventura": {
-        "HOMEBREW_VERSION": "4.1.11",
+        "HOMEBREW_VERSION": "4.1.12",
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
         "CLT": "14.3.1.0.1.1683849156",
-        "Xcode": "14.3.1",
+        "Xcode": "15.0",
         "macOS": "13.5.2"
       }
     }
