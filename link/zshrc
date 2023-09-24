@@ -54,6 +54,6 @@ fi
 
 export GOPROXY="https://proxy.golang.org"
 
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$GOPATH/bin:$PATH"
 
 # vim: set filetype=zsh:
