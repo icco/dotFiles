@@ -30,7 +30,7 @@ spec:
   nodeName: $node
   containers:
   - name: ssh-node
-    image: busybox
+    image: ubuntu:latest
     imagePullPolicy: IfNotPresent
     command: ["chroot", "/host"]
     tty: true
