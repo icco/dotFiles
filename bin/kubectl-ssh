@@ -30,9 +30,9 @@ spec:
   nodeName: $node
   containers:
   - name: ssh-node
-    image: ubuntu:latest
+    image: debian:bookworm-backports
     imagePullPolicy: IfNotPresent
-    command: ["chroot", "/host"]
+    command: ["bash"]
     tty: true
     stdin: true
     stdinOnce: true
