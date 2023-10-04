@@ -30,7 +30,7 @@ spec:
   nodeName: $node
   containers:
   - name: ssh-node
-    image: debian:bookworm-backports
+    image: debian
     imagePullPolicy: IfNotPresent
     command: ["bash"]
     tty: true
