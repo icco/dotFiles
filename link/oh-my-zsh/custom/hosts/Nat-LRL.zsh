@@ -26,6 +26,7 @@ export LSCOLORS=ExFxCxDxBxegedabagacad
 export GOPATH="$HOME/Projects"
 export PATH="$GOPATH/bin:$PATH"
 export GO111MODULE="on"
+export GOPRIVATE="github.com/pinginc/*"
 
 # search!
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
