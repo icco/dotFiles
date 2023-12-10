@@ -69,7 +69,7 @@ Host newyork
 
 Host whatbox.ca
   User icco
-  Hostname dawn.whatbox.ca
+  Hostname naiad.whatbox.ca
   Compression no
   KeepAlive yes
 
