@@ -1762,7 +1762,7 @@
     },
     "cask": {
       "1password": {
-        "version": "8.10.20",
+        "version": "8.10.22",
         "options": {
           "full_name": "1password"
         }
@@ -1809,7 +1809,7 @@
         "HOMEBREW_VERSION": "4.1.25",
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
-        "CLT": "15.0.0.0.1.1694021235",
+        "CLT": "15.1.0.0.1.1700200546",
         "Xcode": "15.1",
         "macOS": "14.1.2"
       }
