@@ -9,6 +9,7 @@ if [[ -z "$IP" ]]; then
 else
   curl -s -n "https://iwantmyname.com/basicauth/ddns?hostname=$1&myip=$IP"
   # New stuff
+  git pull
   mkdir -p ~/Projects/icco.me/$maindomain/
   echo $IP > ~/Projects/icco.me/$maindomain/$subdomain
   cd  ~/Projects/icco.me/$maindomain/
