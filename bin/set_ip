@@ -1,9 +1,17 @@
-#! /bin/bash
+#! /bin/zsh
 
 IP=$(curl -s 'https://api.ipify.org')
+maindomain=$(expr match "$1" '.*\.\(.*\..*\)')
+subdomain=${1%".$maindomain"}
 
 if [[ -z "$IP" ]]; then
   echo "IP is empty."
 else
   curl -s -n "https://iwantmyname.com/basicauth/ddns?hostname=$1&myip=$IP"
+  # New stuff
+  mkdir -p ~/Projects/icco.me/$maindomain/
+  echo $IP > ~/Projects/icco.me/$maindomain/$subdomain
+  cd  ~/Projects/icco.me/$maindomain/
+  git add .
+  git diff --staged --quiet || git commit -m 'chore: set ip' && git push -u
 fi
