@@ -9,10 +9,10 @@ if [[ -z "$IP" ]]; then
 else
   curl -s -n "https://iwantmyname.com/basicauth/ddns?hostname=$1&myip=$IP"
   # New stuff
+  cd  ~/Projects/icco.me/$maindomain/
   git pull
   mkdir -p ~/Projects/icco.me/$maindomain/
   echo $IP > ~/Projects/icco.me/$maindomain/$subdomain
-  cd  ~/Projects/icco.me/$maindomain/
   git add .
   git diff --staged --quiet || git commit -m 'chore: set ip' && git push -u
 fi
