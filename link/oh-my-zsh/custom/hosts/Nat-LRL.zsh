@@ -34,7 +34,6 @@ alias fr='open -R "$(fzf)"'
 alias f='open "$(fzf)"'
 
 # gallery + ytdl
-alias python=python3
 alias gd=gallery-dl
 
 # added by travis gem
@@ -45,6 +44,9 @@ alias gd=gallery-dl
 
 # A better which
 alias which='alias | gwhich --tty-only --read-alias --show-dot --show-tilde'
+
+# iaWriter
+alias ia='open -a "IA Writer"'
 
 # nvm
 export NVM_DIR="$HOME/.nvm"
