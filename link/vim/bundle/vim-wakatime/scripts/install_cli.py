@@ -10,6 +10,7 @@ import shutil
 import ssl
 import subprocess
 import sys
+import time
 import traceback
 from subprocess import PIPE
 from zipfile import ZipFile
@@ -27,14 +28,16 @@ except ImportError:
 
 
 def getOsName():
-    os = platform.system().lower()
-    if os.startswith('cygwin') or os.startswith('mingw') or os.startswith('msys'):
+    osName = platform.system().lower()
+    if osName.startswith('cygwin') or osName.startswith('mingw') or osName.startswith('msys'):
         return 'windows'
-    return os
+    if osName == 'linux' and 'ANDROID_DATA' in os.environ:
+        return 'android'
+    return osName
 
 
 GITHUB_RELEASES_STABLE_URL = 'https://api.github.com/repos/wakatime/wakatime-cli/releases/latest'
-GITHUB_DOWNLOAD_PREFIX = 'https://github.com/wakatime/wakatime-cli/releases/download'
+GITHUB_DOWNLOAD_URL = 'https://github.com/wakatime/wakatime-cli/releases/latest/download'
 PLUGIN = 'vim'
 
 is_py2 = (sys.version_info[0] == 2)
@@ -209,6 +212,11 @@ def downloadCLI():
                 os.remove(getCliLocation())
             except:
                 log(traceback.format_exc())
+        if isCliLinked():
+            try:
+                os.remove(getSymlinkLocation())
+            except:
+                log(traceback.format_exc())
 
         log('Extracting wakatime-cli...')
         with contextlib.closing(ZipFile(zip_file)) as zf:
@@ -246,6 +254,13 @@ def getCliLocation():
     return WAKATIME_CLI_LOCATION
 
 
+def getSymlinkLocation():
+    binary = 'wakatime-cli{ext}'.format(
+        ext='.exe' if is_win else '',
+    )
+    return os.path.join(getResourcesFolder(), binary)
+
+
 def architecture():
     arch = platform.machine() or platform.processor()
     if arch == 'armv7l':
@@ -261,8 +276,12 @@ def isCliInstalled():
     return os.path.exists(getCliLocation())
 
 
+def isCliLinked():
+    return os.path.exists(getSymlinkLocation())
+
+
 def isCliLatest():
-    if not isCliInstalled():
+    if not isCliInstalled() or not isCliLinked():
         return False
 
     args = [getCliLocation(), '--version']
@@ -280,8 +299,27 @@ def isCliLatest():
         return True
 
     log('Current wakatime-cli version is %s' % localVer)
-    log('Checking for updates to wakatime-cli...')
 
+    configs, last_accessed = None, None
+    try:
+        configs = parseConfigFile(getConfigFile(True))
+        if configs and configs.has_option('internal', 'cli_version_last_accessed'):
+            last_accessed = configs.get('internal', 'cli_version_last_accessed')
+    except:
+        log(traceback.format_exc())
+
+    if last_accessed:
+        try:
+            last_accessed = int(float(last_accessed))
+        except:
+            last_accessed = None
+        now = round(time.time())
+        four_hours = 4 * 3600
+        if last_accessed and last_accessed + four_hours > now:
+            log('Skip checking for wakatime-cli updates because recently checked {0} seconds ago.'.format(now - last_accessed))
+            return True
+
+    log('Checking for updates to wakatime-cli...')
     remoteVer = getLatestCliVersion()
 
     if not remoteVer:
@@ -295,50 +333,31 @@ def isCliLatest():
     return False
 
 
-LATEST_CLI_VERSION = None
-
-
 def getLatestCliVersion():
-    global LATEST_CLI_VERSION
-
-    if LATEST_CLI_VERSION:
-        return LATEST_CLI_VERSION
-
-    configs, last_modified, last_version = None, None, None
     try:
-        configs = parseConfigFile(getConfigFile(True))
-        if configs:
-            if configs.has_option('internal', 'cli_version'):
-                last_version = configs.get('internal', 'cli_version')
-            if last_version and configs.has_option('internal', 'cli_version_last_modified'):
-                last_modified = configs.get('internal', 'cli_version_last_modified')
-    except:
-        log(traceback.format_exc())
-
-    try:
-        headers, contents, code = request(GITHUB_RELEASES_STABLE_URL, last_modified=last_modified)
+        headers, contents, code = request(GITHUB_RELEASES_STABLE_URL)
 
         log('GitHub API Response {0}'.format(code))
-
-        if code == 304:
-            LATEST_CLI_VERSION = last_version
-            return last_version
 
         data = json.loads(contents.decode('utf-8'))
 
         ver = data['tag_name']
         log('Latest wakatime-cli version from GitHub: {0}'.format(ver))
 
+        try:
+            configs = parseConfigFile(getConfigFile(True))
+        except:
+            log(traceback.format_exc())
         if configs:
             last_modified = headers.get('Last-Modified')
             if not configs.has_section('internal'):
                 configs.add_section('internal')
             configs.set('internal', 'cli_version', str(u(ver)))
             configs.set('internal', 'cli_version_last_modified', str(u(last_modified)))
+            configs.set('internal', 'cli_version_last_accessed', str(round(time.time())))
             with open(getConfigFile(True), 'w', encoding='utf-8') as fh:
                 configs.write(fh)
 
-        LATEST_CLI_VERSION = ver
         return ver
     except:
         log(traceback.format_exc())
@@ -360,6 +379,8 @@ def cliDownloadUrl():
     arch = architecture()
 
     validCombinations = [
+      'android-arm',
+      'android-arm64',
       'darwin-amd64',
       'darwin-arm64',
       'freebsd-386',
@@ -384,11 +405,8 @@ def cliDownloadUrl():
     if check not in validCombinations:
         reportMissingPlatformSupport(osname, arch)
 
-    version = getLatestCliVersion()
-
-    return '{prefix}/{version}/wakatime-cli-{osname}-{arch}.zip'.format(
-        prefix=GITHUB_DOWNLOAD_PREFIX,
-        version=version,
+    return '{prefix}/wakatime-cli-{osname}-{arch}.zip'.format(
+        prefix=GITHUB_DOWNLOAD_URL,
         osname=osname,
         arch=arch,
     )
@@ -403,16 +421,13 @@ def reportMissingPlatformSupport(osname, arch):
     request(url)
 
 
-def request(url, last_modified=None):
+def request(url):
     req = Request(url)
     req.add_header('User-Agent', 'github.com/wakatime/{plugin}-wakatime'.format(plugin=PLUGIN))
 
     proxy = CONFIGS.get('settings', 'proxy') if CONFIGS.has_option('settings', 'proxy') else None
     if proxy:
         req.set_proxy(proxy, 'https')
-
-    if last_modified:
-        req.add_header('If-Modified-Since', last_modified)
 
     try:
         resp = urlopen(req)
@@ -515,10 +530,8 @@ def is_symlink(path):
 
 
 def createSymlink():
-    link = os.path.join(getResourcesFolder(), 'wakatime-cli')
-    if is_win:
-        link = link + '.exe'
-    elif os.path.exists(link) and is_symlink(link):
+    link = getSymlinkLocation()
+    if os.path.exists(link) and is_symlink(link):
         return  # don't re-create symlink on Unix-like platforms
 
     if os.path.isdir(link):
@@ -528,13 +541,29 @@ def createSymlink():
 
     try:
         os.symlink(getCliLocation(), link)
+        if not isCliLinked():
+            raise Exception('Link not created.')
     except:
+        log(traceback.format_exc())
+        log('Unable to create symlink, will copy instead.')
         try:
             shutil.copy2(getCliLocation(), link)
+            if not isCliLinked():
+                raise Exception('File not copied.')
             if not is_win:
                 os.chmod(link, 509)  # 755
         except:
             log(traceback.format_exc())
+            log('Unable to use copy2, will use copyfile.')
+            try:
+                shutil.copyfile(getCliLocation(), link)
+                if not isCliLinked():
+                    raise Exception('File not copied.')
+                if not is_win:
+                    os.chmod(link, 509)  # 755
+            except:
+                log(traceback.format_exc())
+                log('Unable to install wakatime-cli.')
 
 
 class SSLCertVerificationDisabled(object):

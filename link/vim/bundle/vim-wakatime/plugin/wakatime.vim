@@ -6,7 +6,7 @@
 " Website:     https://wakatime.com/
 " ============================================================================
 
-let s:VERSION = '10.0.0'
+let s:VERSION = '11.1.1'
 
 
 " Init {{{
@@ -62,7 +62,8 @@ let s:VERSION = '10.0.0'
     let s:heartbeats_buffer = []
     let s:send_buffer_seconds = 30  " seconds between sending buffered heartbeats
     let s:last_sent = localtime()
-    let s:has_async = has('patch-7.4-2344') && exists('*job_start')
+    let s:has_async_patch = has('patch-7.4-2344') || v:version >= 800
+    let s:has_async = s:has_async_patch && exists('*job_start')
     let s:nvim_async = exists('*jobstart')
 
     function! s:Init()
@@ -114,7 +115,7 @@ let s:VERSION = '10.0.0'
                 let s:wakatime_cli = 'wakatime-cli'
 
             " Check for wakatime
-            elseif !filereadable(path) && s:Executable('wakatime')
+            elseif !filereadable(path) && s:Executable('wakatime') && !s:Contains(exepath('wakatime'), 'npm') && !s:Contains(exepath('wakatime'), 'node')
                 let s:wakatime_cli = 'wakatime'
 
             " Check for wakatime-cli installed via Homebrew
@@ -183,8 +184,8 @@ let s:VERSION = '10.0.0'
             elseif s:IsWindows()
                 if s:is_debug_on
                     let stdout = s:StripWhitespace(system('(' . s:JoinArgs(cmd) . ')'))
-                    if !empty(stdout)
-                        echo printf('[WakaTime] error installing wakatime-cli for Windows: %s\nWill retry using Vim built-in Python.', stdout)
+                    if !empty(stdout) && !s:Contains(stdout, 'wakatime-cli is up to date')
+                        echo printf("[WakaTime] error installing wakatime-cli for Windows:\n%s\n[WakaTime] Will retry using Vim built-in Python.", stdout)
                         call s:InstallCLI(s:false)
                     endif
                 else
@@ -193,13 +194,13 @@ let s:VERSION = '10.0.0'
             else
                 if s:is_debug_on
                     let stdout = s:StripWhitespace(system(s:JoinArgs(cmd)))
-                    if !empty(stdout)
-                        echo printf('[WakaTime] error installing wakatime-cli: %s\nWill retry using Vim built-in Python.', stdout)
+                    if !empty(stdout) && !s:Containsstridx(stdout, 'wakatime-cli is up to date')
+                        echo printf("[WakaTime] error installing wakatime-cli:\n%s\n[WakaTime] Will retry using Vim built-in Python.", stdout)
                         call s:InstallCLI(s:false)
                     endif
                 else
                     let stdout = s:StripWhitespace(system(s:JoinArgs(cmd) . ' &'))
-                    if !empty(stdout)
+                    if !empty(stdout) && !s:Containsstridx(stdout, 'wakatime-cli is up to date')
                         call s:InstallCLI(s:false)
                     endif
                 endif
@@ -231,7 +232,7 @@ EOF
             if s:IsWindows()
                 echo "Downloading wakatime-cli to ~/.wakatime/... this may take a while but only needs to be done once..."
 
-                let cmd = 'if ((Get-WmiObject win32_operatingsystem | select osarchitecture).osarchitecture -eq "64-bit") { Write "amd64" } else { Write "386" }'
+                let cmd = 'if ((Get-WmiObject win32_operatingsystem | select osarchitecture).osarchitecture -like "64*") { Write "amd64" } else { Write "386" }'
                 let arch = s:Chomp(system(['powershell.exe', '-noprofile', '-command'] + [cmd]))
 
                 let url = "https://github.com/wakatime/wakatime-cli/releases/latest/download/wakatime-cli-windows-" . arch . ".zip"
@@ -553,7 +554,7 @@ EOF
         if has('nvim')
             let editor_name = 'neovim'
         endif
-        let cmd = cmd + ['--plugin', printf('vim/%s %s-wakatime/%s', s:n2s(v:version), editor_name, s:VERSION)]
+        let cmd = cmd + ['--plugin', printf('%s/%s vim-wakatime/%s', editor_name, s:n2s(v:version), s:VERSION)]
 
         if heartbeat.is_write
             let cmd = cmd + ['--write']
@@ -947,6 +948,16 @@ EOF
 
     function! s:Executable(path)
         if !empty(a:path) && executable(a:path)
+            return s:true
+        endif
+        return s:false
+    endfunction
+
+    function! s:Contains(string, substr)
+        if empty(a:string) || empty(a:substr)
+            return s:false
+        endif
+        if stridx(a:string, a:substr) > -1
             return s:true
         endif
         return s:false

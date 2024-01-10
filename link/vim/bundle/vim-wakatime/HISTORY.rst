@@ -3,6 +3,39 @@ History
 -------
 
 
+11.1.1 (2023-11-17)
+++++++++++++++++++
+
+`Changes <https://github.com/wakatime/vim-wakatime/compare/11.1.0...11.1.1>`_
+
+- Prevent using incompatible third party node wakatime-cli.
+  `#171 <https://github.com/wakatime/vim-wakatime/issues/171>`_
+
+
+11.1.0 (2023-11-02)
+++++++++++++++++++
+
+`Changes <https://github.com/wakatime/vim-wakatime/compare/11.0.0...11.1.0>`_
+
+- Fix async detection on Vim 8 and newer.
+- Rate limit checking for wakatime-cli updates, to avoid GitHub API quota.
+
+
+11.0.0 (2023-10-09)
+++++++++++++++++++
+
+`Changes <https://github.com/wakatime/vim-wakatime/compare/10.0.0...11.0.0>`_
+
+- Use pyx when available to install wakatime-cli on NeoVim.
+- Download wakatime-cli with Powershell when no Python available.
+- Fix WakaTimeCliVersion command in NeoVim.
+  `#160 <https://github.com/wakatime/vim-wakatime/issues/160>`_
+- Detect 64bit vs 32bit correctly on all Windows.
+  `#166 <https://github.com/wakatime/vim-wakatime/issues/166>`_
+- Support for Android.
+  `#168 <https://github.com/wakatime/vim-wakatime/pull/168>`_
+
+
 10.0.0 (2022-11-28)
 ++++++++++++++++++
 

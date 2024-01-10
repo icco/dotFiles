@@ -12,16 +12,31 @@
 
 1. With [Vundle](https://github.com/gmarik/vundle): `echo "Plugin 'wakatime/vim-wakatime'" >> ~/.vimrc && vim +PluginInstall`
 
-   Or with [Pathogen](https://github.com/tpope/vim-pathogen): `cd ~/.vim/bundle && git clone git://github.com/wakatime/vim-wakatime.git`
+   Or with [Pathogen](https://github.com/tpope/vim-pathogen): `cd ~/.vim/bundle && git clone https://github.com/wakatime/vim-wakatime.git`
 
    Or with [Vim-plug](https://github.com/junegunn/vim-plug):  add `Plug 'wakatime/vim-wakatime'` to .vimrc file. While in vim reload .vimrc with `:so ~/.vimrc` or restart vim, enter
     `:PlugInstall`
-    
+
    Or with [Packer](https://github.com/wbthomason/packer.nvim): add `use 'wakatime/vim-wakatime'` to your plugins file.
 
-2. Enter your [api key](https://wakatime.com/settings#apikey), then press `enter`.
+   Or with [Vim 8+](https://www.vim.org/): `mkdir -p ~/.vim/pack/plugins/start && ~/.vim/pack/plugins/start && git clone https://github.com/wakatime/vim-wakatime.git`
 
-3. Use Vim and your coding activity will be displayed on your [WakaTime dashboard](https://wakatime.com).
+   Or with [Lazy.nvim](https://github.com/folke/lazy.nvim.git): add to your plugins file.
+   ```lua
+   {
+        "wakatime/vim-wakatime",
+        lazy=false,
+        setup = function ()
+            vim.cmd([[packadd wakatime/vim-wakatime]])
+        end
+    }
+   ```
+
+3. Restart Vim.
+
+4. If this is the first WakaTime plugin on your machine, enter your [API Key](https://wakatime.com/api-key), then press `enter`.
+
+5. Use Vim and your coding activity will be displayed on your [WakaTime dashboard](https://wakatime.com).
 
 
 ## Screen Shots
@@ -29,9 +44,7 @@
 ![Project Overview](https://wakatime.com/static/img/ScreenShots/Screen-Shot-2016-03-21.png)
 
 
-## Configuring
-
-#### Commands:
+## Commands
 
 * `:WakaTimeApiKey` - change the api key saved in your `~/.wakatime.cfg`
 * `:WakaTimeDebugEnable` - enable debug mode (may slow down Vim so disable when finished debugging)
@@ -50,11 +63,11 @@ WakaTime plugins also share a common [$WAKATIME_HOME/.wakatime.cfg config file][
 
 Run `:WakaTimeDebugEnable` in Vim then run this Terminal command:
 
-`tail -f ~/.wakatime.log`
+`tail -f ~/.wakatime/wakatime.log`
 
-Enabling Debug Mode writes Vim Script errors to your Vim Status Bar and tells [wakatime-cli][wakatime-cli] to write verbose logs to `$WAKATIME_HOME/.wakatime.log`.
+Enabling Debug Mode writes Vim Script errors to your Vim Status Bar and tells [wakatime-cli][wakatime-cli] to write verbose logs to `$WAKATIME_HOME/.wakatime/wakatime.log`.
 
-Debug mode can make it hard to find the real error because of all the extra logging, so also try disabling Debug Mode while tailing `~/.wakatime.log` and editing files in Vim.
+Debug mode can make it hard to find the real error because of all the extra logging, so also try disabling Debug Mode while tailing `~/.wakatime/wakatime.log` and editing files in Vim.
 With Debug Mode enabled, the plugin sends data synchronously so disable it when finished debugging with `:WakaTimeDebugDisable`.
 
 The [How to Debug Plugins][how to debug] guide shows how to check when coding activity was last received from Vim use the [User Agents API][user agents api].

@@ -187,6 +187,95 @@ function! tagbar#types#uctags#init(supported_types) abort
         \ {'short' : 'v', 'long' : 'patterns',  'fold' : 0, 'stl' : 1}
     \ ]
     let types.beta = type_beta
+    " BibTeX {{{1
+    let type_bibtex = tagbar#prototypes#typeinfo#new()
+    let type_bibtex.ctagstype = 'bibtex'
+    let type_bibtex.kinds = [
+        \ {'short' : 'a', 'long' : 'article', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'b', 'long' : 'book', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'B', 'long' : 'booklet', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'c', 'long' : 'conference', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'i', 'long' : 'inbook', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'I', 'long' : 'incollection', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'j', 'long' : 'inproceedings', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'm', 'long' : 'manual', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'M', 'long' : 'mastersthesis', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'n', 'long' : 'misc', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'p', 'long' : 'phdthesis', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'P', 'long' : 'proceedings', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 's', 'long' : 'string', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 't', 'long' : 'techreport', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'u', 'long' : 'unpublished', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'A', 'long' : 'artworks', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'C', 'long' : 'bibnotes', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'D', 'long' : 'bookinbooks', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'E', 'long' : 'Booklets', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'G', 'long' : 'collections', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'H', 'long' : 'commentarys', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'J', 'long' : 'images', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'K', 'long' : 'interferences', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'L', 'long' : 'jurisdictions', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'N', 'long' : 'legals', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'O', 'long' : 'letters', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'Q', 'long' : 'musics', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'R', 'long' : 'mvbooks', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'S', 'long' : 'mvcollections', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'T', 'long' : 'mvproceedings', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'U', 'long' : 'mvreferences', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'V', 'long' : 'onlines', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'W', 'long' : 'patents', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'g', 'long' : 'performances', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'h', 'long' : 'periodicals', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'k', 'long' : 'reviews', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'l', 'long' : 'sets', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'o', 'long' : 'suppbooks', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'q', 'long' : 'suppperiodicals', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'r', 'long' : 'thesis', 'fold' : 0, 'stl' : 0},
+    \ ]
+    let types.bibtex = type_bibtex
+    let types.bib = type_bibtex
+    " BibLaTex {{{1
+    let type_biblatex = tagbar#prototypes#typeinfo#new()
+    let type_biblatex.ctagstype = 'biblatex'
+    let type_biblatex.kinds = [
+        \ {'short' : 'A', 'long' : 'artworks', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'B', 'long' : 'audios', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'C', 'long' : 'bibnotes', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'D', 'long' : 'bookinbooks', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'E', 'long' : 'Booklets', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'G', 'long' : 'collections', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'H', 'long' : 'commentarys', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'I', 'long' : 'datasets', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'J', 'long' : 'images', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'K', 'long' : 'interferences', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'L', 'long' : 'jurisdictions', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'M', 'long' : 'legislations', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'N', 'long' : 'legals', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'O', 'long' : 'letters', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'P', 'long' : 'movies', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'Q', 'long' : 'musics', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'R', 'long' : 'mvbooks', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'S', 'long' : 'mvcollections', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'T', 'long' : 'mvproceedings', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'U', 'long' : 'mvreferences', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'V', 'long' : 'onlines', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'W', 'long' : 'patents', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'g', 'long' : 'performances', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'h', 'long' : 'periodicals', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'i', 'long' : 'references', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'j', 'long' : 'reports', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'k', 'long' : 'reviews', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'l', 'long' : 'sets', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'm', 'long' : 'software', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'n', 'long' : 'standards', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'o', 'long' : 'suppbooks', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'p', 'long' : 'suppcollections', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'q', 'long' : 'suppperiodicals', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 'r', 'long' : 'thesis', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 's', 'long' : 'videos', 'fold' : 0, 'stl' : 0},
+        \ {'short' : 't', 'long' : 'xdatas', 'fold' : 0, 'stl' : 0},
+    \ ]
+    let types.biblatex = type_biblatex
     " C {{{1
     let type_c = tagbar#prototypes#typeinfo#new()
     let type_c.ctagstype = 'c'

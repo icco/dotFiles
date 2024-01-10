@@ -615,7 +615,14 @@ function! s:definitionHandler(next, msg) abort dict
 
   " gopls returns a []Location; just take the first one.
   let l:msg = a:msg[0]
-  let l:args = [[printf('%s:%d:%d: %s', go#path#FromURI(l:msg.uri), l:msg.range.start.line+1, go#lsp#lsp#PositionOf(getline(l:msg.range.start.line+1), l:msg.range.start.character), 'lsp does not supply a description')]]
+
+  let l:line = s:lineinfile(go#path#FromURI(l:msg.uri), l:msg.range.start.line+1)
+  if l:line is -1
+    call go#util#EchoWarning('could not find definition')
+    return
+  endif
+
+  let l:args = [[printf('%s:%d:%d: %s', go#path#FromURI(l:msg.uri), l:msg.range.start.line+1, go#lsp#lsp#PositionOf(l:line, l:msg.range.start.character), 'lsp does not supply a description')]]
   call call(a:next, l:args)
 endfunction
 
@@ -641,7 +648,14 @@ function! s:typeDefinitionHandler(next, msg) abort dict
 
   " gopls returns a []Location; just take the first one.
   let l:msg = a:msg[0]
-  let l:args = [[printf('%s:%d:%d: %s', go#path#FromURI(l:msg.uri), l:msg.range.start.line+1, go#lsp#lsp#PositionOf(getline(l:msg.range.start.line+1), l:msg.range.start.character), 'lsp does not supply a description')]]
+
+  let l:line = s:lineinfile(go#path#FromURI(l:msg.uri), l:msg.range.start.line+1)
+  if l:line is -1
+    call go#util#EchoWarning('could not find definition')
+    return
+  endif
+
+  let l:args = [[printf('%s:%d:%d: %s', go#path#FromURI(l:msg.uri), l:msg.range.start.line+1, go#lsp#lsp#PositionOf(l:line, l:msg.range.start.character), 'lsp does not supply a description')]]
   call call(a:next, l:args)
 endfunction
 
@@ -872,7 +886,10 @@ function! s:sameIDsHandler(next, msg) abort dict
       continue
     endif
 
-    let l:result.sameids = add(l:result.sameids, [l:loc.range.start.line+1, l:loc.range.start.character+1, l:loc.range.end.character+1])
+    let l:line = getline(l:loc.range.start.line + 1)
+    let l:start = go#lsp#lsp#PositionOf(l:line, l:loc.range.start.character)
+    let l:end = go#lsp#lsp#PositionOf(l:line, l:loc.range.end.character)
+    let l:result.sameids = add(l:result.sameids, [l:loc.range.start.line+1, l:start, l:end])
   endfor
 
   call call(a:next, [0, l:result, ''])
@@ -1320,6 +1337,22 @@ function! s:debugasync(timer) abort
     return
   endif
 
+  " set the timer to try again if Vim is in a state where we don't want to
+  " change the window.
+  if exists('*state')
+    let l:state = state('a')
+  else
+    let l:state = mode(1)
+    if !(l:state == 'ic' || l:state == 'Rc' || l:state == 'Rvc')
+      let l:state = ''
+    endif
+  endif
+  let l:mode = mode(1)
+  if len(l:state) > 0 || l:mode[0] == 'v' || l:mode[0] == 'V' || l:mode[0] == 's' || l:mode =~ 'CTRL-V'
+    let s:logtimer = timer_start(go#config#DebugLogDelay(), function('s:debugasync', []))
+    return
+  endif
+
   try
     let l:winid = win_getid()
 
@@ -1330,34 +1363,39 @@ function! s:debugasync(timer) abort
       silent file `='__GOLSP_LOG__'`
       setlocal buftype=nofile bufhidden=wipe nomodified nobuflisted noswapfile nowrap nonumber nocursorline
       setlocal filetype=golsplog
-    else
-      call win_gotoid(l:log_winid)
+      call win_gotoid(l:winid)
     endif
 
+    let l:logwinid = bufwinid(l:name)
+
     try
-      setlocal modifiable
+      call setbufvar(l:name, '&modifiable', 1)
       for [l:event, l:data] in s:log
         call remove(s:log, 0)
-        if getline(1) == ''
-          call setline('$', printf('===== %s =====', l:event))
+        if getbufline(l:name, 1)[0] == ''
+          call setbufline(l:name, '$', printf('===== %s =====', l:event))
         else
-          call append('$', printf('===== %s =====', l:event))
+          call appendbufline(l:name, '$', printf('===== %s =====', l:event))
         endif
-        call append('$', split(l:data, "\r\n"))
+        call appendbufline(l:name, '$', split(l:data, "\r\n"))
       endfor
+
+      " TODO(bc): how to move the window's cursor position without switching
+      " to the window?
+      call win_gotoid(l:logwinid)
       normal! G
-      setlocal nomodifiable
-    finally
       call win_gotoid(l:winid)
+      call setbufvar(l:name, '&modifiable', 0)
+    finally
     endtry
   catch
-    call go#util#EchoError(v:exception)
+    call go#util#EchoError(printf('at %s: %s', v:throwpoint, v:exception))
   finally
-    " retry in when there's an exception. This can happen when trying to do
+    " retry when there's an exception. This can happen when trying to do
     " completion, because the window can not be changed while completion is in
     " progress.
     if len(s:log) != 0
-      let s:logtimer = timer_start(10, function('s:debugasync', []))
+      let s:logtimer = timer_start(go#config#DebugLogDelay(), function('s:debugasync', []))
     endif
   endtry
 endfunction
@@ -1367,7 +1405,7 @@ function! s:debug(event, data) abort
   let s:log = add(s:log, [a:event, a:data])
 
   if l:shouldStart
-    let s:logtimer = timer_start(10, function('s:debugasync', []))
+    let s:logtimer = timer_start(go#config#DebugLogDelay(), function('s:debugasync', []))
   endif
 endfunction
 
@@ -1647,7 +1685,7 @@ endfunction
 " Extract executes the refactor.extract code action for the current buffer
 " and configures the handler to only apply the fillstruct command for the
 " current location.
-function! go#lsp#Extract(selected) abort
+function! go#lsp#Extract(line1, line2) abort
   let l:fname = expand('%:p')
   " send the current file so that TextEdits will be relative to the current
   " state of the buffer.
@@ -1661,13 +1699,16 @@ function! go#lsp#Extract(selected) abort
   let l:state.error = l:handler.wrapper
   let l:state.handleError = function('s:handleCodeActionError', [l:fname], l:state)
 
-  if a:selected == -1
-    call go#util#EchoError('no range selected')
-    return
+  if a:line1 == -1
+    let [l:startline, l:startcol] = go#lsp#lsp#Position(line('.'), 1)
+  else
+    let [l:startline, l:startcol] = go#lsp#lsp#Position(a:line1, 1)
   endif
-
-  let [l:startline, l:startcol] = go#lsp#lsp#Position(line("'<"), col("'<"))
-  let [l:endline, l:endcol] = go#lsp#lsp#Position(line("'>"), col("'>"))
+  if a:line2 == -1
+    let [l:endline, l:endcol] = go#lsp#lsp#Position(line('.'), col('$'))
+  else
+    let [l:endline, l:endcol] = go#lsp#lsp#Position(a:line2, col([a:line2, '$']))
+  endif
 
   let l:msg = go#lsp#message#CodeActionRefactorExtract(l:fname, l:startline, l:startcol, l:endline, l:endcol)
   call l:lsp.sendMessage(l:msg, l:state)
@@ -1849,7 +1890,7 @@ function s:applyDocumentChanges(changes)
 
       let l:editbufnr = bufnr(l:bufname)
       if l:editbufnr == -1
-        call go#util#EchoWarn(printf('could not apply changes to %s', l:fname))
+        call go#util#EchoWarning(printf('could not apply changes to %s', l:fname))
         continue
       endif
 
@@ -2032,7 +2073,11 @@ function! s:lineinfile(fname, line) abort
     if l:bufnr == -1 || len(l:bufinfo) == 0 || l:bufinfo[0].loaded == 0
       let l:filecontents = readfile(a:fname, '', a:line)
     else
-      let l:filecontents = getbufline(a:fname, a:line)
+      if exists('*getbufoneline')
+        let l:filecontents = [getbufoneline(a:fname, a:line)]
+      else
+        let l:filecontents = getbufline(a:fname, a:line)
+      endif
     endif
 
     if len(l:filecontents) == 0

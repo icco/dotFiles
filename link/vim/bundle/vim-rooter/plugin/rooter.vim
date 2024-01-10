@@ -64,18 +64,20 @@ command! -bar RooterToggle call <SID>toggle()
 
 augroup rooter
   autocmd!
-  autocmd VimEnter,BufReadPost,BufEnter * nested if !g:rooter_manual_only | Rooter | endif
-  autocmd BufWritePost * nested if !g:rooter_manual_only | call setbufvar('%', 'rootDir', '') | Rooter | endif
+  autocmd VimEnter,BufReadPost,BufEnter * nested if !g:rooter_manual_only | call <SID>rooter(+expand('<abuf>')) | endif
+  autocmd BufWritePost * nested if !g:rooter_manual_only | call <SID>clear_cache(+expand('<abuf>')) | call <SID>rooter(+expand('<abuf>')) | endif
 augroup END
 
 
-function! s:rooter()
+function! s:rooter(...)
   if !s:activate() | return | endif
 
-  let root = getbufvar('%', 'rootDir')
+  let bufnr = a:0 ? a:1 : '%'
+
+  let root = getbufvar(bufnr, 'rootDir')
   if empty(root)
     let root = s:root()
-    call setbufvar('%', 'rootDir', root)
+    call setbufvar(bufnr, 'rootDir', root)
   endif
 
   if empty(root)
@@ -84,6 +86,11 @@ function! s:rooter()
   endif
 
   call s:cd(root)
+endfunction
+
+
+function! s:clear_cache(bufnr)
+  call setbufvar(a:bufnr, 'rootDir', '')
 endfunction
 
 
@@ -97,7 +104,7 @@ function! s:activate()
   if fn =~ 'NERD_tree_\d\+$' | let fn = b:NERDTree.root.path.str().'/' | endif
 
   " directory
-  if empty(fn) || fn[-1:] == '/'
+  if empty(fn) || isdirectory(fn)
     return index(patterns, '/') != -1
   endif
 

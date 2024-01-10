@@ -18,9 +18,12 @@ IMPROVEMENTS:
   [[GH-3504]](https://github.com/fatih/vim-go/pull/3504)
 * Add `:GoExtract` command and related mapping.
   [[GH-3506]](https://github.com/fatih/vim-go/pull/3506)
+  [[GH-3617]](https://github.com/fatih/vim-go/pull/3617)
+  [[GH-3626]](https://github.com/fatih/vim-go/pull/3626)
 * Halt the debugger after a connection is establish with `:GoDebugConnect`.
   [[GH-3514]](https://github.com/fatih/vim-go/pull/3514)
   [[GH-3520]](https://github.com/fatih/vim-go/pull/3520)
+  [[GH-3570]](https://github.com/fatih/vim-go/pull/3570)
 * Clarify `:GoImpl` usage message.
   [[GH-3522]](https://github.com/fatih/vim-go/pull/3522)
 * Add commands and mappings related to godoc to the godoc preview window.
@@ -41,12 +44,32 @@ IMPROVEMENTS:
   [[GH-3555]](https://github.com/fatih/vim-go/pull/3555)
 * Drop support for Vim 8.0.
   [[GH-3538]](https://github.com/fatih/vim-go/pull/3538)
+* Set gopls clientInfo field.
+  [[GH-3567]](https://github.com/fatih/vim-go/pull/3567)
+* Add support for the Go 1.21's new builtin functions.
+  [[GH-3578]](https://github.com/fatih/vim-go/pull/3578)
 
 BUG FIXES:
 * Update [impl](https://github.com/josharian/impl) source path after its default branch was changed from master to main.
   [[GH-3477]](https://github.com/fatih/vim-go/pull/3477)
 * Update `:GoMetaLinter` help.
   [[GH-3534]](https://github.com/fatih/vim-go/pull/3534)
+* Update syntax file for empty const, var, and import lists.
+  [[GH-3577]](https://github.com/fatih/vim-go/pull/3577)
+  [[GH-3579]](https://github.com/fatih/vim-go/pull/3579)
+* Fix sameids highlighting when id is preceded with multi-byte characters.
+  [[GH-3587]](https://github.com/fatih/vim-go/pull/3587)
+* Avoid creating an anonymous snippet when selected completion lacks
+  placeholders.
+  [[GH-3603]](https://github.com/fatih/vim-go/pull/3603)
+* Fix sameids highlighting when identifier immediately precedes newline.
+  [[GH-3606]](https://github.com/fatih/vim-go/pull/3606)
+* Fix Python escape sequence in UltiSnips/go.snippets.
+  [[GH-3614]](https://github.com/fatih/vim-go/pull/3614)
+* Do not attempt to use gopls for documentation when gopls is disabled.
+  [[GH-3610]](https://github.com/fatih/vim-go/pull/3610)
+* Fix spelling of go#util#EchoWarning in a few calls.
+  [[GH-3613]](https://github.com/fatih/vim-go/pull/3613)
 
 ## v1.28 - (December 17, 2022)
 
