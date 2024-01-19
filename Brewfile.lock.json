@@ -1191,45 +1191,45 @@
         }
       },
       "wakatime-cli": {
-        "version": "1.88.4",
+        "version": "1.88.7",
         "bottle": {
           "rebuild": 0,
           "root_url": "https://ghcr.io/v2/homebrew/core",
           "files": {
             "arm64_sonoma": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:825e788f008791eb73d1fa50ecd05091a5c0d2af1f803000b5c3464b9a59963c",
-              "sha256": "825e788f008791eb73d1fa50ecd05091a5c0d2af1f803000b5c3464b9a59963c"
+              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:a3c5b125ffb05ae8548c11959579dbfa65207a663a238078b0c03f39c68f5a3c",
+              "sha256": "a3c5b125ffb05ae8548c11959579dbfa65207a663a238078b0c03f39c68f5a3c"
             },
             "arm64_ventura": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:043782e5699f83f16611d12fe0e2eb3ce3ab40fa5edbbb0be7976588e7914e87",
-              "sha256": "043782e5699f83f16611d12fe0e2eb3ce3ab40fa5edbbb0be7976588e7914e87"
+              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:e7270bcae55e4baefd8f15732e6eaf22e45bee2ba554644e6574a4556cb46b2c",
+              "sha256": "e7270bcae55e4baefd8f15732e6eaf22e45bee2ba554644e6574a4556cb46b2c"
             },
             "arm64_monterey": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:072243caac0f1f8dad03e462c68bcf6ebaf57b32a780db2dcf74fe040ca4d43c",
-              "sha256": "072243caac0f1f8dad03e462c68bcf6ebaf57b32a780db2dcf74fe040ca4d43c"
+              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:594b78175ab208211ff4f6ae7c590ea87782d452452d23d561e9f2329783fa6c",
+              "sha256": "594b78175ab208211ff4f6ae7c590ea87782d452452d23d561e9f2329783fa6c"
             },
             "sonoma": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:d0f109a41b06c8ed5ddfa00518d4070722d9b41ddcad18d18e693377732a797c",
-              "sha256": "d0f109a41b06c8ed5ddfa00518d4070722d9b41ddcad18d18e693377732a797c"
+              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:83a2c7cdf995e77b7116a056cac2a7e786f2917ba97a31d1aca50739ccd53583",
+              "sha256": "83a2c7cdf995e77b7116a056cac2a7e786f2917ba97a31d1aca50739ccd53583"
             },
             "ventura": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:b60e5e9539dc32b93fb6e31a93d0b0c8186ea842355ac966b549db4bfdf22fca",
-              "sha256": "b60e5e9539dc32b93fb6e31a93d0b0c8186ea842355ac966b549db4bfdf22fca"
+              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:497ceca75ad3e959323c6a212748324f7ed259b2b1c284d9130e00771c2068ee",
+              "sha256": "497ceca75ad3e959323c6a212748324f7ed259b2b1c284d9130e00771c2068ee"
             },
             "monterey": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:c233bf5d6008e206646965b7df3cdac3bdb0acc03207ff9758f08626404f50b0",
-              "sha256": "c233bf5d6008e206646965b7df3cdac3bdb0acc03207ff9758f08626404f50b0"
+              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:2e294703b85c44516035a0f05dee96cfcba9c7f1041608bb25f52f6566896d8d",
+              "sha256": "2e294703b85c44516035a0f05dee96cfcba9c7f1041608bb25f52f6566896d8d"
             },
             "x86_64_linux": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:81d98603e8e1eb7b1b6b4c1bef3adabeacc3927d103a92ccda7eefa251559cca",
-              "sha256": "81d98603e8e1eb7b1b6b4c1bef3adabeacc3927d103a92ccda7eefa251559cca"
+              "url": "https://ghcr.io/v2/homebrew/core/wakatime-cli/blobs/sha256:083c0ea09824ecd24a68d73f46f0f0432ea9b86c0a2fab4ed427a233f8faa809",
+              "sha256": "083c0ea09824ecd24a68d73f46f0f0432ea9b86c0a2fab4ed427a233f8faa809"
             }
           }
         }
