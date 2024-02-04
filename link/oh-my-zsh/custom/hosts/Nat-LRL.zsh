@@ -33,6 +33,8 @@ export GOPRIVATE="github.com/pinginc/*"
 alias fr='open -R "$(fzf)"'
 alias f='open "$(fzf)"'
 
+alias k='kubectl'
+
 wordcount() {
   pandoc --lua-filter wordcount.lua "$@"
 }
