@@ -6,6 +6,7 @@
 if [[ -z "${CLOUDSDK_HOME}" ]]; then
   search_locations=(
     "$HOME/google-cloud-sdk"
+    "/usr/local/share/google-cloud-sdk"
     "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
     "/opt/homebrew/Caskroom/google-cloud-sdk/latest/google-cloud-sdk"
     "/usr/share/google-cloud-sdk"
@@ -14,7 +15,9 @@ if [[ -z "${CLOUDSDK_HOME}" ]]; then
     "/usr/lib/google-cloud-sdk"
     "/usr/lib64/google-cloud-sdk"
     "/opt/google-cloud-sdk"
+    "/opt/google-cloud-cli"
     "/opt/local/libexec/google-cloud-sdk"
+    "$HOME/.asdf/installs/gcloud/*/"
   )
 
   for gcloud_sdk_location in $search_locations; do
@@ -27,11 +30,9 @@ if [[ -z "${CLOUDSDK_HOME}" ]]; then
 fi
 
 if (( ${+CLOUDSDK_HOME} )); then
-  # Only source this if gcloud isn't already on the path
-  if (( ! $+commands[gcloud] )); then
-    if [[ -f "${CLOUDSDK_HOME}/path.zsh.inc" ]]; then
-      source "${CLOUDSDK_HOME}/path.zsh.inc"
-    fi
+  # Source path file
+  if [[ -f "${CLOUDSDK_HOME}/path.zsh.inc" ]]; then
+    source "${CLOUDSDK_HOME}/path.zsh.inc"
   fi
 
   # Look for completion file in different paths
