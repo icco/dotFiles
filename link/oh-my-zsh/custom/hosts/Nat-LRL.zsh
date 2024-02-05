@@ -42,12 +42,6 @@ wordcount() {
 # gallery + ytdl
 alias gd=gallery-dl
 
-# added by travis gem
-[ -f /Users/nat/.travis/travis.sh ] && source /Users/nat/.travis/travis.sh
-
-# For jumping
-[ -f /usr/local/etc/profile.d/z.sh ] && . /usr/local/etc/profile.d/z.sh
-
 # A better which
 alias which='alias | gwhich --tty-only --read-alias --show-dot --show-tilde'
 
