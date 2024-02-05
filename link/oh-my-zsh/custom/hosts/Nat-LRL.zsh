@@ -1,7 +1,5 @@
 # ZSH config for work mbp
-
 export TZ="UTC"
-export APTIBLE_OUTPUT_FORMAT=json
 
 # Add iterm2 support
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
@@ -12,10 +10,6 @@ export PATH="/opt/homebrew/bin:/usr/local/sbin:/usr/local/bin:$PATH"
 # Mac ls does not have color option...
 alias ls="/bin/ls";
 
-# for https://github.com/firstlookmedia/aws-profile-gpg
-export AWS_PROFILE_GPG_HOME=$HOME/Projects/aws-profile-gpg
-
-[ -f /usr/local/etc/profile.d/z.sh ] && source /usr/local/etc/profile.d/z.sh
 export PATH="/usr/local/opt/gettext/bin:$PATH"
 
 # Colors
