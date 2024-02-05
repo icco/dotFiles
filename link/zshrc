@@ -32,7 +32,7 @@ plugins=(
   dotenv
   shrink-path
   iterm2
-  z
+  zoxide
 )
 
 zstyle :omz:plugins:iterm2 shell-integration yes
