@@ -48,6 +48,10 @@ IMPROVEMENTS:
   [[GH-3567]](https://github.com/fatih/vim-go/pull/3567)
 * Add support for the Go 1.21's new builtin functions.
   [[GH-3578]](https://github.com/fatih/vim-go/pull/3578)
+* Add syntax support for the toolchain directive in go.mod.
+  [[GH-3633]](https://github.com/fatih/vim-go/pull/3633)
+* Add fuzz snippet.
+  [[GH-3636]](https://github.com/fatih/vim-go/pull/3636)
 
 BUG FIXES:
 * Update [impl](https://github.com/josharian/impl) source path after its default branch was changed from master to main.
@@ -70,6 +74,8 @@ BUG FIXES:
   [[GH-3610]](https://github.com/fatih/vim-go/pull/3610)
 * Fix spelling of go#util#EchoWarning in a few calls.
   [[GH-3613]](https://github.com/fatih/vim-go/pull/3613)
+* Improve matching of package comments.
+  [[GH-3637]](https://github.com/fatih/vim-go/pull/3637)
 
 ## v1.28 - (December 17, 2022)
 
