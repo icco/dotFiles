@@ -42,6 +42,10 @@ Host linear
   User pi
   Hostname linear.local
 
+Host clockwork
+  User nat
+  Hostname clockwork.local
+
 Host piaware
   User pi
   Hostname piaware.local
