@@ -30,16 +30,19 @@
 	commitGraph = true
 [commit]
 	gpgsign = false
+	verbose = true
 [github]
 	user = icco
 [branch]
 	autosetupmerge = true
+	sort = -committerdate
 [pager]
 	color = true
 	diff = false
 	log = false
 [merge]
 	stat = true
+	conflictStyle = zdiff3
 [diff "zip"]
 	textconv = unzip -c -a
 [gist]
@@ -54,10 +57,12 @@
 	uploadarch = true
 [push]
 	default = current
+	autosetupremote = true
 [http]
 	cookiefile = ~/.gitcookies
 [diff]
 	submodule = log
+	algorithm = histogram
 [fetch]
 	prune = true
 [url "git@github.com:"]
@@ -68,3 +73,5 @@
 	submodulesummary = 1
 [init]
 	defaultBranch = main
+[rerere]
+	enabled = true
