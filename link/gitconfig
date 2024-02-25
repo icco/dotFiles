@@ -42,7 +42,6 @@
 	log = false
 [merge]
 	stat = true
-	conflictStyle = zdiff3
 [diff "zip"]
 	textconv = unzip -c -a
 [gist]
