@@ -1,8 +1,16 @@
 local copilot = {}
 
-copilot.lsp_start_client = function(cmd, handler_names)
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
-  local handlers = {}
+local showDocument = function(err, result, ctx, _)
+  local fallback = vim.lsp.handlers['window/showDocument']
+  if not fallback or (result.external and vim.g.copilot_browser) then
+    return vim.fn['copilot#handlers#window_showDocument'](result)
+  else
+    return fallback(err, result, ctx, _)
+  end
+end
+
+copilot.lsp_start_client = function(cmd, handler_names, opts, settings)
+  local handlers = {['window/showDocument'] = showDocument}
   local id
   for _, name in ipairs(handler_names) do
     handlers[name] = function(err, result)
@@ -13,22 +21,23 @@ copilot.lsp_start_client = function(cmd, handler_names)
         end
       end
     end
-    if name:match('^copilot/') then
-      capabilities.copilot = capabilities.copilot or {}
-      capabilities.copilot[name:match('^copilot/(.*)$')] = true
-    end
   end
   id = vim.lsp.start_client({
     cmd = cmd,
     cmd_cwd = vim.call('copilot#job#Cwd'),
     name = 'copilot',
-    capabilities = capabilities,
+    init_options = opts.initializationOptions,
+    workspace_folders = opts.workspace_folders,
+    settings = settings,
     handlers = handlers,
     get_language_id = function(bufnr, filetype)
       return vim.call('copilot#doc#LanguageForFileType', filetype)
     end,
     on_init = function(client, initialize_result)
       vim.call('copilot#agent#LspInit', client.id, initialize_result)
+      if vim.fn.has('nvim-0.8') == 0 then
+        client.notify('workspace/didChangeConfiguration', { settings = settings })
+      end
     end,
     on_exit = function(code, signal, client_id)
       vim.schedule(function()
@@ -39,24 +48,18 @@ copilot.lsp_start_client = function(cmd, handler_names)
   return id
 end
 
-copilot.lsp_request = function(client_id, method, params)
+copilot.lsp_request = function(client_id, method, params, bufnr)
   local client = vim.lsp.get_client_by_id(client_id)
   if not client then
     return
   end
-  pcall(vim.lsp.buf_attach_client, 0, client_id)
-  for _, doc in ipairs({ params.doc, params.textDocument }) do
-    if doc and type(doc.uri) == 'number' then
-      local bufnr = doc.uri
-      pcall(vim.lsp.buf_attach_client, bufnr, client_id)
-      doc.uri = vim.uri_from_bufnr(bufnr)
-      doc.version = vim.lsp.util.buf_versions[bufnr]
-    end
+  if bufnr == vim.NIL then
+    bufnr = nil
   end
   local _, id
   _, id = client.request(method, params, function(err, result)
     vim.call('copilot#agent#LspResponse', client_id, { id = id, error = err, result = result })
-  end)
+  end, bufnr)
   return id
 end
 

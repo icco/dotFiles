@@ -1363,6 +1363,7 @@ function! s:debugasync(timer) abort
       silent file `='__GOLSP_LOG__'`
       setlocal buftype=nofile bufhidden=wipe nomodified nobuflisted noswapfile nowrap nonumber nocursorline
       setlocal filetype=golsplog
+      setlocal fileencoding=utf-8
       call win_gotoid(l:winid)
     endif
 
@@ -1380,11 +1381,8 @@ function! s:debugasync(timer) abort
         call appendbufline(l:name, '$', split(l:data, "\r\n"))
       endfor
 
-      " TODO(bc): how to move the window's cursor position without switching
-      " to the window?
-      call win_gotoid(l:logwinid)
-      normal! G
-      call win_gotoid(l:winid)
+      " Move the window's cursor position without switching to the window
+      call win_execute(l:logwinid, 'normal! G')
       call setbufvar(l:name, '&modifiable', 0)
     finally
     endtry
@@ -1942,15 +1940,15 @@ function s:applyTextEdits(bufnr, msg) abort
     let l:startcontent = ''
     if l:msg.range.start.character > 0
       let l:startcontent = getline(l:startline)
-      let l:preSliceEnd = go#lsp#lsp#PositionOf(l:startcontent, l:msg.range.start.character-1) - 1
-      let l:startcontent = l:startcontent[:l:preSliceEnd]
+      let l:preSliceEnd = go#lsp#lsp#PositionOf(l:startcontent, l:msg.range.start.character-1)
+      let l:startcontent = strcharpart(l:startcontent, 0, l:preSliceEnd) "l:startcontent[:l:preSliceEnd]
     endif
 
     let l:endcontent = getline(l:endline)
     let l:postSliceStart = 0
     if l:msg.range.end.character > 0
       let l:postSliceStart = go#lsp#lsp#PositionOf(l:endcontent, l:msg.range.end.character-1)
-      let l:endcontent = l:endcontent[(l:postSliceStart):]
+      let l:endcontent = strcharpart(l:endcontent, l:postSliceStart) "l:endcontent[(l:postSliceStart):]
     endif
 
     " There isn't an easy way to replace the text in a byte or character
