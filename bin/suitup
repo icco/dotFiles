@@ -26,10 +26,9 @@ sync_dir () {
   fi;
 }
 
-echo "# ~/Projects"
-
 PROJ=~/Projects/
 if [ -d $PROJ ]; then
+  echo "# ~/Projects --------------------------------------------------------------------------------"
   for e in $(ls $PROJ | sort -f); do
     sync_dir $e
     if [ $? -eq 1 ]; then
@@ -38,9 +37,9 @@ if [ -d $PROJ ]; then
   done;
 fi
 
-echo "# ~/Sites"
 PROJ=~/Sites/
 if [ -d $PROJ ]; then
+  echo "# ~/Sites -----------------------------------------------------------------------------------"
   for e in $(ls $PROJ | sort -f); do
     sync_dir $e
     if [ $? -eq 1 ]; then
@@ -48,3 +47,16 @@ if [ -d $PROJ ]; then
     fi
   done;
 fi
+
+PROJ=~/Work/
+if [ -d $PROJ ]; then
+  echo "# ~/Work ------------------------------------------------------------------------------------"
+  for e in $(ls $PROJ | sort -f); do
+    sync_dir $e
+    if [ $? -eq 1 ]; then
+      echo "No known version control."
+    fi
+  done;
+fi
+
+echo "All Done!"
