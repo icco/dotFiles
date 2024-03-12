@@ -902,15 +902,15 @@
         }
       },
       "ssh-copy-id": {
-        "version": "9.6p1",
+        "version": "9.7p1",
         "bottle": {
           "rebuild": 0,
           "root_url": "https://ghcr.io/v2/homebrew/core",
           "files": {
             "all": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/ssh-copy-id/blobs/sha256:f8cf418bbd54cc795f9f94c40752cbfb66d2194de987f0643eb0936103407ccf",
-              "sha256": "f8cf418bbd54cc795f9f94c40752cbfb66d2194de987f0643eb0936103407ccf"
+              "url": "https://ghcr.io/v2/homebrew/core/ssh-copy-id/blobs/sha256:462f07572c6a54fb77fd91e5da31f904f6d1c7a9bb1816ef84a43c5f95bede7c",
+              "sha256": "462f07572c6a54fb77fd91e5da31f904f6d1c7a9bb1816ef84a43c5f95bede7c"
             }
           }
         }
