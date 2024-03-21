@@ -51,7 +51,7 @@ function! s:RejectRequest(request, error) abort
   if empty(reject)
     call copilot#logger#Error(msg)
   else
-    call copilot#logger#Warn(msg)
+    call copilot#logger#Debug(msg)
   endif
 endfunction
 
@@ -72,7 +72,12 @@ function! s:Send(agent, request) abort
 endfunction
 
 function! s:AgentNotify(method, params) dict abort
-  return s:Send(self, {'method': a:method, 'params': a:params})
+  let request = {'method': a:method, 'params': a:params}
+  if has_key(self, 'initialization_pending')
+    call add(self.initialization_pending, request)
+  else
+    return s:Send(self, request)
+  endif
 endfunction
 
 function! s:RequestWait() dict abort
@@ -164,8 +169,8 @@ function! s:BufferText(bufnr) abort
   return join(getbufline(a:bufnr, 1, '$'), "\n") . "\n"
 endfunction
 
-function! s:SendRequest(agent, request) abort
-  if empty(s:Send(a:agent, a:request)) && has_key(a:agent.requests, a:request.id)
+function! s:SendRequest(agent, request, ...) abort
+  if empty(s:Send(a:agent, a:request)) && has_key(a:request, 'id') && has_key(a:agent.requests, a:request.id)
     call s:RejectRequest(remove(a:agent.requests, a:request.id), {'code': 257, 'message': 'Write failed'})
   endif
 endfunction
@@ -180,7 +185,7 @@ function! s:RegisterWorkspaceFolderForBuffer(agent, buf) abort
     return
   endif
   let a:agent.workspaceFolders[root] = v:true
-  call a:agent.Notify('workspace/didChangeWorkspaceFolders', {'event': {'added': [{'uri': root, 'name': fnamemodify(root, ':t')}]}})
+  call a:agent.Notify('workspace/didChangeWorkspaceFolders', {'event': {'added': [{'uri': root, 'name': fnamemodify(root, ':t')}], 'removed': []}})
 endfunction
 
 function! s:PreprocessParams(agent, params) abort
@@ -188,14 +193,17 @@ function! s:PreprocessParams(agent, params) abort
   for doc in filter([get(a:params, 'doc', {}), get(a:params, 'textDocument', {})], 'type(get(v:val, "uri", "")) == v:t_number')
     let bufnr = doc.uri
     call s:RegisterWorkspaceFolderForBuffer(a:agent, bufnr)
-    let synced = a:agent.SyncTextDocument(bufnr)
+    let synced = a:agent.Attach(bufnr)
     let doc.uri = synced.uri
-    let doc.version = synced.version
+    let doc.version = get(synced, 'version', 0)
   endfor
   return bufnr
 endfunction
 
-function! s:VimSyncTextDocument(bufnr) dict abort
+function! s:VimAttach(bufnr) dict abort
+  if !bufloaded(a:bufnr)
+    return {'uri': '', 'version': 0}
+  endif
   let bufnr = a:bufnr
   let doc = {
         \ 'uri': s:UriFromBufnr(bufnr),
@@ -220,6 +228,10 @@ function! s:VimSyncTextDocument(bufnr) dict abort
   return doc
 endfunction
 
+function! s:VimIsAttached(bufnr) dict abort
+  return bufloaded(a:bufnr) && has_key(self.open_buffers, a:bufnr) ? v:true : v:false
+endfunction
+
 function! s:AgentRequest(method, params, ...) dict abort
   let s:id += 1
   let params = deepcopy(a:params)
@@ -228,7 +240,7 @@ function! s:AgentRequest(method, params, ...) dict abort
   if has_key(self, 'initialization_pending')
     call add(self.initialization_pending, request)
   else
-    call timer_start(0, { _ -> s:SendRequest(self, request) })
+    call copilot#util#Defer(function('s:SendRequest'), self, request)
   endif
   return call('s:SetUpRequest', [self, s:id, a:method, params] + a:000)
 endfunction
@@ -263,7 +275,7 @@ endfunction
 
 function! s:DispatchMessage(agent, method, handler, id, params, ...) abort
   try
-    let response = {'result': call(a:handler, [a:params])}
+    let response = {'result': call(a:handler, [a:params, a:agent])}
     if response.result is# 0
       let response.result = v:null
     endif
@@ -271,7 +283,7 @@ function! s:DispatchMessage(agent, method, handler, id, params, ...) abort
     call copilot#logger#Exception('lsp.request.' . a:method)
     let response = {'error': {'code': -32000, 'message': v:exception}}
   endtry
-  if !empty(a:id)
+  if a:id isnot# v:null
     call s:Send(a:agent, extend({'id': a:id}, response))
   endif
   return response
@@ -318,7 +330,7 @@ function! s:OnResponse(agent, response, ...) abort
   endif
 endfunction
 
-function! s:OnErr(agent, line, ...) abort
+function! s:OnErr(agent, ch, line, ...) abort
   if !has_key(a:agent, 'serverInfo')
     call copilot#logger#Bare('<-! ' . a:line)
   endif
@@ -336,7 +348,7 @@ function! s:OnExit(agent, code, ...) abort
   for id in sort(keys(a:agent.requests), { a, b -> +a > +b })
     call s:RejectRequest(remove(a:agent.requests, id), {'code': code, 'message': 'Agent exited', 'data': {'status': a:code}})
   endfor
-  call timer_start(0, { _ -> get(s:instances, a:agent.id) is# a:agent ? remove(s:instances, a:agent.id) : {} })
+  call copilot#util#Defer({ -> get(s:instances, a:agent.id) is# a:agent ? remove(s:instances, a:agent.id) : {} })
   call copilot#logger#Info('Agent exited with status ' . a:code)
 endfunction
 
@@ -362,9 +374,16 @@ function! copilot#agent#LspResponse(agent_id, opts, ...) abort
   call s:OnResponse(s:instances[a:agent_id], a:opts)
 endfunction
 
-function! s:NvimSyncTextDocument(bufnr) dict abort
+function! s:NvimAttach(bufnr) dict abort
+  if !bufloaded(a:bufnr)
+    return {'uri': '', 'version': 0}
+  endif
   call luaeval('pcall(vim.lsp.buf_attach_client, _A[1], _A[2])', [a:bufnr, self.id])
   return luaeval('{uri = vim.uri_from_bufnr(_A), version = vim.lsp.util.buf_versions[_A]}', a:bufnr)
+endfunction
+
+function! s:NvimIsAttached(bufnr) dict abort
+  return bufloaded(a:bufnr) ? luaeval('vim.lsp.buf_is_attached(_A[1], _A[2])', [a:bufnr, self.id]) : v:false
 endfunction
 
 function! s:LspRequest(method, params, ...) dict abort
@@ -510,15 +529,10 @@ function! s:AfterInitialize(result, agent) abort
 endfunction
 
 function! s:InitializeResult(result, agent) abort
-  let pending = get(a:agent, 'initialization_pending', [])
-  if has_key(a:agent, 'initialization_pending')
-    call remove(a:agent, 'initialization_pending')
-  endif
-  call a:agent.Notify('initialized', {})
   call s:AfterInitialize(a:result, a:agent)
-  call a:agent.Notify('workspace/didChangeConfiguration', {'settings': a:agent.settings})
-  for request in pending
-    call timer_start(0, { _ -> s:SendRequest(a:agent, request) })
+  call s:Send(a:agent, {'method': 'initialized', 'params': {}})
+  for request in remove(a:agent, 'initialization_pending')
+    call copilot#util#Defer(function('s:SendRequest'), a:agent, request)
   endfor
 endfunction
 
@@ -542,12 +556,18 @@ function! s:AgentStartupError() dict abort
   endif
 endfunction
 
+function! s:StatusNotification(params, agent) abort
+  call copilot#logger#Info('StatusNotification ' . string(a:params))
+  let a:agent.status = a:params
+endfunction
+
 function! s:Nop(...) abort
   return v:null
 endfunction
 
 let s:common_handlers = {
       \ 'featureFlagsNotification': function('s:Nop'),
+      \ 'statusNotification': function('s:StatusNotification'),
       \ 'window/logMessage': function('copilot#handlers#window_logMessage'),
       \ }
 
@@ -564,12 +584,13 @@ let s:vim_capabilities = {
 function! copilot#agent#New(...) abort
   let opts = a:0 ? a:1 : {}
   let instance = {'requests': {},
-        \ 'settings': extend(copilot#agent#Settings(), get(opts, 'editorConfiguration', {})),
         \ 'workspaceFolders': {},
+        \ 'status': {'status': 'Starting', 'message': ''},
         \ 'Close': function('s:AgentClose'),
         \ 'Notify': function('s:AgentNotify'),
         \ 'Request': function('s:AgentRequest'),
-        \ 'SyncTextDocument': function('s:VimSyncTextDocument'),
+        \ 'Attach': function('s:VimAttach'),
+        \ 'IsAttached': function('s:VimIsAttached'),
         \ 'Call': function('s:AgentCall'),
         \ 'Cancel': function('s:AgentCancel'),
         \ 'StartupError': function('s:AgentStartupError'),
@@ -596,6 +617,7 @@ function! copilot#agent#New(...) abort
         \ 'editorPluginInfo': copilot#agent#EditorPluginInfo(),
         \ }
   let opts.workspaceFolders = []
+  let settings = extend(copilot#agent#Settings(), get(opts, 'editorConfiguration', {}))
   if type(get(g:, 'copilot_workspace_folders')) == v:t_list
     for folder in g:copilot_workspace_folders
       if type(folder) == v:t_string && !empty(folder) && folder !~# '\*\*\|^/$'
@@ -616,9 +638,10 @@ function! copilot#agent#New(...) abort
         \ 'Close': function('s:LspClose'),
         \ 'Notify': function('s:LspNotify'),
         \ 'Request': function('s:LspRequest'),
-        \ 'SyncTextDocument': function('s:NvimSyncTextDocument'),
+        \ 'Attach': function('s:NvimAttach'),
+        \ 'IsAttached': function('s:NvimIsAttached'),
         \ })
-    let instance.client_id = eval("v:lua.require'_copilot'.lsp_start_client(command, keys(instance.methods), opts, instance.settings)")
+    let instance.client_id = eval("v:lua.require'_copilot'.lsp_start_client(command, keys(instance.methods), opts, settings)")
     let instance.id = instance.client_id
   else
     let state = {'headers': {}, 'mode': 'headers', 'buffer': ''}
@@ -627,17 +650,19 @@ function! copilot#agent#New(...) abort
     let instance.job = job_start(command, {
           \ 'cwd': copilot#job#Cwd(),
           \ 'noblock': 1,
+          \ 'stoponexit': '',
           \ 'in_mode': 'lsp',
           \ 'out_mode': 'lsp',
-          \ 'out_cb': { j, d -> timer_start(0, function('s:OnMessage', [instance, d])) },
-          \ 'err_cb': { j, d -> timer_start(0, function('s:OnErr', [instance, d])) },
-          \ 'exit_cb': { j, d -> timer_start(0, function('s:OnExit', [instance, d])) },
+          \ 'out_cb': { j, d -> copilot#util#Defer(function('s:OnMessage'), instance, d) },
+          \ 'err_cb': function('s:OnErr', [instance]),
+          \ 'exit_cb': { j, d -> copilot#util#Defer(function('s:OnExit'), instance, d) },
           \ })
     let instance.id = job_info(instance.job).process
     let opts.capabilities = s:vim_capabilities
     let opts.processId = getpid()
     let request = instance.Request('initialize', opts, function('s:InitializeResult'), function('s:InitializeError'), instance)
     let instance.initialization_pending = []
+    call instance.Notify('workspace/didChangeConfiguration', {'settings': settings})
   endif
   let s:instances[instance.id] = instance
   return instance

@@ -15,9 +15,9 @@ function! s:ColorScheme() abort
   if &t_Co == 256
     hi def CopilotSuggestion guifg=#808080 ctermfg=244
   else
-    hi def CopilotSuggestion guifg=#808080 ctermfg=8
+    hi def CopilotSuggestion guifg=#808080 ctermfg=12
   endif
-  hi def link CopilotAnnotation Normal
+  hi def link CopilotAnnotation MoreMsg
 endfunction
 
 function! s:MapTab() abort
@@ -57,6 +57,7 @@ augroup github_copilot
   autocmd BufLeave             * if mode() =~# '^[iR]'|call s:Event('InsertLeave')|endif
   autocmd InsertEnter          * call s:Event('InsertEnter')
   autocmd BufEnter             * if mode() =~# '^[iR]'|call s:Event('InsertEnter')|endif
+  autocmd BufEnter             * call s:Event('BufEnter')
   autocmd CursorMovedI         * call s:Event('CursorMovedI')
   autocmd CompleteChanged      * call s:Event('CompleteChanged')
   autocmd ColorScheme,VimEnter * call s:ColorScheme()
