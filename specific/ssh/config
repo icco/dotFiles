@@ -12,6 +12,10 @@ Host storm
   User nat
   Hostname storm.local
 
+Host glass
+  User nat
+  Hostname glass.local
+
 Host rope
   User nat
   Hostname rope.local
