@@ -21,3 +21,8 @@ source /usr/share/doc/fzf/examples/key-bindings.zsh
 
 # python
 export PATH="$PATH:$HOME/.local/bin"
+
+# zmv
+autoload -Uz zmv
+
+# vim: set filetype=zsh:
