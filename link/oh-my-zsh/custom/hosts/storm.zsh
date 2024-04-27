@@ -19,4 +19,10 @@ export GPG_TTY
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source /usr/share/doc/fzf/examples/key-bindings.zsh
 
-. /home/nat/Projects/z/z.sh
+# python
+export PATH="$PATH:$HOME/.local/bin"
+
+# zmv
+autoload -Uz zmv
+
+# vim: set filetype=zsh:
