@@ -11,7 +11,7 @@ if !empty(s:subtype) && s:subtype !=# 'copilot'
 endif
 
 syn region copilotHeader start="\%^" end="^─\@="
-syn region copilotSolution matchgroup=copilotSeparator start="^─\{9,}$" end="\%(^─\{9,\}$\)\@=\|\%$" keepend contains=@copilotLanguageTop
+syn region copilotPanelItem matchgroup=copilotSeparator start="^─\{9,}$" end="\%(^─\{9,\}$\)\@=\|\%$" keepend contains=@copilotLanguageTop
 
 hi def link copilotHeader PreProc
 hi def link copilotSeparator Comment

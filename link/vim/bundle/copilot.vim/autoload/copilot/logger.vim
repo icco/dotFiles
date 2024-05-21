@@ -51,7 +51,7 @@ function! copilot#logger#Raw(level, message) abort
 endfunction
 
 function! copilot#logger#Debug(...) abort
-  if $COPILOT_AGENT_VERBOSE !~# '^\%(1\|true\)$'
+  if empty(get(g:, 'copilot_debug'))
     return
   endif
   call copilot#logger#Raw(4, a:000)

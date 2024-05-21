@@ -99,9 +99,7 @@ function! s:activate()
   if index(g:rooter_buftypes, &buftype) == -1 | return 0 | endif
 
   let patterns = split(g:rooter_targets, ',')
-  let fn = expand('%:p', 1)
-
-  if fn =~ 'NERD_tree_\d\+$' | let fn = b:NERDTree.root.path.str().'/' | endif
+  let fn = s:current_file()
 
   " directory
   if empty(fn) || isdirectory(fn)
@@ -215,13 +213,19 @@ endfunction
 
 " Returns full path of directory of current file name (which may be a directory).
 function! s:current()
-  let fn = expand('%:p', 1)
-  if fn =~ 'NERD_tree_\d\+$' | let fn = b:NERDTree.root.path.str().'/' | endif
+  let fn = s:current_file()
   if empty(fn) | return getcwd() | endif  " opening vim without a file
-  if g:rooter_resolve_links | let fn = resolve(fn) | endif
   return fnamemodify(fn, ':h')
 endfunction
 
+" Returns full path of current file name
+function s:current_file()
+  let fn = expand('%:p', 1)
+  if fn =~ 'NERD_tree_\d\+$' | let fn = b:NERDTree.root.path.str().'/' | endif
+  if fn[:5] == 'oil://' | let fn = fn[5:] | endif
+  if g:rooter_resolve_links | let fn = resolve(fn) | endif
+  return fn
+endfunction
 
 " Returns full path of dir's parent directory.
 function! s:parent(dir)

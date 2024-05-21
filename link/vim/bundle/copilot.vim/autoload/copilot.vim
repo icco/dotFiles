@@ -46,11 +46,7 @@ function! s:Start() abort
   if s:Running()
     return
   endif
-  let s:agent = copilot#agent#New({'methods': {
-        \ 'PanelSolution': function('copilot#panel#Solution'),
-        \ 'PanelSolutionsDone': function('copilot#panel#SolutionsDone'),
-        \ },
-        \ 'editorConfiguration' : s:EditorConfiguration()})
+  let s:agent = copilot#agent#New({'editorConfiguration' : s:EditorConfiguration()})
 endfunction
 
 function! s:Stop() abort
@@ -131,20 +127,7 @@ function! copilot#Clear() abort
   return ''
 endfunction
 
-function! s:Reject(bufnr) abort
-  try
-    let dict = getbufvar(a:bufnr, '_copilot')
-    if type(dict) == v:t_dict && !empty(get(dict, 'shown_choices', {}))
-      call copilot#Request('notifyRejected', {'uuids': keys(dict.shown_choices)})
-      let dict.shown_choices = {}
-    endif
-  catch
-    call copilot#logger#Exception()
-  endtry
-endfunction
-
 function! copilot#Dismiss() abort
-  call s:Reject('%')
   call copilot#Clear()
   call s:UpdatePreview()
   return ''
@@ -187,23 +170,32 @@ endfunction
 function! copilot#Enabled() abort
   return get(g:, 'copilot_enabled', 1)
         \ && empty(s:BufferDisabled())
-        \ && empty(copilot#Agent().StartupError())
 endfunction
+
+let s:inline_automatic = 1
+let s:inline_invoked = 2
 
 function! copilot#Complete(...) abort
   if exists('g:_copilot_timer')
     call timer_stop(remove(g:, '_copilot_timer'))
   endif
-  let params = copilot#doc#Params()
-  if !exists('b:_copilot.params') || b:_copilot.params !=# params
+  let target = [bufnr(''), getbufvar('', 'changedtick'), line('.'), col('.')]
+  if !exists('b:_copilot.target') || b:_copilot.target !=# target
     if exists('b:_copilot.first')
       call copilot#agent#Cancel(b:_copilot.first)
     endif
     if exists('b:_copilot.cycling')
       call copilot#agent#Cancel(b:_copilot.cycling)
     endif
-    let b:_copilot = {'params': params, 'first':
-          \ copilot#Request('getCompletions', params)}
+    let params = {
+          \ 'textDocument': {'uri': bufnr('')},
+          \ 'position': copilot#util#AppendPosition(),
+          \ 'formattingOptions': {'insertSpaces': &expandtab ? v:true : v:false, 'tabSize': shiftwidth()},
+          \ 'context': {'triggerKind': s:inline_automatic}}
+    let b:_copilot = {
+          \ 'target': target,
+          \ 'params': params,
+          \ 'first': copilot#Request('textDocument/inlineCompletion', params)}
     let g:_copilot_last = b:_copilot
   endif
   let completion = b:_copilot.first
@@ -222,37 +214,37 @@ function! s:HideDuringCompletion() abort
 endfunction
 
 function! s:SuggestionTextWithAdjustments() abort
+  let empty = ['', 0, 0, {}]
   try
     if mode() !~# '^[iR]' || (s:HideDuringCompletion() && pumvisible()) || !exists('b:_copilot.suggestions')
-      return ['', 0, 0, '']
+      return empty
     endif
     let choice = get(b:_copilot.suggestions, b:_copilot.choice, {})
-    if !has_key(choice, 'range') || choice.range.start.line != line('.') - 1 || type(choice.text) !=# v:t_string
-      return ['', 0, 0, '']
+    if !has_key(choice, 'range') || choice.range.start.line != line('.') - 1 || type(choice.insertText) !=# v:t_string
+      return empty
     endif
     let line = getline('.')
     let offset = col('.') - 1
-    let choice_text = strpart(line, 0, copilot#doc#UTF16ToByteIdx(line, choice.range.start.character)) . substitute(choice.text, "\n*$", '', '')
+    let choice_text = strpart(line, 0, copilot#util#UTF16ToByteIdx(line, choice.range.start.character)) . substitute(choice.insertText, "\n*$", '', '')
     let typed = strpart(line, 0, offset)
-    let end_offset = copilot#doc#UTF16ToByteIdx(line, choice.range.end.character)
+    let end_offset = copilot#util#UTF16ToByteIdx(line, choice.range.end.character)
     if end_offset < 0
       let end_offset = len(line)
     endif
     let delete = strpart(line, offset, end_offset - offset)
-    let uuid = get(choice, 'uuid', '')
     if typed =~# '^\s*$'
       let leading = matchstr(choice_text, '^\s\+')
       let unindented = strpart(choice_text, len(leading))
       if strpart(typed, 0, len(leading)) == leading && unindented !=# delete
-        return [unindented, len(typed) - len(leading), strchars(delete), uuid]
+        return [unindented, len(typed) - len(leading), strchars(delete), choice]
       endif
     elseif typed ==# strpart(choice_text, 0, offset)
-      return [strpart(choice_text, offset), 0, strchars(delete), uuid]
+      return [strpart(choice_text, offset), 0, strchars(delete), choice]
     endif
   catch
     call copilot#logger#Exception()
   endtry
-  return ['', 0, 0, '']
+  return empty
 endfunction
 
 
@@ -272,12 +264,12 @@ function! s:GetSuggestionsCyclingCallback(context, result) abort
   let callbacks = remove(a:context, 'cycling_callbacks')
   let seen = {}
   for suggestion in a:context.suggestions
-    let seen[suggestion.text] = 1
+    let seen[suggestion.insertText] = 1
   endfor
-  for suggestion in get(a:result, 'completions', [])
-    if !has_key(seen, suggestion.text)
+  for suggestion in get(a:result, 'items', [])
+    if !has_key(seen, suggestion.insertText)
       call add(a:context.suggestions, suggestion)
-      let seen[suggestion.text] = 1
+      let seen[suggestion.insertText] = 1
     endif
   endfor
   for Callback in callbacks
@@ -291,9 +283,11 @@ function! s:GetSuggestionsCycling(callback) abort
   elseif exists('b:_copilot.cycling')
     call a:callback(b:_copilot)
   elseif exists('b:_copilot.suggestions')
+    let params = deepcopy(b:_copilot.first.params)
+    let params.context.triggerKind = s:inline_invoked
     let b:_copilot.cycling_callbacks = [a:callback]
-    let b:_copilot.cycling = copilot#Request('getCompletionsCycling',
-          \ b:_copilot.first.params,
+    let b:_copilot.cycling = copilot#Request('textDocument/inlineCompletion',
+          \ params,
           \ function('s:GetSuggestionsCyclingCallback', [b:_copilot]),
           \ function('s:GetSuggestionsCyclingCallback', [b:_copilot]),
           \ )
@@ -311,10 +305,10 @@ function! copilot#Previous() abort
 endfunction
 
 function! copilot#GetDisplayedSuggestion() abort
-  let [text, outdent, delete, uuid] = s:SuggestionTextWithAdjustments()
+  let [text, outdent, delete, item] = s:SuggestionTextWithAdjustments()
 
   return {
-        \ 'uuid': uuid,
+        \ 'item': item,
         \ 'text': text,
         \ 'outdentSize': outdent,
         \ 'deleteSize': delete}
@@ -331,8 +325,8 @@ endfunction
 
 function! s:UpdatePreview() abort
   try
-    let [text, outdent, delete, uuid] = s:SuggestionTextWithAdjustments()
-    let text = split(text, "\n", 1)
+    let [text, outdent, delete, item] = s:SuggestionTextWithAdjustments()
+    let text = split(text, "\r\n\\=\\|\n", 1)
     if empty(text[-1])
       call remove(text, -1)
     endif
@@ -362,7 +356,7 @@ function! s:UpdatePreview() abort
       endif
       let data.hl_mode = 'combine'
       call nvim_buf_set_extmark(0, copilot#NvimNs(), line('.')-1, col('.')-1, data)
-    else
+    elseif s:has_vim_ghost_text
       call prop_add(line('.'), col('.'), {'type': s:hlgroup, 'text': text[0]})
       for line in text[1:]
         call prop_add(line('.'), 0, {'type': s:hlgroup, 'text_align': 'below', 'text': line})
@@ -371,10 +365,7 @@ function! s:UpdatePreview() abort
         call prop_add(line('.'), col('$'), {'type': s:annot_hlgroup, 'text': ' ' . annot})
       endif
     endif
-    if !has_key(b:_copilot.shown_choices, uuid)
-      let b:_copilot.shown_choices[uuid] = v:true
-      call copilot#Request('notifyShown', {'uuid': uuid})
-    endif
+    call copilot#Notify('textDocument/didShowCompletion', {'item': item})
   catch
     return copilot#logger#Exception()
   endtry
@@ -384,9 +375,8 @@ function! s:HandleTriggerResult(result) abort
   if !exists('b:_copilot')
     return
   endif
-  let b:_copilot.suggestions = get(a:result, 'completions', [])
+  let b:_copilot.suggestions = type(a:result) == type([]) ? a:result : get(empty(a:result) ? {} : a:result, 'items', [])
   let b:_copilot.choice = 0
-  let b:_copilot.shown_choices = {}
   call s:UpdatePreview()
 endfunction
 
@@ -412,7 +402,7 @@ function! s:Trigger(bufnr, timer) abort
 endfunction
 
 function! copilot#Schedule(...) abort
-  if !s:has_ghost_text || !copilot#Enabled()
+  if !s:has_ghost_text || !s:Running() || !copilot#Enabled()
     call copilot#Clear()
     return
   endif
@@ -447,8 +437,9 @@ function! copilot#OnBufEnter() abort
   call copilot#util#Defer(function('s:Focus'), bufnr)
 endfunction
 
-function! copilot#OnInsertLeave() abort
-  return copilot#Clear()
+function! copilot#OnInsertLeavePre() abort
+  call copilot#Clear()
+  call s:ClearPreview()
 endfunction
 
 function! copilot#OnInsertEnter() abort
@@ -468,7 +459,6 @@ function! copilot#OnCursorMovedI() abort
 endfunction
 
 function! copilot#OnBufUnload() abort
-  call s:Reject(+expand('<abuf>'))
 endfunction
 
 function! copilot#OnVimLeavePre() abort
@@ -493,11 +483,14 @@ function! copilot#Accept(...) abort
     if empty(text)
       let text = s.text
     endif
-    let acceptance = {'uuid': s.uuid}
-    if text !=# s.text
-      let acceptance.acceptedLength = copilot#doc#UTF16Width(text)
+    if text ==# s.text && has_key(s.item, 'command')
+      call copilot#Request('workspace/executeCommand', s.item.command)
+    else
+      let line_text = strpart(getline('.'), 0, col('.') - 1) . text
+      call copilot#Notify('textDocument/didPartiallyAcceptCompletion', {
+            \ 'item': s.item,
+            \ 'acceptedLength': copilot#util#UTF16Width(line_text) - s.item.range.start.character})
     endif
-    call copilot#Request('notifyAccepted', acceptance)
     call s:ClearPreview()
     let s:suggestion_text = text
     return repeat("\<Left>\<Del>", s.outdentSize) . repeat("\<Del>", s.deleteSize) .
@@ -733,7 +726,7 @@ function! s:commands.version(opts) abort
     if exists('s:agent.serverInfo.version')
       echo s:agent.serverInfo.name . ' ' . s:agent.serverInfo.version
     else
-      echo 'dist/agent.js ' . versions.Await().version
+      echo 'GitHub Copilot Language Server ' . versions.Await().version
     endif
     if exists('s:agent.node_version')
       echo 'Node.js ' . s:agent.node_version
@@ -786,7 +779,7 @@ function! s:commands.restart(opts) abort
   if !empty(err)
     return 'echoerr ' . string('Copilot: ' . err)
   endif
-  echo 'Copilot: Restarting agent.'
+  echo 'Copilot: Restarting language server.'
 endfunction
 
 function! s:commands.disable(opts) abort
