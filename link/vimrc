@@ -120,7 +120,11 @@ au BufRead,BufNewFile *.fs set ft=fs
 autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
 
 " ALE + Js
-let g:ale_fixers = {'javascript': ['eslint']}
+let g:ale_fixers = {
+      \  'javascript': ['eslint'],
+      \  'typescript': ['eslint'],
+      \  'graphql': ['eslint'],
+      \}
 let g:ale_fix_on_save = 1
 
 " Text Files
