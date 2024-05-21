@@ -119,6 +119,10 @@ au BufRead,BufNewFile *.fs set ft=fs
 " tsx https://github.com/peitalin/vim-jsx-typescript
 autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
 
+" ALE + Js
+let g:ale_fixers = {'javascript': ['eslint']}
+let g:ale_fix_on_save = 1
+
 " Text Files
 "au BufRead,BufNewFile *.txt highlight clear OverLength
 "au BufRead,BufNewFile *.txt set textwidth=80
