@@ -1347,45 +1347,45 @@
         }
       },
       "gallery-dl": {
-        "version": "1.26.9_2",
+        "version": "1.27.0",
         "bottle": {
-          "rebuild": 1,
+          "rebuild": 0,
           "root_url": "https://ghcr.io/v2/homebrew/core",
           "files": {
             "arm64_sonoma": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:54cafbdd71f748d1d00991b3cb3909ce18b198fc77d573dc69b03604c5f6c619",
-              "sha256": "54cafbdd71f748d1d00991b3cb3909ce18b198fc77d573dc69b03604c5f6c619"
+              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:d29e6b50d311ee581a7030856622ce701a7e80d3eab7a2c785abf8bf0573dab5",
+              "sha256": "d29e6b50d311ee581a7030856622ce701a7e80d3eab7a2c785abf8bf0573dab5"
             },
             "arm64_ventura": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:54cafbdd71f748d1d00991b3cb3909ce18b198fc77d573dc69b03604c5f6c619",
-              "sha256": "54cafbdd71f748d1d00991b3cb3909ce18b198fc77d573dc69b03604c5f6c619"
+              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:d29e6b50d311ee581a7030856622ce701a7e80d3eab7a2c785abf8bf0573dab5",
+              "sha256": "d29e6b50d311ee581a7030856622ce701a7e80d3eab7a2c785abf8bf0573dab5"
             },
             "arm64_monterey": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:54cafbdd71f748d1d00991b3cb3909ce18b198fc77d573dc69b03604c5f6c619",
-              "sha256": "54cafbdd71f748d1d00991b3cb3909ce18b198fc77d573dc69b03604c5f6c619"
+              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:d29e6b50d311ee581a7030856622ce701a7e80d3eab7a2c785abf8bf0573dab5",
+              "sha256": "d29e6b50d311ee581a7030856622ce701a7e80d3eab7a2c785abf8bf0573dab5"
             },
             "sonoma": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:54cafbdd71f748d1d00991b3cb3909ce18b198fc77d573dc69b03604c5f6c619",
-              "sha256": "54cafbdd71f748d1d00991b3cb3909ce18b198fc77d573dc69b03604c5f6c619"
+              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:d29e6b50d311ee581a7030856622ce701a7e80d3eab7a2c785abf8bf0573dab5",
+              "sha256": "d29e6b50d311ee581a7030856622ce701a7e80d3eab7a2c785abf8bf0573dab5"
             },
             "ventura": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:54cafbdd71f748d1d00991b3cb3909ce18b198fc77d573dc69b03604c5f6c619",
-              "sha256": "54cafbdd71f748d1d00991b3cb3909ce18b198fc77d573dc69b03604c5f6c619"
+              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:d29e6b50d311ee581a7030856622ce701a7e80d3eab7a2c785abf8bf0573dab5",
+              "sha256": "d29e6b50d311ee581a7030856622ce701a7e80d3eab7a2c785abf8bf0573dab5"
             },
             "monterey": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:54cafbdd71f748d1d00991b3cb3909ce18b198fc77d573dc69b03604c5f6c619",
-              "sha256": "54cafbdd71f748d1d00991b3cb3909ce18b198fc77d573dc69b03604c5f6c619"
+              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:d29e6b50d311ee581a7030856622ce701a7e80d3eab7a2c785abf8bf0573dab5",
+              "sha256": "d29e6b50d311ee581a7030856622ce701a7e80d3eab7a2c785abf8bf0573dab5"
             },
             "x86_64_linux": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:8a34063365d9d52561a73e0d678381521d3b2d2e327a6b53974dad3a981dddf8",
-              "sha256": "8a34063365d9d52561a73e0d678381521d3b2d2e327a6b53974dad3a981dddf8"
+              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:84099c72889c0239f472d783375c5742b26b726995a4a3405cf1d78088101b6c",
+              "sha256": "84099c72889c0239f472d783375c5742b26b726995a4a3405cf1d78088101b6c"
             }
           }
         }
