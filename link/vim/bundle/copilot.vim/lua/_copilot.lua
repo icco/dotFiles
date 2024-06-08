@@ -15,7 +15,7 @@ copilot.lsp_start_client = function(cmd, handler_names, opts, settings)
   for _, name in ipairs(handler_names) do
     handlers[name] = function(err, result, ctx, _)
       if result then
-        local retval = vim.call('copilot#agent#LspHandle', id, { method = name, params = result })
+        local retval = vim.call('copilot#client#LspHandle', id, { method = name, params = result })
         if type(retval) == 'table' then
           return retval.result, retval.error
         elseif vim.lsp.handlers[name] then
@@ -37,14 +37,14 @@ copilot.lsp_start_client = function(cmd, handler_names, opts, settings)
     settings = settings,
     handlers = handlers,
     on_init = function(client, initialize_result)
-      vim.call('copilot#agent#LspInit', client.id, initialize_result)
+      vim.call('copilot#client#LspInit', client.id, initialize_result)
       if vim.fn.has('nvim-0.8') == 0 then
         client.notify('workspace/didChangeConfiguration', { settings = settings })
       end
     end,
     on_exit = function(code, signal, client_id)
       vim.schedule(function()
-        vim.call('copilot#agent#LspExit', client_id, code, signal)
+        vim.call('copilot#client#LspExit', client_id, code, signal)
       end)
     end,
   })
@@ -61,7 +61,7 @@ copilot.lsp_request = function(client_id, method, params, bufnr)
   end
   local _, id
   _, id = client.request(method, params, function(err, result)
-    vim.call('copilot#agent#LspResponse', client_id, { id = id, error = err, result = result })
+    vim.call('copilot#client#LspResponse', client_id, { id = id, error = err, result = result })
   end, bufnr)
   return id
 end
@@ -73,7 +73,7 @@ copilot.rpc_request = function(client_id, method, params)
   end
   local _, id
   _, id = client.rpc.request(method, params, function(err, result)
-    vim.call('copilot#agent#LspResponse', client_id, { id = id, error = err, result = result })
+    vim.call('copilot#client#LspResponse', client_id, { id = id, error = err, result = result })
   end)
   return id
 end

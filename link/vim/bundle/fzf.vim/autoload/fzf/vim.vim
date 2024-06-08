@@ -53,7 +53,8 @@ function! s:bash()
 
   let custom_bash = s:conf('preview_bash', '')
   let git_bash = 'C:\Program Files\Git\bin\bash.exe'
-  let candidates = filter(s:is_win ? [custom_bash, 'bash', git_bash] : [custom_bash, 'bash'], 'len(v:val)')
+  let scoop_git_bash = exists('$GIT_INSTALL_ROOT') ? $GIT_INSTALL_ROOT . '\bin\bash.exe' : ''
+  let candidates = filter(s:is_win ? [custom_bash, git_bash, scoop_git_bash, 'bash'] : [custom_bash, 'bash'], 'len(v:val)')
 
   let found = filter(map(copy(candidates), 'exepath(v:val)'), 'len(v:val)')
   if empty(found)
@@ -834,7 +835,11 @@ endfunction
 " ------------------------------------------------------------------
 function! s:ag_to_qf(line)
   let parts = matchlist(a:line, '\(.\{-}\)\s*:\s*\(\d\+\)\%(\s*:\s*\(\d\+\)\)\?\%(\s*:\(.*\)\)\?')
-  let dict = {'filename': &acd ? fnamemodify(parts[1], ':p') : parts[1], 'lnum': parts[2], 'text': parts[4]}
+  let file = &acd ? fnamemodify(parts[1], ':p') : parts[1]
+  if has('win32unix') && file !~ '/'
+    let file = substitute(file, '\', '/', 'g')
+  endif
+  let dict = {'filename': file, 'lnum': parts[2], 'text': parts[4]}
   if len(parts[3])
     let dict.col = parts[3]
   endif
@@ -846,7 +851,17 @@ function! s:ag_handler(name, lines)
     return
   endif
 
-  let list = map(filter(a:lines[1:], 'len(v:val)'), 's:ag_to_qf(v:val)')
+  let multi_line = min([s:conf('grep_multi_line', 0), 2])
+  let lines = []
+  if multi_line && executable('perl')
+    for idx in range(1, len(a:lines), multi_line + 1)
+      call add(lines, join(a:lines[idx:idx + multi_line + 1], ''))
+    endfor
+  else
+    let lines = a:lines[1:]
+  endif
+
+  let list = map(filter(lines, 'len(v:val)'), 's:ag_to_qf(v:val)')
   if empty(list)
     return
   endif
@@ -888,6 +903,19 @@ function! fzf#vim#ag_raw(command_suffix, ...)
   return call('fzf#vim#grep', extend(['ag --nogroup --column --color '.a:command_suffix, 1], a:000))
 endfunction
 
+function! s:grep_multi_line(opts)
+  " TODO: Non-global option
+  let multi_line = s:conf('grep_multi_line', 0)
+  if multi_line && executable('perl')
+    let opts = copy(a:opts)
+    let opts.options = extend(copy(opts.options), ['--read0', '--highlight-line'])
+    let delim = multi_line > 1 ? '\n\0' : '\0'
+    return [opts, printf(" | perl -pe 's/\\n/%s/; s/^([^:]+:){2,3}/$&\\n  /'", delim)]
+  endif
+
+  return [a:opts, '']
+endfunction
+
 " command (string), [spec (dict)], [fullscreen (bool)]
 function! fzf#vim#grep(grep_command, ...)
   let args = copy(a:000)
@@ -914,9 +942,11 @@ function! fzf#vim#grep(grep_command, ...)
     return s:ag_handler(get(opts, 'name', name), a:lines)
   endfunction
   let opts['sink*'] = remove(opts, 'sink')
+  let [opts, suffix] = s:grep_multi_line(opts)
+  let command = a:grep_command . suffix
   try
     let prev_default_command = $FZF_DEFAULT_COMMAND
-    let $FZF_DEFAULT_COMMAND = a:grep_command
+    let $FZF_DEFAULT_COMMAND = command
     return s:fzf(name, opts, args)
   finally
     let $FZF_DEFAULT_COMMAND = prev_default_command
@@ -941,11 +971,15 @@ function! fzf#vim#grep2(command_prefix, query, ...)
   \ 'source': s:is_win ? 'cd .' : ':',
   \ 'options': ['--ansi', '--prompt', toupper(name).'> ', '--query', a:query,
   \             '--disabled',
-  \             '--bind', 'start:reload:'.a:command_prefix.' '.fzf#shellescape(a:query),
-  \             '--bind', 'change:reload:'.a:command_prefix.' {q}'.fallback,
   \             '--multi', '--bind', 'alt-a:select-all,alt-d:deselect-all',
   \             '--delimiter', ':', '--preview-window', '+{2}-/2']
   \}
+
+  let [opts, suffix] = s:grep_multi_line(opts)
+  let suffix = escape(suffix, '{')
+  call extend(opts.options, ['--bind', 'start:reload:'.a:command_prefix.' '.fzf#shellescape(a:query).suffix])
+  call extend(opts.options, ['--bind', 'change:reload:'.a:command_prefix.' {q}'.suffix.fallback])
+
   if len(args) && type(args[0]) == s:TYPE.bool
     call remove(args, 0)
   endif
@@ -1474,14 +1508,22 @@ function! s:commits(range, buffer_local, args)
 
   let args = copy(a:args)
   let log_opts = len(args) && type(args[0]) == type('') ? remove(args, 0) : ''
+  let with_preview = !s:is_win && &columns > s:wide
 
   if len(a:range) || a:buffer_local
     if !managed
       return s:warn('The current buffer is not in the working tree')
     endif
-    let source .= len(a:range)
-      \ ? join([printf(' -L %d,%d:%s --no-patch', a:range[0], a:range[1], fzf#shellescape(current)), log_opts])
-      \ : join([' --follow', log_opts, fzf#shellescape(current)])
+    if len(a:range)
+      let source .= join([printf(' -L %d,%d:%s --no-patch', a:range[0], a:range[1], fzf#shellescape(current)), log_opts])
+      if with_preview
+        let previewparams = join([printf('log -L %d,%d:%s', a:range[0], a:range[1], fzf#shellescape(current)), log_opts])
+        let previewfilter = " | awk '/commit {1}/ {flag=1;print;next} /^[^ ]*commit/{flag=0} flag' "
+        let previewcmd = prefix . previewparams .' --color=always '. previewfilter
+      endif
+    else
+      let source .= join([' --follow', log_opts, fzf#shellescape(current)])
+    endif
     let command = 'BCommits'
   else
     let source .= join([' --graph', log_opts])
@@ -1503,12 +1545,14 @@ function! s:commits(range, buffer_local, args)
     let options.options[-1] .= ',ctrl-d'
   endif
 
-  if !s:is_win && &columns > s:wide
+  if with_preview
+    if !len(a:range)
+      let orderfile = tempname()
+      call writefile([current[len(s:git_root)+1:]], orderfile)
+      let previewcmd = 'echo {} | grep -o "[a-f0-9]\{7,\}" | head -1 | xargs ' . prefix . 'show -O'.fzf#shellescape(orderfile).' --format=format: --color=always '
+    endif
     let suffix = executable('delta') ? '| delta --width $FZF_PREVIEW_COLUMNS' : ''
-    let orderfile = tempname()
-    call writefile([current[len(s:git_root)+1:]], orderfile)
-    call extend(options.options,
-    \ ['--preview', 'echo {} | grep -o "[a-f0-9]\{7,\}" | head -1 | xargs ' . prefix . 'show -O'.fzf#shellescape(orderfile).' --format=format: --color=always ' . suffix])
+    call extend(options.options, ['--preview', previewcmd . suffix])
   endif
 
   return s:fzf(a:buffer_local ? 'bcommits' : 'commits', options, args)

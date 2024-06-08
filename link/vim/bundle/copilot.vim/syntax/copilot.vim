@@ -6,7 +6,7 @@ endif
 
 let s:subtype = matchstr(&l:filetype, '\<copilot\.\zs[[:alnum:]_-]\+')
 if !empty(s:subtype) && s:subtype !=# 'copilot'
-  exe 'syn include @copilotLanguageTop syntax/' . s:subtype . '.vim'
+  silent! exe 'syn include @copilotLanguageTop syntax/' . s:subtype . '.vim'
   unlet! b:current_syntax
 endif
 

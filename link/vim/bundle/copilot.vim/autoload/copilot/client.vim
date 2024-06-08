@@ -377,14 +377,14 @@ function! s:OnExit(instance, code, ...) abort
   endif
 endfunction
 
-function! copilot#agent#LspInit(id, initialize_result) abort
+function! copilot#client#LspInit(id, initialize_result) abort
   if !has_key(s:instances, a:id)
     return
   endif
   call s:AfterInitialize(a:initialize_result, s:instances[a:id])
 endfunction
 
-function! copilot#agent#LspExit(id, code, signal) abort
+function! copilot#client#LspExit(id, code, signal) abort
   if !has_key(s:instances, a:id)
     return
   endif
@@ -392,7 +392,7 @@ function! copilot#agent#LspExit(id, code, signal) abort
   call s:OnExit(instance, a:code)
 endfunction
 
-function! copilot#agent#LspResponse(id, opts, ...) abort
+function! copilot#client#LspResponse(id, opts, ...) abort
   if !has_key(s:instances, a:id)
     return
   endif
@@ -419,7 +419,7 @@ function! s:NvimRequest(method, params, ...) dict abort
     return call('s:SetUpRequest', [self, id, a:method, params, progress] + a:000)
   endif
   if has_key(self, 'client_id')
-    call copilot#agent#LspExit(self.client_id, -1, -1)
+    call copilot#client#LspExit(self.client_id, -1, -1)
   endif
   throw 'Copilot: LSP client not available'
 endfunction
@@ -435,7 +435,7 @@ function! s:NvimNotify(method, params) dict abort
   return eval("v:lua.require'_copilot'.rpc_notify(self.id, a:method, a:params)")
 endfunction
 
-function! copilot#agent#LspHandle(id, request) abort
+function! copilot#client#LspHandle(id, request) abort
   if !has_key(s:instances, a:id)
     return
   endif
@@ -455,7 +455,7 @@ function! s:GetNodeVersion(command) abort
   return {'status': status, 'string': string, 'major': major, 'minor': minor}
 endfunction
 
-let s:script_name = 'dist/agent.js'
+let s:script_name = 'dist/language-server.js'
 function! s:Command() abort
   if !has('nvim-0.6') && v:version < 900
     return [v:null, '', 'Vim version too old']
@@ -512,7 +512,7 @@ function! s:UrlDecode(str) abort
   return substitute(a:str, '%\(\x\x\)', '\=iconv(nr2char("0x".submatch(1)), "utf-8", "latin1")', 'g')
 endfunction
 
-function! copilot#agent#EditorInfo() abort
+function! copilot#client#EditorInfo() abort
   if !exists('s:editor_version')
     if has('nvim')
       let s:editor_version = matchstr(execute('version'), 'NVIM v\zs[^[:space:]]\+')
@@ -523,11 +523,11 @@ function! copilot#agent#EditorInfo() abort
   return {'name': has('nvim') ? 'Neovim': 'Vim', 'version': s:editor_version}
 endfunction
 
-function! copilot#agent#EditorPluginInfo() abort
+function! copilot#client#EditorPluginInfo() abort
   return {'name': 'copilot.vim', 'version': s:plugin_version}
 endfunction
 
-function! copilot#agent#Settings() abort
+function! copilot#client#Settings() abort
   let settings = {
         \ 'http': {
         \   'proxy': get(g:, 'copilot_proxy', v:null),
@@ -609,7 +609,7 @@ let s:vim_capabilities = {
       \ 'window': {'showDocument': {'support': v:true}},
       \ }
 
-function! copilot#agent#New(...) abort
+function! copilot#client#New(...) abort
   let opts = a:0 ? a:1 : {}
   let instance = {'requests': {},
         \ 'progress': {},
@@ -644,11 +644,11 @@ function! copilot#agent#New(...) abort
   endif
   let opts = {}
   let opts.initializationOptions = {
-        \ 'editorInfo': copilot#agent#EditorInfo(),
-        \ 'editorPluginInfo': copilot#agent#EditorPluginInfo(),
+        \ 'editorInfo': copilot#client#EditorInfo(),
+        \ 'editorPluginInfo': copilot#client#EditorPluginInfo(),
         \ }
   let opts.workspaceFolders = []
-  let settings = extend(copilot#agent#Settings(), get(opts, 'editorConfiguration', {}))
+  let settings = extend(copilot#client#Settings(), get(opts, 'editorConfiguration', {}))
   if type(get(g:, 'copilot_workspace_folders')) == v:t_list
     for folder in g:copilot_workspace_folders
       if type(folder) == v:t_string && !empty(folder) && folder !~# '\*\*\|^/$'
@@ -699,7 +699,7 @@ function! copilot#agent#New(...) abort
   return instance
 endfunction
 
-function! copilot#agent#Cancel(request) abort
+function! copilot#client#Cancel(request) abort
   if type(a:request) == type({}) && has_key(a:request, 'Cancel')
     call a:request.Cancel()
   endif
@@ -712,7 +712,7 @@ function! s:Callback(request, type, callback, timer) abort
   endif
 endfunction
 
-function! copilot#agent#Result(request, callback) abort
+function! copilot#client#Result(request, callback) abort
   if has_key(a:request, 'resolve')
     call add(a:request.resolve, a:callback)
   elseif has_key(a:request, 'result')
@@ -720,7 +720,7 @@ function! copilot#agent#Result(request, callback) abort
   endif
 endfunction
 
-function! copilot#agent#Error(request, callback) abort
+function! copilot#client#Error(request, callback) abort
   if has_key(a:request, 'reject')
     call add(a:request.reject, a:callback)
   elseif has_key(a:request, 'error')
