@@ -37,7 +37,6 @@ brew 'wget'
 brew 'yq'
 brew 'zoxide'
 brew 'zsh'
-brew 'jordanbaird-ice'
 
 cask '1password'
 cask '1password-cli'
