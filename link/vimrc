@@ -2,11 +2,6 @@
 " .vimrc -- the way it ought to be: Ha. It rhymes!
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" Install fzf
-" TODO: Make this work on non-os-x things
-set rtp+=$HOMEBREW_PREFIX/opt/fzf
-nnoremap ff :Files<CR>
-
 " Basics
 set encoding=utf-8
 behave xterm
@@ -72,6 +67,18 @@ set directory=/tmp
 " For work stuff
 if filereadable("/usr/share/vim/google/google.vim")
   source /usr/share/vim/google/google.vim
+endif
+
+" FZF
+if filereadable("/usr/share/doc/fzf/examples/fzf.vim")
+  source /usr/share/doc/fzf/examples/fzf.vim
+  nnoremap ff :Files<CR>
+endif
+
+if filereadable("/opt/homebrew/opt/fzf/plugin/fzf.vim")
+  " set rtp+=$HOMEBREW_PREFIX/opt/fzf
+  source /opt/homebrew/opt/fzf/plugin/fzf.vim
+  nnoremap ff :Files<CR>
 endif
 
 " Enables scrolling in vim
