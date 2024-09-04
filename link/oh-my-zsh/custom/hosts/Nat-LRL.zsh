@@ -26,6 +26,7 @@ export GOPRIVATE="github.com/pinginc/*"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 alias fr='open -R "$(fzf)"'
 alias f='open "$(fzf)"'
+alias fv='vim "$(fzf)"'
 
 alias k='kubectl'
 
