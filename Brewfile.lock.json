@@ -1317,15 +1317,15 @@
         }
       },
       "gallery-dl": {
-        "version": "1.27.3",
+        "version": "1.27.4",
         "bottle": {
-          "rebuild": 1,
+          "rebuild": 0,
           "root_url": "https://ghcr.io/v2/homebrew/core",
           "files": {
             "all": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:3d2e76919bc10e97649d00cf61277364a68f0c04ab8898ff2d0ea1908e9b5a69",
-              "sha256": "3d2e76919bc10e97649d00cf61277364a68f0c04ab8898ff2d0ea1908e9b5a69"
+              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:08a353f1335707808194b07441371777bbb28e7b7e8adbb742be4a31cb18bedf",
+              "sha256": "08a353f1335707808194b07441371777bbb28e7b7e8adbb742be4a31cb18bedf"
             }
           }
         }
