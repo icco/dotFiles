@@ -1740,7 +1740,7 @@
         "macOS": "13.6"
       },
       "sonoma": {
-        "HOMEBREW_VERSION": "4.4.0",
+        "HOMEBREW_VERSION": "4.4.1",
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
         "CLT": "16.0.0.0.1.1724870825",
