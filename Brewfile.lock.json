@@ -1379,13 +1379,13 @@
       "gallery-dl": {
         "version": "1.27.6",
         "bottle": {
-          "rebuild": 0,
+          "rebuild": 1,
           "root_url": "https://ghcr.io/v2/homebrew/core",
           "files": {
             "all": {
               "cellar": ":any_skip_relocation",
-              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:1f771e430eaa9b8f8500ddf6fe6a2b12515577633d1da9ed898d8701dee01d5d",
-              "sha256": "1f771e430eaa9b8f8500ddf6fe6a2b12515577633d1da9ed898d8701dee01d5d"
+              "url": "https://ghcr.io/v2/homebrew/core/gallery-dl/blobs/sha256:8983d8abfc7d69646811362d99bf3089be0fae84f8bff948c119eb1c46c897fe",
+              "sha256": "8983d8abfc7d69646811362d99bf3089be0fae84f8bff948c119eb1c46c897fe"
             }
           }
         }
