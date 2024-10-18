@@ -1746,6 +1746,14 @@
         "CLT": "16.0.0.0.1.1724870825",
         "Xcode": "16.0",
         "macOS": "14.7"
+      },
+      "sequoia": {
+        "HOMEBREW_VERSION": "4.4.1",
+        "HOMEBREW_PREFIX": "/opt/homebrew",
+        "Homebrew/homebrew-core": "api",
+        "CLT": "16.0.0.0.1.1724870825",
+        "Xcode": "16.0",
+        "macOS": "15.0.1"
       }
     }
   }
