@@ -51,7 +51,6 @@ export GOPROXY="https://proxy.golang.org"
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$GOPATH/bin:$PATH"
 
 if (( $+commands[brew] )); then
-  echo 1
   FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
 
   autoload -Uz compinit
