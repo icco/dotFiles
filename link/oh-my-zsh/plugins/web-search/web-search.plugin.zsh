@@ -27,6 +27,12 @@ function web_search() {
     ask             "https://www.ask.com/web?q="
     youtube         "https://www.youtube.com/results?search_query="
     deepl           "https://www.deepl.com/translator#auto/auto/"
+    dockerhub       "https://hub.docker.com/search?q="
+    npmpkg          "https://www.npmjs.com/search?q="
+    packagist       "https://packagist.org/?query="
+    gopkg           "https://pkg.go.dev/search?m=package&q="
+    chatgpt         "https://chatgpt.com/?q="
+    reddit          "https://www.reddit.com/search/?q="
   )
 
   # check whether the search engine is supported
@@ -40,7 +46,7 @@ function web_search() {
     # if search goes in the query string ==> space as +, otherwise %20
     # see https://stackoverflow.com/questions/1634271/url-encoding-the-space-character-or-20
     local param="-P"
-    [[ "$urls[$1]" =~ .*\?.*=$ ]] && param=""
+    [[ "$urls[$1]" == *\?*= ]] && param=""
 
     # build search url:
     # join arguments passed with '+', then append to search engine URL
@@ -75,6 +81,12 @@ alias scholar='web_search scholar'
 alias ask='web_search ask'
 alias youtube='web_search youtube'
 alias deepl='web_search deepl'
+alias dockerhub='web_search dockerhub'
+alias npmpkg='web_search npmpkg'
+alias packagist='web_search packagist'
+alias gopkg='web_search gopkg'
+alias chatgpt='web_search chatgpt'
+alias reddit='web_search reddit'
 
 #add your own !bang searches here
 alias wiki='web_search duckduckgo \!w'
