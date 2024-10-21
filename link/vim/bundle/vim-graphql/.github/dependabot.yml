@@ -9,3 +9,7 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    ignore:
+      - dependency-name: "setuptools"
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]

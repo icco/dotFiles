@@ -85,6 +85,14 @@ BUG FIXES:
   [[GH-3644]](https://github.com/fatih/vim-go/pull/3644)
 * Swallow delve errors when trying to place a breakpoint at an invalid location.
   [[GH-3652]](https://github.com/fatih/vim-go/pull/3652)
+* Fix parsing of gopls error message to determine debug port.
+  [[GH-3672]](https://github.com/fatih/vim-go/pull/3672)
+* Handle unexpected code action commands from `gopls`.
+  [[GH-3678]](https://github.com/fatih/vim-go/pull/3678)
+* Fix substitution paths in debug stacktrace window.
+  [[GH-3675]](https://github.com/fatih/vim-go/pull/3675)
+* Fix handling of gopls restarts.
+  [[GH-3685]](https://github.com/fatih/vim-go/pull/3685)
 
 ## v1.28 - (December 17, 2022)
 

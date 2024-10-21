@@ -11,7 +11,7 @@ let s:logs = []
 function! copilot#logger#BufReadCmd() abort
   try
     setlocal modifiable noreadonly
-    call deletebufline('', 1, '$')
+    silent call deletebufline('', 1, '$')
     if !empty(s:logs)
       call setline(1, s:logs)
     endif
@@ -99,7 +99,7 @@ function! copilot#logger#Exception(...) abort
             \ 'type': type . code,
             \ 'value': message,
             \ 'stacktrace': stacklines}]
-            \ })
+            \ }, v:null, function('copilot#util#Nop'))
     endif
   endif
 endfunction

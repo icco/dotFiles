@@ -6,7 +6,7 @@
 " Website:     https://wakatime.com/
 " ============================================================================
 
-let s:VERSION = '11.1.1'
+let s:VERSION = '11.2.0'
 
 
 " Init {{{
@@ -337,10 +337,10 @@ EOF
             endif
 
             if !found_api_key
-                echoerr '[WakaTime] Type the Vim command :WakaTimeApiKey to enter your WakaTime API Key. Find yours at https://wakatime.com/api-key'
+                echomsg '[WakaTime] Type the Vim command :WakaTimeApiKey to enter your WakaTime API Key. Find yours at https://wakatime.com/api-key'
+            else
+                let s:config_file_already_setup = s:true
             endif
-
-            let s:config_file_already_setup = s:true
         endif
     endfunction
 
@@ -520,6 +520,10 @@ EOF
                     let heartbeat.language = &filetype
                 endif
             endif
+            let cursor = getpos(".")
+            let heartbeat.lineno = cursor[1]
+            let heartbeat.cursorpos = cursor[2]
+            let heartbeat.lines = line("$")
             let s:heartbeats_buffer = s:heartbeats_buffer + [heartbeat]
             call s:SetLastHeartbeat(a:now, a:now, file)
 
@@ -548,6 +552,9 @@ EOF
 
         let cmd = [s:wakatime_cli, '--entity', heartbeat.entity]
         let cmd = cmd + ['--time', heartbeat.time]
+        let cmd = cmd + ['--lineno', heartbeat.lineno]
+        let cmd = cmd + ['--cursorpos', heartbeat.cursorpos]
+        let cmd = cmd + ['--lines-in-file', heartbeat.lines]
 
         let editor_name = 'vim'
         if has('nvim')
@@ -659,6 +666,9 @@ EOF
         let loop_count = 1
         for heartbeat in s:heartbeats_buffer
             let heartbeat_str = '{"entity": "' . s:JsonEscape(heartbeat.entity) . '", '
+            let heartbeat_str = heartbeat_str . '"lineno": ' . s:n2s(heartbeat.lineno) . ', '
+            let heartbeat_str = heartbeat_str . '"cursorpos": ' . s:n2s(heartbeat.cursorpos) . ', '
+            let heartbeat_str = heartbeat_str . '"lines": ' . s:n2s(heartbeat.lines) . ', '
             let heartbeat_str = heartbeat_str . '"timestamp": ' . s:OrderTime(heartbeat.time, loop_count) . ', '
             let heartbeat_str = heartbeat_str . '"is_write": '
             if heartbeat.is_write
@@ -709,6 +719,7 @@ EOF
     endfunction
 
     function! s:n2s(number)
+        " Converts an integer or float number to a string
         return substitute(printf('%d', a:number), ',', '.', '')
     endfunction
 
@@ -729,7 +740,6 @@ EOF
     endfunction
 
     function! s:PromptForApiKey()
-        let api_key = s:false
         let api_key = s:GetIniSetting('settings', 'api_key')
         if empty(api_key)
             let api_key = s:GetIniSetting('settings', 'apikey')
@@ -737,6 +747,9 @@ EOF
 
         let api_key = inputsecret("[WakaTime] Enter your wakatime.com api key: ", api_key)
         call s:SetIniSetting('settings', 'api_key', api_key)
+        if !empty(api_key)
+            let s:config_file_already_setup = s:true
+        endif
     endfunction
 
     function! s:EnableDebugMode()
@@ -772,6 +785,9 @@ EOF
     endfunction
 
     function! s:HandleActivity(is_write)
+        if !s:config_file_already_setup
+            return
+        endif
         let file = s:GetCurrentFile()
         if !empty(file) && file !~ "-MiniBufExplorer-" && file !~ "--NO NAME--" && file !~ "^term:"
             let last = s:GetLastHeartbeat()

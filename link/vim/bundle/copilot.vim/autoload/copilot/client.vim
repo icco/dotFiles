@@ -2,7 +2,9 @@ scriptencoding utf-8
 
 let s:plugin_version = copilot#version#String()
 
-let s:error_exit = -32097
+let s:error_canceled = {'code': -32800, 'message': 'Canceled'}
+let s:error_exit = {'code': -32097, 'message': 'Process exited'}
+let s:error_connection_inactive = {'code': -32096, 'message': 'Connection inactive'}
 
 let s:root = expand('<sfile>:h:h:h')
 
@@ -14,6 +16,15 @@ endif
 if has('nvim')
   lua package.loaded._copilot = nil
 endif
+
+function! s:Warn(msg) abort
+  if !empty(get(g:, 'copilot_no_startup_warnings'))
+    return
+  endif
+  echohl WarningMsg
+  echomsg 'Copilot: ' . a:msg
+  echohl NONE
+endfunction
 
 function! s:VimClose() dict abort
   if !has_key(self, 'job')
@@ -36,17 +47,20 @@ function! s:LogSend(request, line) abort
 endfunction
 
 function! s:RejectRequest(request, error) abort
-  if a:request.status ==# 'canceled'
+  if a:request.status !=# 'running'
     return
   endif
   let a:request.waiting = {}
   call remove(a:request, 'resolve')
   let reject = remove(a:request, 'reject')
   let a:request.status = 'error'
-  let a:request.error = a:error
+  let a:request.error = deepcopy(a:error)
   for Cb in reject
     let a:request.waiting[timer_start(0, function('s:Callback', [a:request, 'error', Cb]))] = 1
   endfor
+  if index([s:error_canceled.code, s:error_connection_inactive.code], a:error.code) != -1
+    return
+  endif
   let msg = 'Method ' . a:request.method . ' errored with E' . a:error.code . ': ' . json_encode(a:error.message)
   if empty(reject)
     call copilot#logger#Error(msg)
@@ -55,16 +69,23 @@ function! s:RejectRequest(request, error) abort
   endif
 endfunction
 
+function! s:AfterInitialized(fn, ...) dict abort
+  call add(self.after_initialized, function(a:fn, a:000))
+endfunction
+
 function! s:Send(instance, request) abort
+  if !has_key(a:instance, 'job')
+    return v:false
+  endif
   try
     call ch_sendexpr(a:instance.job, a:request)
     return v:true
   catch /^Vim\%((\a\+)\)\=:E906:/
     let a:instance.kill = v:true
-    let job = a:instance.job
-    call copilot#logger#Warn('Terminating process after failed write')
+    let job = remove(a:instance, 'job')
     call job_stop(job)
     call timer_start(2000, { _ -> job_stop(job, 'kill') })
+    call copilot#logger#Warn('Terminating process after failed write')
     return v:false
   catch /^Vim\%((\a\+)\)\=:E631:/
     return v:false
@@ -73,11 +94,7 @@ endfunction
 
 function! s:VimNotify(method, params) dict abort
   let request = {'method': a:method, 'params': a:params}
-  if has_key(self, 'initialization_pending')
-    call add(self.initialization_pending, request)
-  else
-    return s:Send(self, request)
-  endif
+  call self.AfterInitialized(function('s:Send', [self, request]))
 endfunction
 
 function! s:RequestWait() dict abort
@@ -123,7 +140,6 @@ function! s:SetUpRequest(instance, id, method, params, progress, ...) abort
         \ 'reject': [],
         \ 'progress': a:progress,
         \ 'status': 'running'}
-  let a:instance.requests[a:id] = request
   let args = a:000[2:-1]
   if len(args)
     if !empty(a:1)
@@ -173,8 +189,13 @@ function! s:BufferText(bufnr) abort
   return join(getbufline(a:bufnr, 1, '$'), "\n") . "\n"
 endfunction
 
+let s:valid_request_key = '^\%(id\|method\|params\)$'
 function! s:SendRequest(instance, request, ...) abort
-  if empty(s:Send(a:instance, a:request)) && has_key(a:request, 'id') && has_key(a:instance.requests, a:request.id)
+  if !has_key(a:instance, 'job') || get(a:instance, 'shutdown', a:request) isnot# a:request
+    return s:RejectRequest(a:request, s:error_connection_inactive)
+  endif
+  let json = filter(copy(a:request), 'v:key =~# s:valid_request_key')
+  if empty(s:Send(a:instance, json)) && has_key(a:request, 'id') && has_key(a:instance.requests, a:request.id)
     call s:RejectRequest(remove(a:instance.requests, a:request.id), {'code': -32099, 'message': 'Write failed'})
   endif
 endfunction
@@ -247,13 +268,10 @@ function! s:VimRequest(method, params, ...) dict abort
   let s:id += 1
   let params = deepcopy(a:params)
   let [_, progress] = s:PreprocessParams(self, params)
-  let request = {'method': a:method, 'params': params, 'id': s:id}
-  if has_key(self, 'initialization_pending')
-    call add(self.initialization_pending, request)
-  else
-    call copilot#util#Defer(function('s:SendRequest'), self, request)
-  endif
-  return call('s:SetUpRequest', [self, s:id, a:method, params, progress] + a:000)
+  let request = call('s:SetUpRequest', [self, s:id, a:method, params, progress] + a:000)
+  call self.AfterInitialized(function('s:SendRequest', [self, request]))
+  let self.requests[s:id] = request
+  return request
 endfunction
 
 function! s:Call(method, params, ...) dict abort
@@ -266,11 +284,8 @@ endfunction
 
 function! s:Cancel(request) dict abort
   if has_key(self.requests, get(a:request, 'id', ''))
-    call remove(self.requests, a:request.id)
     call self.Notify('$/cancelRequest', {'id': a:request.id})
-  endif
-  if get(a:request, 'status', '') ==# 'running'
-    let a:request.status = 'canceled'
+    call s:RejectRequest(remove(self.requests, a:request.id), s:error_canceled)
   endif
 endfunction
 
@@ -279,7 +294,7 @@ function! s:RequestCancel() dict abort
   if !empty(instance)
     call instance.Cancel(self)
   elseif get(self, 'status', '') ==# 'running'
-    let self.status = 'canceled'
+    call s:RejectRequest(self, s:error_canceled)
   endif
   return self
 endfunction
@@ -331,7 +346,7 @@ function! s:OnResponse(instance, response, ...) abort
       call remove(a:instance.progress, progress_token)
     endif
   endfor
-  if request.status ==# 'canceled'
+  if request.status !=# 'running'
     return
   endif
   if has_key(response, 'result')
@@ -362,18 +377,32 @@ function! s:OnExit(instance, code, ...) abort
   if has_key(a:instance, 'client_id')
     call remove(a:instance, 'client_id')
   endif
-  let error = {'code': s:error_exit, 'message': 'Process exited with status ' . a:code, 'data': {'status': a:code}}
-  if a:code == 2
-    let error.message = 'Process aborted due to unsupported Node.js version'
+  let message = 'Process exited with status ' . a:code
+  if a:code >= 18 && a:code < 100
+    let message = 'Node.js too old.  ' .
+          \ (get(a:instance.node, 0, 'node') ==# 'node' ? 'Upgrade' : 'Change g:copilot_node_command') .
+          \ ' to ' . a:code . '.x or newer'
+  endif
+  if !has_key(a:instance, 'serverInfo') && !has_key(a:instance, 'startup_error')
+    let a:instance.startup_error = message
   endif
   for id in sort(keys(a:instance.requests), { a, b -> +a > +b })
-    call s:RejectRequest(remove(a:instance.requests, id), deepcopy(error))
+    call s:RejectRequest(remove(a:instance.requests, id), s:error_exit)
   endfor
+  if has_key(a:instance, 'after_initialized')
+    let a:instance.AfterInitialized = function('copilot#util#Defer')
+    for Fn in remove(a:instance, 'after_initialized')
+      call copilot#util#Defer(Fn)
+    endfor
+  endif
   call copilot#util#Defer({ -> get(s:instances, a:instance.id) is# a:instance ? remove(s:instances, a:instance.id) : {} })
   if a:code == 0
-    call copilot#logger#Info(error.message)
+    call copilot#logger#Info(message)
   else
-    call copilot#logger#Warn(error.message)
+    call copilot#logger#Warn(message)
+    if !has_key(a:instance, 'kill')
+      call copilot#util#Defer(function('s:Warn'), message)
+    endif
   endif
 endfunction
 
@@ -381,7 +410,7 @@ function! copilot#client#LspInit(id, initialize_result) abort
   if !has_key(s:instances, a:id)
     return
   endif
-  call s:AfterInitialize(a:initialize_result, s:instances[a:id])
+  call s:PostInit(a:initialize_result, s:instances[a:id])
 endfunction
 
 function! copilot#client#LspExit(id, code, signal) abort
@@ -414,25 +443,41 @@ endfunction
 function! s:NvimRequest(method, params, ...) dict abort
   let params = deepcopy(a:params)
   let [bufnr, progress] = s:PreprocessParams(self, params)
-  let id = eval("v:lua.require'_copilot'.lsp_request(self.id, a:method, params, bufnr)")
-  if id isnot# v:null
-    return call('s:SetUpRequest', [self, id, a:method, params, progress] + a:000)
+  let request = call('s:SetUpRequest', [self, v:null, a:method, params, progress] + a:000)
+  call self.AfterInitialized(function('s:NvimDoRequest', [self, request, bufnr]))
+  return request
+endfunction
+
+function! s:NvimDoRequest(client, request, bufnr) abort
+  let request = a:request
+  if has_key(a:client, 'client_id') && !has_key(a:client, 'kill')
+    let request.id = eval("v:lua.require'_copilot'.lsp_request(a:client.id, a:request.method, a:request.params, a:bufnr)")
   endif
-  if has_key(self, 'client_id')
-    call copilot#client#LspExit(self.client_id, -1, -1)
+  if request.id isnot# v:null
+    let a:client.requests[request.id] = request
+  else
+    if has_key(a:client, 'client_id')
+      call copilot#client#LspExit(a:client.client_id, -1, -1)
+    endif
+    call copilot#util#Defer(function('s:RejectRequest'), request, s:error_connection_inactive)
   endif
-  throw 'Copilot: LSP client not available'
+  return request
 endfunction
 
 function! s:NvimClose() dict abort
   if !has_key(self, 'client_id')
     return
   endif
+  let self.kill = v:true
   return luaeval('vim.lsp.get_client_by_id(_A).stop()', self.client_id)
 endfunction
 
 function! s:NvimNotify(method, params) dict abort
-  return eval("v:lua.require'_copilot'.rpc_notify(self.id, a:method, a:params)")
+  call self.AfterInitialized(function('s:NvimDoNotify', [self.client_id, a:method, a:params]))
+endfunction
+
+function! s:NvimDoNotify(client_id, method, params) abort
+  return eval("v:lua.require'_copilot'.rpc_notify(a:client_id, a:method, a:params)")
 endfunction
 
 function! copilot#client#LspHandle(id, request) abort
@@ -442,23 +487,10 @@ function! copilot#client#LspHandle(id, request) abort
   return s:OnMessage(s:instances[a:id], a:request)
 endfunction
 
-function! s:GetNodeVersion(command) abort
-  let out = []
-  let err = []
-  let status = copilot#job#Stream(a:command + ['--version'], function('add', [out]), function('add', [err]))
-  let string = matchstr(join(out, ''), '^v\zs\d\+\.[^[:space:]]*')
-  if status != 0
-    let string = ''
-  endif
-  let major = str2nr(string)
-  let minor = str2nr(matchstr(string, '\.\zs\d\+'))
-  return {'status': status, 'string': string, 'major': major, 'minor': minor}
-endfunction
-
 let s:script_name = 'dist/language-server.js'
 function! s:Command() abort
-  if !has('nvim-0.6') && v:version < 900
-    return [v:null, '', 'Vim version too old']
+  if !has('nvim-0.7') && v:version < 900
+    return [[], [], 'Vim version too old']
   endif
   let script = get(g:, 'copilot_command', '')
   if type(script) == type('')
@@ -467,10 +499,10 @@ function! s:Command() abort
   if empty(script) || !filereadable(script[0])
     let script = [s:root . '/' . s:script_name]
     if !filereadable(script[0])
-      return [v:null, '', 'Could not find ' . s:script_name . ' (bad install?)']
+      return [[], [], 'Could not find ' . s:script_name . ' (bad install?)']
     endif
   elseif script[0] !~# '\.js$'
-    return [script + ['--stdio'], '', '']
+    return [[], script + ['--stdio'], '']
   endif
   let node = get(g:, 'copilot_node_command', '')
   if empty(node)
@@ -480,32 +512,12 @@ function! s:Command() abort
   endif
   if !executable(get(node, 0, ''))
     if get(node, 0, '') ==# 'node'
-      return [v:null, '', 'Node.js not found in PATH']
+      return [[], [], 'Node.js not found in PATH']
     else
-      return [v:null, '', 'Node.js executable `' . get(node, 0, '') . "' not found"]
+      return [[], [], 'Node.js executable `' . get(node, 0, '') . "' not found"]
     endif
   endif
-  if get(g:, 'copilot_ignore_node_version')
-    return [node + script + ['--stdio'], '', '']
-  endif
-  let node_version = s:GetNodeVersion(node)
-  let warning = ''
-  if node_version.status != 0
-    return [v:null, '', 'Node.js exited with status ' . node_version.status]
-  endif
-  if get(node, 0, '') !=# 'node'
-    let upgrade_advice = 'Change g:copilot_node_command to'
-  else
-    let upgrade_advice = 'Upgrade to'
-  endif
-  if node_version.major == 0
-    return [v:null, node_version.string, 'Could not determine Node.js version']
-  elseif node_version.major < 16 || node_version.major == 16 && node_version.minor < 14 || node_version.major == 17 && node_version.minor < 3
-    return [v:null, node_version.string, 'Node.js ' . node_version.string . ' is unsupported.  ' . upgrade_advice . ' 18.x or newer']
-  elseif node_version.major < 18
-    let warning = 'Node.js ' . node_version.string . ' support will soon be dropped.  ' . upgrade_advice . ' 18.x or newer'
-  endif
-  return [node + script + ['--stdio'], node_version.string, warning]
+  return [node, script + ['--stdio'], '']
 endfunction
 
 function! s:UrlDecode(str) abort
@@ -543,25 +555,24 @@ function! copilot#client#Settings() abort
   return settings
 endfunction
 
-function! s:AfterInitialize(result, instance) abort
+function! s:PostInit(result, instance) abort
   let a:instance.serverInfo = get(a:result, 'serverInfo', {})
   if !has_key(a:instance, 'node_version') && has_key(a:result.serverInfo, 'nodeVersion')
     let a:instance.node_version = a:result.serverInfo.nodeVersion
   endif
-endfunction
-
-function! s:InitializeResult(result, instance) abort
-  call s:AfterInitialize(a:result, a:instance)
-  call s:Send(a:instance, {'method': 'initialized', 'params': {}})
-  for request in remove(a:instance, 'initialization_pending')
-    call copilot#util#Defer(function('s:SendRequest'), a:instance, request)
+  let a:instance.AfterInitialized = function('copilot#util#Defer')
+  for Fn in remove(a:instance, 'after_initialized')
+    call copilot#util#Defer(Fn)
   endfor
 endfunction
 
+function! s:InitializeResult(result, instance) abort
+  call s:Send(a:instance, {'method': 'initialized', 'params': {}})
+  call s:PostInit(a:result, a:instance)
+endfunction
+
 function! s:InitializeError(error, instance) abort
-  if a:error.code == s:error_exit
-    let a:instance.startup_error = a:error.message
-  else
+  if !has_key(a:instance, 'startup_error')
     let a:instance.startup_error = 'Unexpected error E' . a:error.code . ' initializing language server: ' . a:error.message
     call a:instance.Close()
   endif
@@ -584,6 +595,10 @@ endfunction
 
 function! s:Nop(...) abort
   return v:null
+endfunction
+
+function! s:False(...) abort
+  return v:false
 endfunction
 
 function! s:Progress(params, instance) abort
@@ -614,34 +629,28 @@ function! copilot#client#New(...) abort
   let instance = {'requests': {},
         \ 'progress': {},
         \ 'workspaceFolders': {},
+        \ 'after_initialized': [],
         \ 'status': {'status': 'Starting', 'message': ''},
-        \ 'Close': function('s:VimClose'),
-        \ 'Notify': function('s:VimNotify'),
+        \ 'AfterInitialized': function('s:AfterInitialized'),
+        \ 'Close': function('s:Nop'),
+        \ 'Notify': function('s:False'),
         \ 'Request': function('s:VimRequest'),
-        \ 'Attach': function('s:VimAttach'),
-        \ 'IsAttached': function('s:VimIsAttached'),
+        \ 'Attach': function('s:Nop'),
+        \ 'IsAttached': function('s:False'),
         \ 'Call': function('s:Call'),
         \ 'Cancel': function('s:Cancel'),
         \ 'StartupError': function('s:StartupError'),
         \ }
   let instance.methods = copy(s:notifications)
-  let [command, node_version, command_error] = s:Command()
-  if len(command_error)
-    if empty(command)
-      let instance.id = -1
-      let instance.startup_error = command_error
-      call copilot#logger#Error(command_error)
-      return instance
-    else
-      let instance.node_version_warning = command_error
-      echohl WarningMsg
-      echomsg 'Copilot: ' . command_error
-      echohl NONE
-    endif
+  let [node, argv, command_error] = s:Command()
+  if !empty(command_error)
+    let instance.id = -1
+    let instance.startup_error = command_error
+    call copilot#logger#Error(command_error)
+    return instance
   endif
-  if !empty(node_version)
-    let instance.node_version = node_version
-  endif
+  let instance.node = node
+  let command = node + argv
   let opts = {}
   let opts.initializationOptions = {
         \ 'editorInfo': copilot#client#EditorInfo(),
@@ -666,15 +675,21 @@ function! copilot#client#New(...) abort
   endfor
   if has('nvim')
     call extend(instance, {
-        \ 'Close': function('s:NvimClose'),
-        \ 'Notify': function('s:NvimNotify'),
-        \ 'Request': function('s:NvimRequest'),
-        \ 'Attach': function('s:NvimAttach'),
-        \ 'IsAttached': function('s:NvimIsAttached'),
-        \ })
+          \ 'Close': function('s:NvimClose'),
+          \ 'Notify': function('s:NvimNotify'),
+          \ 'Request': function('s:NvimRequest'),
+          \ 'Attach': function('s:NvimAttach'),
+          \ 'IsAttached': function('s:NvimIsAttached'),
+          \ })
     let instance.client_id = eval("v:lua.require'_copilot'.lsp_start_client(command, keys(instance.methods), opts, settings)")
     let instance.id = instance.client_id
   else
+    call extend(instance, {
+          \ 'Close': function('s:VimClose'),
+          \ 'Notify': function('s:VimNotify'),
+          \ 'Attach': function('s:VimAttach'),
+          \ 'IsAttached': function('s:VimIsAttached'),
+          \ })
     let state = {'headers': {}, 'mode': 'headers', 'buffer': ''}
     let instance.open_buffers = {}
     let instance.methods = extend(s:vim_handlers, instance.methods)
@@ -692,7 +707,7 @@ function! copilot#client#New(...) abort
     let opts.capabilities = s:vim_capabilities
     let opts.processId = getpid()
     let request = instance.Request('initialize', opts, function('s:InitializeResult'), function('s:InitializeError'), instance)
-    let instance.initialization_pending = []
+    call call(remove(instance.after_initialized, 0), [])
     call instance.Notify('workspace/didChangeConfiguration', {'settings': settings})
   endif
   let s:instances[instance.id] = instance

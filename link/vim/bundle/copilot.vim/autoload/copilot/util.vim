@@ -1,5 +1,9 @@
 let s:deferred = []
 
+function! copilot#util#Nop(...) abort
+  return v:null
+endfunction
+
 function! copilot#util#Defer(fn, ...) abort
   call add(s:deferred, function(a:fn, a:000))
   return timer_start(0, function('s:RunDeferred'))

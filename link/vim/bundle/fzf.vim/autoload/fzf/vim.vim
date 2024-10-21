@@ -94,7 +94,7 @@ function! s:escape_for_bash(path)
   return escape(path, ' ')
 endfunction
 
-let s:min_version = '0.23.0'
+let s:min_version = '0.53.0'
 let s:is_win = has('win32') || has('win64')
 let s:is_wsl_bash = s:is_win && (exepath('bash') =~? 'Windows[/\\]system32[/\\]bash.exe$')
 let s:layout_keys = ['window', 'up', 'down', 'left', 'right']
@@ -578,16 +578,46 @@ endfunction
 " ------------------------------------------------------------------
 " Colors
 " ------------------------------------------------------------------
+function! s:colors_exit(code)
+  if exists('s:colors_name')
+    if a:code > 0 && s:colors_name != g:colors_name
+      execute 'colo' s:colors_name
+    endif
+    unlet s:colors_name
+  endif
+  call fzf#vim#ipc#stop()
+endfunction
+
 function! fzf#vim#colors(...)
   let colors = split(globpath(&rtp, "colors/*.vim"), "\n")
   if has('packages')
     let colors += split(globpath(&packpath, "pack/*/opt/*/colors/*.vim"), "\n")
   endif
-  return s:fzf('colors', {
-  \ 'source':  fzf#vim#_uniq(map(colors, "substitute(fnamemodify(v:val, ':t'), '\\..\\{-}$', '', '')")),
+  let colors = fzf#vim#_uniq(map(colors, "fnamemodify(v:val, ':t')[:-5]"))
+
+  " Put the current colorscheme at the top
+  if exists('g:colors_name')
+    let s:colors_name = g:colors_name
+    let colors = [g:colors_name] + filter(colors, 'g:colors_name != v:val')
+  endif
+
+  let spec = {
+  \ 'source':  colors,
   \ 'sink':    'colo',
-  \ 'options': '+m --prompt="Colors> "'
-  \}, a:000)
+  \ 'options': ['+m', '--prompt', 'Colors> ']
+  \}
+
+  if !a:1 " We can't set up IPC in fullscreen mode in Vim
+    let fifo = fzf#vim#ipc#start({ msg -> execute('colo '.msg) })
+    if len(fifo)
+      call extend(spec.options, ['--no-tmux', '--no-padding', '--no-margin', '--bind', 'focus:execute-silent:echo {} > '.fifo])
+      let spec.exit = s:function('s:colors_exit')
+      let maxwidth = max(map(copy(colors), 'strwidth(v:val)'))
+      let spec.window = { 'width': maxwidth + 8, 'height': len(colors) + 5 }
+    endif
+  endif
+
+  call s:fzf('colors', spec, a:000)
 endfunction
 
 " ------------------------------------------------------------------
@@ -855,7 +885,7 @@ function! s:ag_handler(name, lines)
   let lines = []
   if multi_line && executable('perl')
     for idx in range(1, len(a:lines), multi_line + 1)
-      call add(lines, join(a:lines[idx:idx + multi_line + 1], ''))
+      call add(lines, join(a:lines[idx:idx + multi_line], ''))
     endfor
   else
     let lines = a:lines[1:]
@@ -1337,37 +1367,52 @@ endfunction
 " Jumps
 " ------------------------------------------------------------------
 function! s:jump_format(line)
-  return substitute(a:line, '[0-9]\+', '\=s:yellow(submatch(0), "Number")', '')
+  let line = substitute(a:line, '[0-9]\+', '\=s:yellow(submatch(0), "Number")', '')
+  let line = substitute(line, '\s.\{-}\ze:[0-9]\+:', '\=s:green(submatch(0), "Directory")', '')
+  let line = substitute(line, '\%(:[0-9]\+\)\+:', '\=s:black(submatch(0), "NonText")', '')
+  return line
 endfunction
 
 function! s:jump_sink(lines)
   if len(a:lines) < 2
     return
   endif
-  call s:action_for(a:lines[0])
-  let idx = index(s:jumplist, a:lines[1])
-  if idx == -1
-    return
-  endif
-  let current = match(s:jumplist, '\v^\s*\>')
-  let delta = idx - current
+  keepjumps call s:action_for(a:lines[0])
+  let idx = str2nr(a:lines[1])
+  let delta = idx - s:jump_current - 1
   if delta < 0
     execute 'normal! ' . -delta . "\<C-O>"
   else
     execute 'normal! ' . delta . "\<C-I>"
   endif
+  normal! zvzz
 endfunction
 
 function! fzf#vim#jumps(...)
-  redir => cout
-  silent jumps
-  redir END
-  let s:jumplist = split(cout, '\n')
-  let current = -match(s:jumplist, '\v^\s*\>')
+  let [jumps, pos] = getjumplist()
+  if empty(jumps)
+    return s:warn('No jumps')
+  endif
+  let s:jumplist = []
+  for idx in range(len(jumps))
+    let jump = jumps[idx]
+    let loc = expand('#'.jump.bufnr.':p:~:.')
+    if empty(loc)
+      let loc = '[No Name]'
+    endif
+    let loc .= ':'.jump.lnum
+    if jump.col
+      let loc .= ':'.jump.col
+    endif
+    let line = printf('%-2d %s: %s', idx+1, loc, getbufoneline(jump.bufnr, jump.lnum))
+    call add(s:jumplist, line)
+  endfor
+  let s:jump_current = pos
+  let current = -pos-1
   return s:fzf('jumps', {
-  \ 'source'  : extend(s:jumplist[0:0], map(s:jumplist[1:], 's:jump_format(v:val)')),
+  \ 'source'  : map(s:jumplist, 's:jump_format(v:val)'),
   \ 'sink*'   : s:function('s:jump_sink'),
-  \ 'options' : '+m -x --ansi --tiebreak=index --cycle --scroll-off 999 --sync --bind start:pos:'.current.' --tac --header-lines 1 --tiebreak=begin --prompt "Jumps> "',
+  \ 'options' : ['+m', '-x', '--ansi', '--tiebreak=index', '--cycle', '--scroll-off=999', '--sync', '--bind', 'start:pos('.current.')+offset-middle', '--tac', '--tiebreak=begin', '--prompt', 'Jumps> ', '--preview-window', '+{3}-/2', '--tabstop=2', '--delimiter', '[:\s]+'],
   \ }, a:000)
 endfunction
 
