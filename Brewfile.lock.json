@@ -1736,6 +1736,18 @@
         "options": {
           "full_name": "gpg-suite"
         }
+      },
+      "notion": {
+        "version": "3.17.0",
+        "options": {
+          "full_name": "notion"
+        }
+      },
+      "notion-calendar": {
+        "version": "1.124.0,241009gdr7bilqc",
+        "options": {
+          "full_name": "notion-calendar"
+        }
       }
     }
   },
