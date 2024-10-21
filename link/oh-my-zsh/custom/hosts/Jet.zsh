@@ -1,4 +1,4 @@
-# ZSH config for work mbp
+# ZSH config for personal mbp
 export TZ="UTC"
 
 # Add iterm2 support
@@ -9,8 +9,6 @@ export PATH="/opt/homebrew/bin:/usr/local/sbin:/usr/local/bin:$PATH"
 
 # Mac ls does not have color option...
 alias ls="/bin/ls";
-
-export PATH="/usr/local/opt/gettext/bin:$PATH"
 
 # Colors
 export CLICOLOR=1
