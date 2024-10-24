@@ -76,6 +76,8 @@
 	enabled = true
 [includeIf "gitdir:~/Work/"]
 	path = "~/.work.gitconfig"
+[includeIf "gitdir:~/HFP/"]
+	path = "~/.hfp.gitconfig"
 [filter "lfs"]
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f

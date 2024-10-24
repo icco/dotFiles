@@ -1,4 +1,6 @@
 [user]
 	name = Nat Welch
-  signingkey = CB666BC6
+	signingkey = CB666BC6
 	email = nat@laurel.ai
+
+# vim: set filetype=gitconfig:

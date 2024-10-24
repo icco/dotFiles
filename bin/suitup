@@ -59,4 +59,15 @@ if [ -d $PROJ ]; then
   done;
 fi
 
+PROJ=~/HFP/
+if [ -d $PROJ ]; then
+  echo "# ~/HFP ------------------------------------------------------------------------------------"
+  for e in $(ls $PROJ | sort -f); do
+    sync_dir $e
+    if [ $? -eq 1 ]; then
+      echo "No known version control."
+    fi
+  done;
+fi
+
 echo "All Done!"
