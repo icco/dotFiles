@@ -15,6 +15,11 @@ function etu_prompt_status {
   echo -n $_OMZ_ASYNC_OUTPUT[compute_etu]
 }
 
+function virtualenv_prompt_info {
+  [[ -n ${VIRTUAL_ENV} ]] || return
+  echo "${VIRTUAL_ENV:t:gs/%/%%}"
+}
+
 # git_prompt_info is a shell function from /Users/nat/.oh-my-zsh/lib/git.zsh
 
 PROMPT=$'\n[ %{$fg[red]%}%D{%a %b %d %H:%M:%S}%{$reset_color%} ]%{$fg[grey]%}$(etu_prompt_status)%{$reset_color%} $(git_prompt_info) %{$fg[green]%}$(virtualenv_prompt_info)%{$reset_color%}% \n[ %b%n@%m %{$fg[blue]%}$(shrink_path -f)%{$reset_color%} ]\\$ '
