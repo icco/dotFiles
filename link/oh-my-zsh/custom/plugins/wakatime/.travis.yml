@@ -1,0 +1,13 @@
+language: bash
+sudo: true
+
+before_install:
+  - sudo apt-get -y install shellcheck
+
+script:
+  - shellcheck wakatime.plugin.zsh || echo "zsh has problems with shellcheck"
+
+notifications:
+  email:
+    on_success: never
+    on_failure: change
