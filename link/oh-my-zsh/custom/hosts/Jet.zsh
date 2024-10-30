@@ -85,4 +85,6 @@ export PATH="$PATH:$HOME/.rvm/bin"
 # zmv
 autoload -Uz zmv
 
+export PATH="$PATH:/Users/nat/.local/bin"
+
 # vim: set filetype=zsh:

@@ -35,6 +35,7 @@ plugins=(
   zoxide
   macos
   virtualenvwrapper
+  pipx
 )
 
 zstyle :omz:plugins:iterm2 shell-integration yes
