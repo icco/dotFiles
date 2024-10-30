@@ -1666,7 +1666,7 @@
     },
     "cask": {
       "1password": {
-        "version": "8.10.48",
+        "version": "8.10.50",
         "options": {
           "full_name": "1password"
         }
