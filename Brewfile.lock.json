@@ -1748,7 +1748,7 @@
         "macOS": "14.7"
       },
       "sequoia": {
-        "HOMEBREW_VERSION": "4.4.3",
+        "HOMEBREW_VERSION": "4.4.4",
         "HOMEBREW_PREFIX": "/opt/homebrew",
         "Homebrew/homebrew-core": "api",
         "CLT": "16.0.0.0.1.1724870825",
