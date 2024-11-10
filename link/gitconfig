@@ -1,7 +1,3 @@
-[user]
-	name = Nat Welch
-	signingkey = C4EEF77F
-	email = nat@natwelch.com
 [alias]
 	ci = commit
 	clean-branches = !git branch | grep -ve ' (master|main)$' | xargs git branch -D
@@ -18,73 +14,77 @@
 	remote-branches = for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/remotes
 	serve = daemon --verbose --export-all --base-path=.git --reuseaddr --strict-paths .git/
 	st = status -sb
-[color]
-	ui = auto
-[color "diff"]
-	whitespace = red reverse
-[core]
-	whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
-	autocrlf = input
-	abbrev = 12
-	commitGraph = true
-	pager = delta
-[commit]
-	gpgsign = true
-	verbose = true
-[github]
-	user = icco
 [branch]
 	autosetupmerge = true
 	sort = -committerdate
-[pager]
-	color = true
-	log = false
-[merge]
-	conflictstyle = zdiff3
-	stat = true
-[diff "zip"]
-	textconv = unzip -c -a
-[gist]
-	browse = false
-[rebase]
-	stat = true
-[help]
-	autocorrect = 1
+[color "diff"]
+	whitespace = red reverse
+[color]
+	ui = auto
+[commit]
+	gpgsign = true
+	verbose = true
+[core]
+	abbrev = 12
+	autocrlf = input
+	commitGraph = true
+	pager = delta
+	whitespace=fix,-indent-with-non-tab,trailing-space,cr-at-eol
 [credential]
 	helper = store
 [daemon]
 	uploadarch = true
-[push]
-	default = current
-	autosetupremote = true
-[http]
-	cookiefile = ~/.gitcookies
-[diff]
-	submodule = log
-	algorithm = histogram
-[fetch]
-	prune = true
-[url "git@github.com:"]
-	insteadOf = https://github.com/
-[pull]
-	rebase = false
-[status]
-	submodulesummary = 1
-[init]
-	defaultBranch = main
-[rerere]
-	enabled = true
-[includeIf "gitdir:~/Work/"]
-	path = "~/.work.gitconfig"
-[includeIf "gitdir:~/HFP/"]
-	path = "~/.hfp.gitconfig"
-[filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
 [delta]
 	line-numbers = true
 	navigate = true
+[diff "zip"]
+	textconv = unzip -c -a
+[diff]
+	algorithm = histogram
+	submodule = log
+[fetch]
+	prune = true
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	process = git-lfs filter-process
+	required = true
+	smudge = git-lfs smudge -- %f
+[gist]
+	browse = false
+[github]
+	user = icco
+[help]
+	autocorrect = 1
+[http]
+	cookiefile = ~/.gitcookies
+[includeIf "gitdir:~/HFP/"]
+	path = "~/.hfp.gitconfig"
+[includeIf "gitdir:~/Work/"]
+	path = "~/.work.gitconfig"
+[init]
+	defaultBranch = main
 [interactive]
 	diffFilter = delta --color-only
+[merge]
+	conflictstyle = zdiff3
+	stat = true
+[pager]
+	color = true
+	log = false
+[pull]
+	rebase = false
+[push]
+	autosetupremote = true
+	default = current
+[rebase]
+	stat = true
+[rerere]
+	enabled = true
+[status]
+	submodulesummary = 1
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+[user]
+	email = nat@natwelch.com
+	name = Nat Welch
+	signingkey = C4EEF77F
