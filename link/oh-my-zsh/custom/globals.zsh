@@ -4,7 +4,7 @@
 export DEBFULLNAME="Nat Welch"
 export DEBEMAIL="nat@natwelch.com"
 export EDITOR="/usr/bin/vim"
-export GREP_COLOR="1;33"
+export GREP_COLORS="1;33"
 alias grep='grep --color=auto'
 
 # If I have a bin in my user directory, check there for commands.
