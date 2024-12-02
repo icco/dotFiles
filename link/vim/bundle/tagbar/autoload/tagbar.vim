@@ -328,17 +328,17 @@ function! s:InitTypes() abort
         let type_go = tagbar#prototypes#typeinfo#new()
         let type_go.ctagstype = 'go'
         let type_go.kinds = [
-            \ {'short' : 'p', 'long' : 'package',      'fold' : 0, 'stl' : 0},
-            \ {'short' : 'i', 'long' : 'imports',      'fold' : 1, 'stl' : 0},
+            \ {'short' : 'p', 'long' : 'package',      'fold' : 0, 'stl' : 1},
+            \ {'short' : 'i', 'long' : 'imports',      'fold' : 1, 'stl' : 1},
             \ {'short' : 'c', 'long' : 'constants',    'fold' : 0, 'stl' : 0},
             \ {'short' : 'v', 'long' : 'variables',    'fold' : 0, 'stl' : 0},
-            \ {'short' : 't', 'long' : 'types',        'fold' : 0, 'stl' : 0},
+            \ {'short' : 't', 'long' : 'types',        'fold' : 0, 'stl' : 1},
             \ {'short' : 'n', 'long' : 'intefaces',    'fold' : 0, 'stl' : 0},
-            \ {'short' : 'w', 'long' : 'fields',       'fold' : 0, 'stl' : 0},
+            \ {'short' : 'w', 'long' : 'fields',       'fold' : 0, 'stl' : 1},
             \ {'short' : 'e', 'long' : 'embedded',     'fold' : 0, 'stl' : 0},
-            \ {'short' : 'm', 'long' : 'methods',      'fold' : 0, 'stl' : 0},
+            \ {'short' : 'm', 'long' : 'methods',      'fold' : 0, 'stl' : 1},
             \ {'short' : 'r', 'long' : 'constructors', 'fold' : 0, 'stl' : 0},
-            \ {'short' : 'f', 'long' : 'functions',    'fold' : 0, 'stl' : 0},
+            \ {'short' : 'f', 'long' : 'functions',    'fold' : 0, 'stl' : 1},
         \ ]
         let type_go.sro        = '.'
         let type_go.kind2scope = {
@@ -1319,7 +1319,7 @@ function! s:ProcessFile(fname, ftype) abort
 
         let seen[line] = 1
 
-        let parts = split(line, ';"')
+        let parts = split(line, ';"\t')
         if len(parts) == 2 " Is a valid tag line
             call s:ParseTagline(parts[0], parts[1], typeinfo, fileinfo)
         endif
@@ -1509,7 +1509,7 @@ function! s:ParseTagline(part1, part2, typeinfo, fileinfo) abort
 
     " When splitting fields make sure not to create empty keys or values in
     " case a value illegally contains tabs
-    let fields = split(a:part2, '^\t\|\t\ze\w\+:')
+    let fields = split(a:part2, '\t\ze\w\+:')
     let fielddict = {}
     if fields[0] !~# ':'
         let fielddict.kind = remove(fields, 0)

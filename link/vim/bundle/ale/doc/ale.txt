@@ -2946,6 +2946,7 @@ documented in additional help files.
     foodcritic............................|ale-chef-foodcritic|
   clojure.................................|ale-clojure-options|
     clj-kondo.............................|ale-clojure-clj-kondo|
+    cljfmt................................|ale-clojure-cljfmt|
     joker.................................|ale-clojure-joker|
   cloudformation..........................|ale-cloudformation-options|
     cfn-python-lint.......................|ale-cloudformation-cfn-python-lint|
@@ -3024,6 +3025,7 @@ documented in additional help files.
   erlang..................................|ale-erlang-options|
     dialyzer..............................|ale-erlang-dialyzer|
     elvis.................................|ale-erlang-elvis|
+    erlang-mode...........................|ale-erlang-erlang-mode|
     erlang_ls.............................|ale-erlang-erlang_ls|
     erlc..................................|ale-erlang-erlc|
     erlfmt................................|ale-erlang-erlfmt|
