@@ -4,10 +4,6 @@ Host norns
   Hostname norns.local
   RemoteForward /run/user/1000/gnupg/S.gpg-agent /Users/nat/.gnupg/S.gpg-agent.extra
 
-Host cask
-  User admin
-  Hostname cask.local
-
 Host storm
   User nat
   Hostname storm.local
@@ -15,6 +11,10 @@ Host storm
 Host glass
   User nat
   Hostname glass.local
+
+Host gallon
+  User nat
+  Hostname gallon.local
 
 Host rope
   User nat
