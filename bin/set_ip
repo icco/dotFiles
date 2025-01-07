@@ -6,13 +6,12 @@ subdomain=${1%".$maindomain"}
 
 if [[ -z "$IP" ]]; then
   echo "IP is empty."
-else
-  curl -s -n "https://iwantmyname.com/basicauth/ddns?hostname=$1&myip=$IP"
-  # New stuff
-  cd  ~/Projects/icco.me/$maindomain/
-  git pull
-  mkdir -p ~/Projects/icco.me/$maindomain/
-  echo $IP > ~/Projects/icco.me/$maindomain/$subdomain
-  git add .
-  git diff --staged --quiet || git commit -m 'chore: set ip' && git push -u
+  exit 1
 fi
+
+cd  ~/Projects/icco.me/$maindomain/
+git pull
+mkdir -p ~/Projects/icco.me/$maindomain/
+echo $IP > ~/Projects/icco.me/$maindomain/$subdomain
+git add .
+git diff --staged --quiet || git commit -m 'chore: set ip' && git push -u
