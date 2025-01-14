@@ -1,3 +1,7 @@
+[user]
+	email = nat@natwelch.com
+	name = Nat Welch
+	signingkey = C4EEF77F
 [alias]
 	ci = commit
 	clean-branches = !git branch | grep -ve ' (master|main)$' | xargs git branch -D
@@ -84,7 +88,3 @@
 	submodulesummary = 1
 [url "git@github.com:"]
 	insteadOf = https://github.com/
-[user]
-	email = nat@natwelch.com
-	name = Nat Welch
-	signingkey = C4EEF77F
