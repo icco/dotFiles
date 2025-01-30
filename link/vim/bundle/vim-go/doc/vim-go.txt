@@ -601,7 +601,7 @@ CTRL-t
     Changes the build tags for various commands. If you have any file that
     uses a custom build tag, such as `// +build integration`, this command
     can be used to pass it to all tools that accepts tags, such as gopls,
-    gorename, etc.
+    go test, etc.
 
     The build tags is cleared (unset) if `""` is given. If no arguments are
     given it prints the current build tags.
@@ -1676,7 +1676,7 @@ default it is set to edit.
                                                        *'g:go_rename_command'*
 
 Use this option to define which tool is used to rename. By default `gopls`
-is used. Valid options are `gorename` and `gopls`.
+is used. Valid options are `gopls`, `gopls rename`, and `gorename`.
 >
   let g:go_rename_command = 'gopls'
 <
