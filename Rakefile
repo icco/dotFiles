@@ -15,7 +15,7 @@ task :vim do
   `cat link/vim/spell/en.utf-8.add | sort -if | uniq > t && mv t link/vim/spell/en.utf-8.add`
   `git ci -a -m 'vim spell sort'`
 
-  repos = %w(editorconfig/editorconfig-vim junegunn/fzf.vim jparise/vim-graphql airblade/vim-rooter mhinz/vim-signify nathanielc/vim-tickscript wakatime/vim-wakatime hashivim/vim-terraform fatih/vim-go isobit/vim-caddyfile uarun/vim-protobuf preservim/vim-markdown godlygeek/tabular preservim/tagbar craigmac/vim-mermaid nanotee/zoxide.vim github/copilot.vim dense-analysis/ale grafana/vim-alloy)
+  repos = %w(editorconfig/editorconfig-vim junegunn/fzf.vim jparise/vim-graphql airblade/vim-rooter mhinz/vim-signify nathanielc/vim-tickscript wakatime/vim-wakatime hashivim/vim-terraform fatih/vim-go isobit/vim-caddyfile uarun/vim-protobuf preservim/vim-markdown godlygeek/tabular preservim/tagbar craigmac/vim-mermaid nanotee/zoxide.vim github/copilot.vim dense-analysis/ale grafana/vim-alloy tpope/vim-commentary)
   repos.each do |repo|
     p repo
     dir = "link/vim/bundle/#{repo.split("/").last}"
@@ -31,7 +31,7 @@ desc "Test to make sure everything works ok."
 task :test do
   if RUBY_VERSION < "1.9"
     puts "Ruby needs to be at least 1.9 for this script."
-    Kernel.exit -1
+    Kernel.exit(-1)
   end
 end
 
