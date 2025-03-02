@@ -550,7 +550,10 @@ function! copilot#client#Settings() abort
     let settings.http.proxy = 'http://' . settings.http.proxy
   endif
   if type(get(g:, 'copilot_settings')) == v:t_dict
-    call extend(settings, g:copilot_settings)
+    let settings.github = {'copilot': g:copilot_settings}
+  endif
+  if type(get(g:, 'copilot_lsp_settings')) == v:t_dict
+    call extend(settings, g:copilot_lsp_settings)
   endif
   return settings
 endfunction
@@ -610,7 +613,7 @@ endfunction
 let s:notifications = {
       \ '$/progress': function('s:Progress'),
       \ 'featureFlagsNotification': function('s:Nop'),
-      \ 'statusNotification': function('s:StatusNotification'),
+      \ 'didChangeStatus': function('s:StatusNotification'),
       \ 'window/logMessage': function('copilot#handlers#window_logMessage'),
       \ }
 
@@ -624,8 +627,8 @@ let s:vim_capabilities = {
       \ 'window': {'showDocument': {'support': v:true}},
       \ }
 
-function! copilot#client#New(...) abort
-  let opts = a:0 ? a:1 : {}
+function! copilot#client#New() abort
+  let opts = {}
   let instance = {'requests': {},
         \ 'progress': {},
         \ 'workspaceFolders': {},
@@ -651,13 +654,12 @@ function! copilot#client#New(...) abort
   endif
   let instance.node = node
   let command = node + argv
-  let opts = {}
   let opts.initializationOptions = {
         \ 'editorInfo': copilot#client#EditorInfo(),
         \ 'editorPluginInfo': copilot#client#EditorPluginInfo(),
         \ }
   let opts.workspaceFolders = []
-  let settings = extend(copilot#client#Settings(), get(opts, 'editorConfiguration', {}))
+  let settings = copilot#client#Settings()
   if type(get(g:, 'copilot_workspace_folders')) == v:t_list
     for folder in g:copilot_workspace_folders
       if type(folder) == v:t_string && !empty(folder) && folder !~# '\*\*\|^/$'

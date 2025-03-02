@@ -23,17 +23,6 @@ function! s:Echo(msg) abort
   endif
 endfunction
 
-function! s:EditorConfiguration() abort
-  let filetypes = copy(s:filetype_defaults)
-  if type(get(g:, 'copilot_filetypes')) == v:t_dict
-    call extend(filetypes, g:copilot_filetypes)
-  endif
-  return {
-        \ 'enableAutoCompletions': empty(get(g:, 'copilot_enabled', 1)) ? v:false : v:true,
-        \ 'disabledLanguages': map(sort(keys(filter(filetypes, { k, v -> empty(v) }))), { _, v -> {'languageId': v}}),
-        \ }
-endfunction
-
 function! copilot#Init(...) abort
   call copilot#util#Defer({ -> exists('s:client') || s:Start() })
 endfunction
@@ -46,7 +35,7 @@ function! s:Start() abort
   if s:Running() || exists('s:client.startup_error')
     return
   endif
-  let s:client = copilot#client#New({'editorConfiguration' : s:EditorConfiguration()})
+  let s:client = copilot#client#New()
 endfunction
 
 function! s:Stop() abort
@@ -599,20 +588,8 @@ function! s:VerifySetup() abort
     return
   endif
 
-  let status = copilot#Call('checkStatus', {})
-
-  if !has_key(status, 'user')
-    echo 'Copilot: Not authenticated. Invoke :Copilot setup'
-    return
-  endif
-
-  if status.status ==# 'NoTelemetryConsent'
-    echo 'Copilot: Telemetry terms not accepted. Invoke :Copilot setup'
-    return
-  endif
-
-  if status.status ==# 'NotAuthorized'
-    echo "Copilot: You don't have access to GitHub Copilot. Sign up by visiting https://github.com/settings/copilot"
+  if exists('s:client.status.kind') && s:client.status.kind ==# 'Error'
+    echo 'Copilot: Error: ' . get(s:client.status, 'message', 'unknown')
     return
   endif
 
@@ -624,11 +601,8 @@ function! s:commands.status(opts) abort
     return
   endif
 
-  if exists('s:client.status.status') && s:client.status.status =~# 'Warning\|Error'
-    echo 'Copilot: ' . s:client.status.status
-    if !empty(get(s:client.status, 'message', ''))
-      echon ': ' . s:client.status.message
-    endif
+  if exists('s:client.status.kind') && s:client.status.kind ==# 'Warning'
+    echo 'Copilot: Warning: ' . get(s:client.status, 'message', 'unknown')
     return
   endif
 
@@ -643,12 +617,7 @@ function! s:commands.status(opts) abort
 endfunction
 
 function! s:commands.signout(opts) abort
-  let status = copilot#Call('checkStatus', {'options': {'localChecksOnly': v:true}})
-  if has_key(status, 'user')
-    echo 'Copilot: Signed out as GitHub user ' . status.user
-  else
-    echo 'Copilot: Not signed in'
-  endif
+  echo 'Copilot: Signed out'
   call copilot#Call('signOut', {})
 endfunction
 
@@ -659,14 +628,7 @@ function! s:commands.setup(opts) abort
       return
   endif
 
-  let browser = copilot#Browser()
-
-  let status = copilot#Call('checkStatus', {})
-  if has_key(status, 'user')
-    let data = {'status': 'AlreadySignedIn', 'user': status.user}
-  else
-    let data = copilot#Call('signInInitiate', {})
-  endif
+  let data = copilot#Call('signIn', {})
 
   if has_key(data, 'verificationUri')
     let uri = data.verificationUri
@@ -688,24 +650,13 @@ function! s:commands.setup(opts) abort
       endif
       if get(a:opts, 'bang')
         call s:Echo(codemsg . "In your browser, visit " . uri)
-      elseif len(browser)
-        call input(codemsg . "Press ENTER to open GitHub in your browser\n")
-        let status = {}
-        call copilot#job#Stream(browser + [uri], v:null, v:null, function('s:BrowserCallback', [status]))
-        let time = reltime()
-        while empty(status) && reltimefloat(reltime(time)) < 5
-          sleep 10m
-        endwhile
-        if get(status, 'code', browser[0] !=# 'xdg-open') != 0
-          call s:Echo("Failed to open browser.  Visit " . uri)
-        else
-          call s:Echo("Opened " . uri)
-        endif
+        let request = copilot#Request('signInConfirm', {})
       else
-        call s:Echo(codemsg . "Could not find browser.  Visit " . uri)
+        call input(codemsg . "Press ENTER to open GitHub in your browser\n")
+        let request = copilot#Request('workspace/executeCommand', data.command)
       endif
-      call s:Echo("Waiting (could take up to 10 seconds)")
-      let request = copilot#Request('signInConfirm', {'userCode': data.userCode}).Wait()
+      call s:Echo("Waiting for " . data.userCode . " at " . uri . " (could take up to 10 seconds)")
+      call request.Wait()
     finally
       if exists('mouse')
         let &mouse = mouse
@@ -768,16 +719,6 @@ function! s:commands.version(opts) abort
   call s:EditorVersionWarning()
 endfunction
 
-function! s:UpdateEditorConfiguration() abort
-  try
-    if s:Running()
-      call copilot#Notify('notifyChangeConfiguration', {'settings': s:EditorConfiguration()})
-    endif
-  catch
-    call copilot#logger#Exception()
-  endtry
-endfunction
-
 let s:feedback_url = 'https://github.com/orgs/community/discussions/categories/copilot'
 function! s:commands.feedback(opts) abort
   echo s:feedback_url
@@ -795,12 +736,10 @@ endfunction
 
 function! s:commands.disable(opts) abort
   let g:copilot_enabled = 0
-  call s:UpdateEditorConfiguration()
 endfunction
 
 function! s:commands.enable(opts) abort
   let g:copilot_enabled = 1
-  call s:UpdateEditorConfiguration()
 endfunction
 
 function! s:commands.panel(opts) abort
