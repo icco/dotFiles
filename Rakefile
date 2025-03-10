@@ -37,6 +37,7 @@ task :vim do
     tpope/vim-commentary
     uarun/vim-protobuf
     wakatime/vim-wakatime
+    tpope/vim-fugitive
   )
   repos.each do |repo|
     p repo

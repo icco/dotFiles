@@ -115,6 +115,10 @@ au BufRead,BufNewFile *.g set ft=antlr
 au BufRead,BufNewFile *.less set ft=less
 
 " Markdown
+let g:vim_markdown_folding_disabled = 1
+let g:vim_markdown_frontmatter = 1
+let g:vim_markdown_strikethrough = 1
+
 au BufRead,BufNewFile *.md set ft=markdown
 
 " Makefiles
