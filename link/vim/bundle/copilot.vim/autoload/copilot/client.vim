@@ -658,6 +658,9 @@ function! copilot#client#New() abort
         \ 'editorInfo': copilot#client#EditorInfo(),
         \ 'editorPluginInfo': copilot#client#EditorPluginInfo(),
         \ }
+  if type(get(g:, 'copilot_integration_id')) == v:t_string
+    let opts.initializationOptions.copilotIntegrationId = g:copilot_integration_id
+  endif
   let opts.workspaceFolders = []
   let settings = copilot#client#Settings()
   if type(get(g:, 'copilot_workspace_folders')) == v:t_list
