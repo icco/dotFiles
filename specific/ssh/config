@@ -52,6 +52,10 @@ Host clockwork
   User nat
   Hostname clockwork.local
 
+Host mist
+  User nat
+  Hostname mist.local
+
 Host piaware
   User pi
   Hostname piaware.local
