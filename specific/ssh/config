@@ -56,6 +56,10 @@ Host mist
   User nat
   Hostname mist.local
 
+Host brook
+  User nat
+  Hostname brook.local
+
 Host piaware
   User pi
   Hostname piaware.local
