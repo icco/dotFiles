@@ -243,6 +243,8 @@ formatting.
   * [gotype](https://godoc.org/golang.org/x/tools/cmd/gotype) :warning: :floppy_disk:
   * [revive](https://github.com/mgechev/revive) :warning: :floppy_disk:
   * [staticcheck](https://github.com/dominikh/go-tools/tree/master/cmd/staticcheck) :warning: :floppy_disk:
+* Go HTML Templates
+  * [djlint](https://djlint.com/)
 * GraphQL
   * [eslint](http://eslint.org/)
   * [gqlint](https://github.com/happylinks/gqlint)
@@ -256,6 +258,7 @@ formatting.
 * Haml
   * [haml-lint](https://github.com/brigade/haml-lint)
 * Handlebars
+  * [djlint](https://djlint.com/)
   * [ember-template-lint](https://github.com/rwjblue/ember-template-lint)
 * Haskell
   * [brittany](https://github.com/lspitzner/brittany)
@@ -293,6 +296,12 @@ formatting.
   * [rustywind](https://github.com/avencera/rustywind)
   * [tidy](http://www.html-tidy.org/)
   * [write-good](https://github.com/btford/write-good)
+* HTML Angular
+  * [djlint](https://djlint.com/)
+* HTML Django
+  * [djlint](https://djlint.com/)
+* HTTP
+  * [kulala_fmt](https://github.com/mistweaverco/kulala-fmt)
 * Hurl
   * [hurlfmt](https://hurl.dev)
 * Idris
@@ -330,6 +339,8 @@ formatting.
   * [standard](http://standardjs.com/)
   * [tsserver](https://github.com/Microsoft/TypeScript/wiki/Standalone-Server-%28tsserver%29)
   * [xo](https://github.com/sindresorhus/xo)
+* Jinja
+  * [djlint](https://djlint.com/)
 * JSON
   * [VSCode JSON language server](https://github.com/hrsh7th/vscode-langservers-extracted)
   * [biome](https://biomejs.dev/)
@@ -400,6 +411,7 @@ formatting.
   * [pandoc](https://pandoc.org)
   * [prettier](https://github.com/prettier/prettier)
   * [proselint](http://proselint.com/)
+  * [pymarkdown](https://github.com/jackdewinter/pymarkdown)
   * [redpen](http://redpen.cc/)
   * [remark-lint](https://github.com/wooorm/remark-lint)
   * [textlint](https://textlint.github.io/)
@@ -429,6 +441,8 @@ formatting.
   * [alex](https://github.com/get-alex/alex)
   * [proselint](http://proselint.com/)
   * [write-good](https://github.com/btford/write-good)
+* Nunjucks
+  * [djlint](https://djlint.com/)
 * Objective-C
   * [ccls](https://github.com/MaskRay/ccls)
   * [clang](http://clang.llvm.org/)
@@ -454,6 +468,7 @@ formatting.
   * [yamllint](https://yamllint.readthedocs.io/)
 * OpenSCAD
   * [SCA2D](https://gitlab.com/bath_open_instrumentation_group/sca2d) :floppy_disk:
+  * [scadformat](https://github.com/hugheaves/scadformat)
 * Packer (HCL)
   * [packer-fmt-fixer](https://github.com/hashicorp/packer)
 * Pascal
@@ -565,6 +580,8 @@ formatting.
   * [cspell](https://github.com/streetsidesoftware/cspell/tree/main/packages/cspell)
   * [opacheck](https://www.openpolicyagent.org/docs/latest/cli/#opa-check)
   * [opafmt](https://www.openpolicyagent.org/docs/latest/cli/#opa-fmt)
+* REST
+  * [kulala_fmt](https://github.com/mistweaverco/kulala-fmt)
 * reStructuredText
   * [alex](https://github.com/get-alex/alex)
   * [cspell](https://github.com/streetsidesoftware/cspell/tree/main/packages/cspell)
@@ -693,6 +710,8 @@ formatting.
   * [tslint](https://github.com/palantir/tslint)
   * [tsserver](https://github.com/Microsoft/TypeScript/wiki/Standalone-Server-%28tsserver%29)
   * typecheck
+* Typst
+  * [typstyle](https://github.com/Enter-tainer/typstyle)
 * V
   * [v](https://github.com/vlang/v/) :floppy_disk:
   * [vfmt](https://github.com/vlang/v/)
@@ -746,8 +765,11 @@ formatting.
   * [yq](https://github.com/mikefarah/yq)
 * YANG
   * [yang-lsp](https://github.com/theia-ide/yang-lsp)
+* Yara
+  * [yls](https://github.com/avast/yls)
 * Zeek
   * [zeek](http://zeek.org) :floppy_disk:
 * Zig
   * [zigfmt](https://github.com/ziglang/zig)
+  * [zlint](https://github.com/DonIsaac/zlint)
   * [zls](https://github.com/zigtools/zls)

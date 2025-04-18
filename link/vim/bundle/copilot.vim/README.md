@@ -58,5 +58,5 @@ See `:help copilot` for more information.
 ## Troubleshooting
 
 We’d love to get your help in making GitHub Copilot better!  If you have
-feedback or encounter any problems, please reach out on our [Feedback
-forum](https://github.com/orgs/community/discussions/categories/copilot).
+feedback or encounter any problems, please reach out on our [feedback
+forum](https://github.com/github/copilot.vim/issues).

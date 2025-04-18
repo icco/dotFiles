@@ -98,6 +98,11 @@ let s:default_registry = {
 \       'suggested_filetypes': ['dhall'],
 \       'description': 'Standard code formatter for the Dhall language and removing dead code',
 \   },
+\   'djlint': {
+\       'function': 'ale#fixers#djlint#Fix',
+\       'suggested_filetypes': ['html', 'htmldjango', 'htmlangular', 'jinja', 'handlebars', 'nunjucks', 'gohtmltmpl'],
+\       'description': 'Fix HTML templates with `djlint --reformat`.',
+\   },
 \   'dune': {
 \       'function': 'ale#fixers#dune#Fix',
 \       'suggested_filetypes': ['dune'],
@@ -123,6 +128,11 @@ let s:default_registry = {
 \       'function': 'ale#fixers#hurlfmt#Fix',
 \       'suggested_filetypes': ['hurl'],
 \       'description': 'Fix hurl files with hurlfmt.',
+\   },
+\   'kulala_fmt': {
+\       'function': 'ale#fixers#kulala_fmt#Fix',
+\       'suggested_filetypes': ['http', 'rest'],
+\       'description': 'Fix http and rest files with kulala_fmt.',
 \   },
 \   'tidy': {
 \       'function': 'ale#fixers#tidy#Fix',
@@ -697,10 +707,20 @@ let s:default_registry = {
 \       'suggested_filetypes': ['ruby'],
 \       'description': 'A formatter for Ruby source code',
 \   },
+\   'scadformat': {
+\       'function': 'ale#fixers#scadformat#Fix',
+\       'suggested_filetypes': ['openscad'],
+\       'description': 'Formatter for scad files',
+\   },
 \   'cljfmt': {
 \       'function': 'ale#fixers#cljfmt#Fix',
 \       'suggested_filetypes': ['clojure'],
 \       'description': 'formatter and linter for clojure files',
+\   },
+\   'typstyle': {
+\       'function': 'ale#fixers#typstyle#Fix',
+\       'suggested_filetypes': ['typst'],
+\       'description': 'A formatter for Typst files',
 \   },
 \}
 

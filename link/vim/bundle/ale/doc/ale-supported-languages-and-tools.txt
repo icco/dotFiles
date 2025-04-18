@@ -234,6 +234,8 @@ Notes:
   * `gotype`!!
   * `revive`!!
   * `staticcheck`!!
+* Go HTML Templates
+  * djlint
 * GraphQL
   * `eslint`
   * `gqlint`
@@ -247,6 +249,7 @@ Notes:
 * Haml
   * `haml-lint`
 * Handlebars
+  * djlint
   * `ember-template-lint`
 * Haskell
   * `brittany`
@@ -284,6 +287,12 @@ Notes:
   * `rustywind`
   * `tidy`
   * `write-good`
+* HTML Angular
+  * djlint
+* HTML Django
+  * djlint
+* HTTP
+  * kulala_fmt
 * Hurl
   * `hurlfmt`
 * Idris
@@ -321,6 +330,8 @@ Notes:
   * `standard`
   * `tsserver`
   * `xo`
+* Jinja
+  * djlint
 * JSON
   * `VSCode JSON language server`
   * `biome`
@@ -391,6 +402,7 @@ Notes:
   * `pandoc`
   * `prettier`
   * `proselint`
+  * `pymarkdown`
   * `redpen`
   * `remark-lint`
   * `textlint`
@@ -420,6 +432,8 @@ Notes:
   * `alex`
   * `proselint`
   * `write-good`
+* Nunjucks
+  * djlint
 * Objective-C
   * `ccls`
   * `clang`
@@ -445,6 +459,7 @@ Notes:
   * `yamllint`
 * OpenSCAD
   * `SCA2D`
+  * `scadformat`
 * Packer
   * `packer-fmt-fixer`
 * Pascal
@@ -556,6 +571,8 @@ Notes:
   * `cspell`
   * `opacheck`
   * `opafmt`
+* REST
+  * kulala_fmt
 * reStructuredText
   * `alex`
   * `cspell`
@@ -684,6 +701,8 @@ Notes:
   * `tslint`
   * `tsserver`
   * `typecheck`
+* Typst
+  * `typstyle`
 * V
   * `v`!!
   * `vfmt`
@@ -737,10 +756,13 @@ Notes:
   * `yq`
 * YANG
   * `yang-lsp`
+* Yara
+  * `yls`
 * Zeek
   * `zeek`!!
 * Zig
   * `zigfmt`
+  * `zlint`
   * `zls`
 
 ===============================================================================

@@ -202,7 +202,8 @@ function! s:SuggestionTextWithAdjustments() abort
     endif
     let line = getline('.')
     let offset = col('.') - 1
-    let choice_text = strpart(line, 0, copilot#util#UTF16ToByteIdx(line, choice.range.start.character)) . substitute(choice.insertText, "\n*$", '', '')
+    let byte_offset = copilot#util#UTF16ToByteIdx(line, choice.range.start.character)
+    let choice_text = strpart(line, 0, byte_offset) . substitute(choice.insertText, "\n*$", '', '')
     let typed = strpart(line, 0, offset)
     let end_offset = copilot#util#UTF16ToByteIdx(line, choice.range.end.character)
     if end_offset < 0
@@ -665,13 +666,13 @@ function! s:commands.setup(opts) abort
     if request.status ==# 'error'
       return 'echoerr ' . string('Copilot: Authentication failure: ' . request.error.message)
     else
-      let status = request.result
+      let data = request.result
     endif
   elseif get(data, 'status', '') isnot# 'AlreadySignedIn'
     return 'echoerr ' . string('Copilot: Something went wrong')
   endif
 
-  let user = get(status, 'user', '<unknown>')
+  let user = get(data, 'user', '<unknown>')
 
   echo 'Copilot: Authenticated as GitHub user ' . user
 endfunction
@@ -719,7 +720,7 @@ function! s:commands.version(opts) abort
   call s:EditorVersionWarning()
 endfunction
 
-let s:feedback_url = 'https://github.com/orgs/community/discussions/categories/copilot'
+let s:feedback_url = 'https://github.com/github/copilot.vim/issues'
 function! s:commands.feedback(opts) abort
   echo s:feedback_url
   let browser = copilot#Browser()
