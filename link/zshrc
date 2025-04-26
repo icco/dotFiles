@@ -37,7 +37,6 @@ plugins=(
   virtualenvwrapper
   pip
   rvm
-  thefuck
 )
 
 zstyle :omz:plugins:iterm2 shell-integration yes
