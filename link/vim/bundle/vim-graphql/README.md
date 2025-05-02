@@ -12,7 +12,7 @@ as JavaScript).
 
 ## Installation
 
-This plugin requires Vim version 8 or later. Equivalent Neovim versions
+This plugin requires Vim version 8.2 or later. Equivalent Neovim versions
 are also supported.
 
 ### Using [vim-plug](https://github.com/junegunn/vim-plug)
@@ -67,7 +67,7 @@ const query = gql`
       lastName
     }
   }
-`);
+`;
 ```
 
 The list of recognized tag names is defined by the `g:graphql_javascript_tags`
@@ -87,7 +87,7 @@ const query = graphql(`
       lastName
     }
   }
-`;
+`);
 ```
 
 You can also add a `# gql` or `# graphql` comment at the start of a template

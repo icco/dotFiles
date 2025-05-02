@@ -469,7 +469,7 @@ function! s:NvimClose() dict abort
     return
   endif
   let self.kill = v:true
-  return luaeval('vim.lsp.get_client_by_id(_A).stop()', self.client_id)
+  return luaeval('vim.lsp.stop_client(_A)', self.client_id)
 endfunction
 
 function! s:NvimNotify(method, params) dict abort

@@ -211,9 +211,9 @@ function! s:SuggestionTextWithAdjustments() abort
     endif
     let delete = strpart(line, offset, end_offset - offset)
     if typed =~# '^\s*$'
-      let leading = matchstr(choice_text, '^\s\+')
+      let leading = strpart(matchstr(choice_text, '^\s\+'), 0, len(typed))
       let unindented = strpart(choice_text, len(leading))
-      if strpart(typed, 0, len(leading)) == leading && unindented !=# delete
+      if strpart(typed, 0, len(leading)) ==# leading && unindented !=# delete
         return [unindented, len(typed) - len(leading), strchars(delete), choice]
       endif
     elseif typed ==# strpart(choice_text, 0, offset)
