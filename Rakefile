@@ -17,6 +17,7 @@ task :vim do
 
   repos = %w(
     airblade/vim-rooter
+    andrejlevkovitch/vim-lua-format
     craigmac/vim-mermaid
     dense-analysis/ale
     editorconfig/editorconfig-vim
@@ -35,9 +36,9 @@ task :vim do
     preservim/tagbar
     preservim/vim-markdown
     tpope/vim-commentary
+    tpope/vim-fugitive
     uarun/vim-protobuf
     wakatime/vim-wakatime
-    tpope/vim-fugitive
   )
   repos.each do |repo|
     p repo
