@@ -17,7 +17,6 @@ task :vim do
 
   repos = %w(
     airblade/vim-rooter
-    andrejlevkovitch/vim-lua-format
     craigmac/vim-mermaid
     dense-analysis/ale
     editorconfig/editorconfig-vim
