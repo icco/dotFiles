@@ -3361,6 +3361,8 @@ documented in additional help files.
   bicep...................................|ale-bicep-options|
     bicep.................................|ale-bicep-bicep|
     az_bicep..............................|ale-bicep-az_bicep|
+  bindzone................................|ale-bindzone-options|
+    checkzone.............................|ale-bindzone-checkzone|
   bitbake.................................|ale-bitbake-options|
     oelint-adv............................|ale-bitbake-oelint_adv|
   c.......................................|ale-c-options|
@@ -3786,6 +3788,7 @@ documented in additional help files.
     pylint................................|ale-python-pylint|
     pylsp.................................|ale-python-pylsp|
     pyre..................................|ale-python-pyre|
+    pyrefly...............................|ale-python-pyrefly|
     pyright...............................|ale-python-pyright|
     refurb................................|ale-python-refurb|
     reorder-python-imports................|ale-python-reorder_python_imports|
@@ -3820,6 +3823,10 @@ documented in additional help files.
     write-good............................|ale-restructuredtext-write-good|
   robot...................................|ale-robot-options|
     rflint................................|ale-robot-rflint|
+  roc.....................................|ale-roc-options|
+    roc_language_server...................|ale-roc-roc-language-server|
+    roc_format............................|ale-roc-roc-format|
+    roc_annotate..........................|ale-roc-roc-annotate|
   ruby....................................|ale-ruby-options|
     brakeman..............................|ale-ruby-brakeman|
     cspell................................|ale-ruby-cspell|

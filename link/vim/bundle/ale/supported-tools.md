@@ -69,6 +69,8 @@ formatting.
   * [bibclean](http://ftp.math.utah.edu/pub/bibclean/)
 * Bicep
   * [bicep](https://github.com/Azure/bicep) :floppy_disk:
+* Bindzone
+  * [checkzone](https://bind9.readthedocs.io/en/stable/manpages.html#named-checkzone-zone-file-validation-tool)
 * BitBake
   * [oelint-adv](https://github.com/priv-kweihmann/oelint-adv)
 * Bourne Shell
@@ -552,6 +554,7 @@ formatting.
   * [pylint](https://www.pylint.org/) :floppy_disk:
   * [pylsp](https://github.com/python-lsp/python-lsp-server) :warning:
   * [pyre](https://github.com/facebook/pyre-check) :warning:
+  * [pyrefly](https://github.com/facebook/pyrefly) :warning:
   * [pyright](https://github.com/microsoft/pyright)
   * [refurb](https://github.com/dosisod/refurb) :floppy_disk:
   * [reorder-python-imports](https://github.com/asottile/reorder_python_imports)
@@ -595,6 +598,10 @@ formatting.
   * [write-good](https://github.com/btford/write-good)
 * Robot
   * [rflint](https://github.com/boakley/robotframework-lint)
+* Roc
+  * [roc_annotate](https://github.com/roc-lang/roc)
+  * [roc_format](https://github.com/roc-lang/roc)
+  * [roc_language_server](https://github.com/roc-lang/roc)
 * RPM spec
   * [rpmlint](https://github.com/rpm-software-management/rpmlint) :warning: (see `:help ale-integration-spec`)
 * Ruby
