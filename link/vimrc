@@ -209,3 +209,7 @@ let g:terraform_align=0
 :nnoremap <Leader>s <c-w><Down><CR>
 :nnoremap <Leader>a <c-w><Left><CR>
 :nnoremap <Leader>d <c-w><Right><CR>
+
+" Copilot settings
+let g:copilot_workspace_folders = ["~/Projects/", "~/Work/"]
+let g:copilot_filetypes = { 'typst': v:false, }
