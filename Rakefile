@@ -23,6 +23,7 @@ task :vim do
     fatih/vim-go
     github/copilot.vim
     godlygeek/tabular
+    google/vim-jsonnet
     grafana/vim-alloy
     hashivim/vim-terraform
     isobit/vim-caddyfile
