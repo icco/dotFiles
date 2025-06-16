@@ -21,7 +21,7 @@ function virtualenv_prompt_info {
 }
 
 # git_prompt_info is a shell function from /Users/nat/.oh-my-zsh/lib/git.zsh
-# git_super_status is a shell function from /Users/nat/.oh-my-zsh/plugins/git-status/git-status.plugin.zsh
+# git_super_status is a shell function from /Users/nat/.oh-my-zsh/plugins/git-prompt/git-prompt.plugin.zsh
 ZSH_THEME_GIT_PROMPT_CACHE=1
 ZSH_THEME_GIT_PROMPT_BRANCH=""
 ZSH_THEME_GIT_PROMPT_STAGED="%{●%G%}"
