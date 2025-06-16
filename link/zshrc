@@ -37,6 +37,7 @@ plugins=(
   virtualenvwrapper
   pip
   rvm
+  git-prompt
 )
 
 zstyle :omz:plugins:iterm2 shell-integration yes
