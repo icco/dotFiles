@@ -65,7 +65,20 @@ jobs:
             echo "Formatting $file"
             yq -iP '.' "$file"
           done
+      - name: Check for changes
+        id: verify-changed-files
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+      - name: Pull latest changes
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        run: |
+          git pull --rebase origin ${{ github.head_ref || github.ref_name }}
       - name: Commit YAML formatting changes
+        if: steps.verify-changed-files.outputs.changed == 'true'
         uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: 'feat: format YAML files with yq'
