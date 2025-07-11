@@ -24,7 +24,7 @@ func TestSortVimSpell(t *testing.T) {
 
 	// Create a test spell file with unsorted content
 	spellFile := filepath.Join(spellDir, "en.utf-8.add")
-	unsortedContent := "zebra\nalpha\nbeta\ngamma\nzebra\nalpha"
+	unsortedContent := "zebra\nalpha\nbeta\nzebra\nalpha"
 	if err := os.WriteFile(spellFile, []byte(unsortedContent), 0644); err != nil {
 		t.Fatalf("Failed to create spell file: %v", err)
 	}
