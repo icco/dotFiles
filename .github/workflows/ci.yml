@@ -70,10 +70,10 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: 'feat: format YAML files with yq'
-          file_pattern: '*.yml *.yaml'
-          commit_author: 'GitHub Actions <actions@github.com>'
-          commit_user_name: 'github-actions[bot]'
-          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
+          file_pattern: '*.yml *.yaml :!.github/workflows/*'
+          commit_author: GitHub Actions <actions@github.com>
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com
   all-checks:
     name: All Checks Complete
     runs-on: ubuntu-latest
