@@ -77,8 +77,13 @@ if [ -f '/Users/nat/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/nat/go
 if [ -f '/Users/nat/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/nat/google-cloud-sdk/completion.zsh.inc'; fi
 
 # Terraform
-alias tf="terraform"
+alias tf="tofu"
 alias tfdocs="terraform-docs"
+
+# Github
+alias ghr='gh repo view --web'
+alias ghpr='gh pr view --web'
+alias ghpc='gh pr create --web'
 
 # RVM
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
