@@ -7,3 +7,42 @@
 #  - If current dir doesn't end in -infra, cd to the directory in the parent directory with -infra in the name
 #  - If in the previous two rules the directory doesn't exist, check if there is a github repo in the pinginc organization with that name, clone it to the parent directory and cd into it.
 #  - If no repo exists, exit with an error
+
+set -e
+
+# Check if we're in a subdirectory of ~/Work
+if [[ ! $(pwd) =~ ^$HOME/Work ]]; then
+    echo "Error: Must be in a subdirectory of ~/Work" >&2
+    exit 1
+fi
+
+current_dir=$(basename $(pwd))
+parent_dir=$(dirname $(pwd))
+
+if [[ $current_dir == *-infra ]]; then
+    # Remove -infra suffix
+    target_name=${current_dir%-infra}
+    target_path="$parent_dir/$target_name"
+else
+    # Add -infra suffix
+    target_name="${current_dir}-infra"
+    target_path="$parent_dir/$target_name"
+fi
+
+if [[ -d $target_path ]]; then
+    cd "$target_path"
+    echo "Switched to: $target_path"
+else
+    # Try to clone from pinginc organization
+    echo "Directory $target_path doesn't exist. Attempting to clone from pinginc/$target_name..."
+    
+    if git ls-remote "https://github.com/pinginc/$target_name.git" >/dev/null 2>&1; then
+        cd "$parent_dir"
+        git clone "https://github.com/pinginc/$target_name.git"
+        cd "$target_name"
+        echo "Cloned and switched to: $target_path"
+    else
+        echo "Error: Repository pinginc/$target_name does not exist on GitHub" >&2
+        exit 1
+    fi
+fi
