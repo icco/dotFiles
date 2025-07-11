@@ -1,0 +1,100 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  shellcheck:
+    name: Shellcheck
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run shellcheck on bin/ directory
+        run: |
+          # Check all files in bin/ directory (all are shell scripts)
+          find bin/ -type f -exec shellcheck {} \;
+      - name: Run shellcheck on oh-my-zsh custom directory
+        run: |
+          # Check .zsh files in custom directory
+          find link/oh-my-zsh/custom -name "*.zsh" -type f -exec shellcheck -s bash {} \;
+
+          # Check any shell scripts in hosts subdirectory
+          if [ -d "link/oh-my-zsh/custom/hosts" ]; then
+            find link/oh-my-zsh/custom/hosts -name "*.zsh" -type f -exec shellcheck -s bash {} \;
+          fi
+  go-test:
+    name: Go Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: "1.24"
+      - name: Run go mod tidy
+        run: go mod tidy
+      - name: Run go vet
+        run: go vet ./...
+      - name: Run go test
+        run: go test -v ./...
+      - name: Run go test with race detector
+        run: go test -race ./...
+  yaml-lint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+      - uses: reviewdog/action-yamllint@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-check
+      - name: Install yq
+        uses: dcarbone/install-yq-action@v1.3.1
+      - name: Format YAML files with yq
+        run: |
+          # Format all YAML files in place, excluding vim bundles
+          find . -name "*.yml" -o -name "*.yaml" | grep -v "link/vim/bundle" | while read -r file; do
+            echo "Formatting $file"
+            yq -iP '.' "$file"
+          done
+      - name: Commit YAML formatting changes
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: 'feat: format YAML files with yq'
+          file_pattern: '*.yml *.yaml :!.github/workflows/*'
+          commit_author: GitHub Actions <actions@github.com>
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com
+  all-checks:
+    name: All Checks Complete
+    runs-on: ubuntu-latest
+    needs:
+      - shellcheck
+      - go-test
+      - yaml-lint
+    if: always()
+    steps:
+      - name: Check all jobs
+        run: |
+          if [[ "${{ needs.shellcheck.result }}" != "success" ]]; then
+            echo "Shellcheck failed"
+            exit 1
+          fi
+          if [[ "${{ needs.go-test.result }}" != "success" ]]; then
+            echo "Go tests failed"
+            exit 1
+          fi
+          if [[ "${{ needs.yaml-lint.result }}" != "success" ]]; then
+            echo "YAML formatting failed"
+            exit 1
+          fi
+          echo "All checks passed!"
