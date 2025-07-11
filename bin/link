@@ -1,0 +1,9 @@
+#! /bin/zsh
+
+# This script changes directory to the related infra directory if it exists.
+# Rules:
+#  - if not in a sub directory of ~/Work, exit with an error
+#  - If current dir ends in -infra, cd to directory in parent directory without -infra in the name
+#  - If current dir doesn't end in -infra, cd to the directory in the parent directory with -infra in the name
+#  - If in the previous two rules the directory doesn't exist, check if there is a github repo in the pinginc organization with that name, clone it to the parent directory and cd into it.
+#  - If no repo exists, exit with an error
