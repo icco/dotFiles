@@ -22,6 +22,12 @@ if [[ ! $(pwd) =~ ^$HOME/Work ]]; then
   return 1
 fi
 
+# Check if we're directly in ~/Work (not in a project directory)
+if [[ $(pwd) == "$HOME/Work" ]]; then
+  echo "Error: You're in ~/Work but not in a project directory. Please navigate to a project folder first." >&2
+  return 1
+fi
+
 current_dir=$(basename "$(pwd)")
 parent_dir=$(dirname "$(pwd)")
 
