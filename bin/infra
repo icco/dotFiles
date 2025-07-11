@@ -9,7 +9,12 @@
 #  - If in the previous two rules the directory doesn't exist, check if there is a github repo in the pinginc organization with that name, clone it to the parent directory and cd into it.
 #  - If no repo exists, exit with an error
 
-set -e
+# If this script is being executed directly (not sourced), source it instead
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]] && [[ -z "$ZSH_EVAL_CONTEXT" ]]; then
+  # shellcheck disable=SC1090
+  source "$0"
+  exit 0
+fi
 
 # Check if we're in a subdirectory of ~/Work
 if [[ ! $(pwd) =~ ^$HOME/Work ]]; then
@@ -31,19 +36,19 @@ else
 fi
 
 if [[ -d $target_path ]]; then
-  cd "$target_path"
+  cd "$target_path" || exit 1
   echo "Switched to: $target_path"
 else
   # Try to clone from pinginc organization
   echo "Directory $target_path doesn't exist. Attempting to clone from pinginc/$target_name..."
   
   if gh repo view "pinginc/$target_name" >/dev/null 2>&1; then
-    cd "$parent_dir"
+    cd "$parent_dir" || exit 1
     git clone "git@github.com:pinginc/$target_name.git"
-    cd "$target_name"
+    cd "$target_name" || exit 1
     echo "Cloned and switched to: $target_path"
   else
     echo "Error: Repository pinginc/$target_name does not exist on GitHub" >&2
     exit 1
   fi
-fi
+fi 
