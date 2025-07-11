@@ -1,61 +1,41 @@
 name: Build and Release
-
 on:
   push:
-    branches: [main]
-
+    branches:
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write
-    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
-          go-version: '1.24'
-      
+          go-version: "1.24"
       - name: Generate build timestamp
         id: timestamp
         run: echo "timestamp=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
-      
       - name: Build binaries
         run: |
           cd infect
-          
+
           # Create release directory
           mkdir -p ../release
-          
+
           # Build for different architectures
           GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o ../release/infect-linux-amd64 .
           GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o ../release/infect-linux-arm64 .
           GOOS=darwin GOARCH=amd64 go build -ldflags="-s -w" -o ../release/infect-darwin-amd64 .
           GOOS=darwin GOARCH=arm64 go build -ldflags="-s -w" -o ../release/infect-darwin-arm64 .
-          GOOS=windows GOARCH=amd64 go build -ldflags="-s -w" -o ../release/infect-windows-amd64.exe .
-          
+
           # Create checksums
           cd ../release
           sha256sum * > checksums.txt
-      
       - name: Create Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          tag_name="v${{ steps.timestamp.outputs.timestamp }}"
-          
-          # Create release
-          gh release create "$tag_name" \
-            --title "Release $tag_name" \
-            --notes "Automated release from main branch" \
-            --target main \
-            release/infect-linux-amd64 \
-            release/infect-linux-arm64 \
-            release/infect-darwin-amd64 \
-            release/infect-darwin-arm64 \
-            release/infect-windows-amd64.exe \
-            release/checksums.txt 
+        run: "tag_name=\"v${{ steps.timestamp.outputs.timestamp }}\"\n\n# Create release\ngh release create \"$tag_name\" \\\n  --title \"Release $tag_name\" \\\n  --notes \"Automated release from main branch\" \\\n  --target main \\\n  release/infect-linux-amd64 \\\n  release/infect-linux-arm64 \\\n  release/infect-darwin-amd64 \\\n  release/infect-darwin-arm64 \\\n  release/checksums.txt "
