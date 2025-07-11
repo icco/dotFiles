@@ -35,7 +35,7 @@ func sortVimSpell() error {
 	}
 
 	// Commit the changes
-	cmd = exec.Command("git", "ci", "-a", "-m", "vim spell sort")
+	cmd = exec.Command("git", "commit", "-a", "-m", "vim spell sort")
 	if output, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("failed to commit spell changes: %s, %w", string(output), err)
 	}
@@ -81,7 +81,7 @@ func upgradeVimPlugins() error {
 	}
 
 	// Commit all plugin changes
-	cmd := exec.Command("git", "ci", "-a", "-m", "vim upgrades")
+	cmd := exec.Command("git", "commit", "-a", "-m", "vim upgrades")
 	if output, err := cmd.CombinedOutput(); err != nil {
 		return fmt.Errorf("failed to commit plugin changes: %s, %w", string(output), err)
 	}
