@@ -72,12 +72,10 @@ jobs:
             echo "Linting $file"
             yamllint "$file"
           done
+      - name: Install yq
+        uses: dcarbone/install-yq-action@v1.3.1
       - name: Format YAML files with yq
         run: |
-          # Install yq for YAML formatting
-          sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
-          sudo chmod +x /usr/local/bin/yq
-
           # Format all YAML files in place, excluding vim bundles
           find . -name "*.yml" -o -name "*.yaml" | grep -v "link/vim/bundle" | while read -r file; do
             echo "Formatting $file"
