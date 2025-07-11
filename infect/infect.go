@@ -141,7 +141,13 @@ func createSymlink(source, target string) error {
 		// Backup existing file
 		backupPath := fmt.Sprintf("%s.%d.backup", target, time.Now().Unix())
 		homeDir, _ := os.UserHomeDir()
-		backupPath = filepath.Join(homeDir, "tmp", filepath.Base(backupPath))
+		backupDir := filepath.Join(homeDir, "tmp")
+		backupPath = filepath.Join(backupDir, filepath.Base(backupPath))
+
+		// Ensure backup directory exists
+		if err := os.MkdirAll(backupDir, 0755); err != nil {
+			return fmt.Errorf("failed to create backup directory %s: %w", backupDir, err)
+		}
 
 		fmt.Printf("Backing up %s to %s\n", target, backupPath)
 		if err := exec.Command("cp", "-r", target, backupPath).Run(); err != nil {
