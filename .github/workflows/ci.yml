@@ -44,34 +44,14 @@ jobs:
         run: go test -v ./...
       - name: Run go test with race detector
         run: go test -race ./...
-  yaml-format:
-    name: YAML Formatting
+  yaml-lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Install yamllint
-        run: pip install yamllint
-      - name: Create yamllint config
-        run: |
-          cat > .yamllint.yml << 'EOF'
-          extends: default
-
-          rules:
-            line-length:
-              max: 120
-            indentation:
-              spaces: 2
-            truthy:
-              allowed-values: ['true', 'false', 'on', 'off']
-          EOF
-      - name: Run yamllint
-        run: |
-          # Find and lint YAML files, excluding vim bundles
-          find . -name "*.yml" -o -name "*.yaml" | grep -v "link/vim/bundle" | while read -r file; do
-            echo "Linting $file"
-            yamllint "$file"
-          done
+      - uses: actions/checkout@v4
+      - uses: reviewdog/action-yamllint@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          reporter: github-pr-check
       - name: Install yq
         uses: dcarbone/install-yq-action@v1.3.1
       - name: Format YAML files with yq
