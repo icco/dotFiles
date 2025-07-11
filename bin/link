@@ -1,4 +1,5 @@
 #! /bin/zsh
+# shellcheck shell=bash
 
 # This script changes directory to the related infra directory if it exists.
 # Rules:
@@ -16,8 +17,8 @@ if [[ ! $(pwd) =~ ^$HOME/Work ]]; then
   exit 1
 fi
 
-current_dir=$(basename $(pwd))
-parent_dir=$(dirname $(pwd))
+current_dir=$(basename "$(pwd)")
+parent_dir=$(dirname "$(pwd)")
 
 if [[ $current_dir == *-infra ]]; then
   # Remove -infra suffix
