@@ -74,7 +74,7 @@ jobs:
     needs:
       - shellcheck
       - go-test
-      - yaml-format
+      - yaml-lint
     if: always()
     steps:
       - name: Check all jobs
