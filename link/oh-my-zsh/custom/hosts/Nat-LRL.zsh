@@ -85,6 +85,11 @@ alias ghr='gh repo view --web'
 alias ghpr='gh pr view --web'
 alias ghpc='gh pr create --web'
 
+# Infra directory switcher
+infra() {
+  source ~/Projects/dotFiles/bin/infra-script
+}
+
 # RVM
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 export PATH="$PATH:$HOME/.rvm/bin"

@@ -7,7 +7,22 @@ This repository holds my config files for just about everything. Use this to set
 
 ## Install
 
-Originally I did this entirely with shell scripts. Now I use rake. Make sure to `gem install rake` and install ruby 1.9.2 before going ahead with `rake infect`
+Originally I did this entirely with shell scripts, then Ruby/Rake. Now I use Go for better performance and easier distribution.
+
+### Go Commands
+
+```bash
+# Install dotfiles (equivalent to old `rake` command)
+go run ./infect
+
+# Update vim plugins and sort spell file (equivalent to old `rake vim`)
+go run ./infect vim
+
+# Run tests
+go run ./infect test
+```
+
+### Other Setup
 
 To install all the needed OSX packages, `brew bundle` in the top directory.
 
