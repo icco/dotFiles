@@ -47,7 +47,7 @@ if [[ -d $target_path ]]; then
 else
   # Try to clone from pinginc organization
   echo "Directory $target_path doesn't exist. Attempting to clone from pinginc/$target_name..."
-  
+
   if gh repo view "pinginc/$target_name" >/dev/null 2>&1; then
     cd "$parent_dir" || return 1
     git clone "git@github.com:pinginc/$target_name.git"
@@ -57,4 +57,4 @@ else
     echo "Error: Repository pinginc/$target_name does not exist on GitHub" >&2
     return 1
   fi
-fi 
+fi
