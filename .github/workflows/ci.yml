@@ -46,8 +46,12 @@ jobs:
         run: go test -race ./...
   yaml-lint:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: reviewdog/action-yamllint@v1
         with:
           github_token: ${{ secrets.github_token }}
@@ -61,13 +65,14 @@ jobs:
             echo "Formatting $file"
             yq -iP '.' "$file"
           done
-
-          # Check if any files were modified
-          if ! git diff --quiet; then
-            echo "YAML files were reformatted. Please commit these changes:"
-            git diff --name-only
-            exit 1
-          fi
+      - name: Commit YAML formatting changes
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: 'feat: format YAML files with yq'
+          file_pattern: '*.yml *.yaml'
+          commit_author: 'GitHub Actions <actions@github.com>'
+          commit_user_name: 'github-actions[bot]'
+          commit_user_email: 'github-actions[bot]@users.noreply.github.com'
   all-checks:
     name: All Checks Complete
     runs-on: ubuntu-latest
@@ -78,4 +83,17 @@ jobs:
     if: always()
     steps:
       - name: Check all jobs
-        run: "if [[ \"${{ needs.shellcheck.result }}\" != \"success\" ]]; then\n  echo \"Shellcheck failed\"\n  exit 1\nfi\nif [[ \"${{ needs.go-test.result }}\" != \"success\" ]]; then\n  echo \"Go tests failed\"\n  exit 1\nfi\nif [[ \"${{ needs.yaml-format.result }}\" != \"success\" ]]; then\n  echo \"YAML formatting failed\"\n  exit 1\nfi\necho \"All checks passed!\" "
+        run: |
+          if [[ "${{ needs.shellcheck.result }}" != "success" ]]; then
+            echo "Shellcheck failed"
+            exit 1
+          fi
+          if [[ "${{ needs.go-test.result }}" != "success" ]]; then
+            echo "Go tests failed"
+            exit 1
+          fi
+          if [[ "${{ needs.yaml-lint.result }}" != "success" ]]; then
+            echo "YAML formatting failed"
+            exit 1
+          fi
+          echo "All checks passed!"
