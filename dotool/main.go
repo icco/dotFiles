@@ -4,55 +4,57 @@ import (
 	"fmt"
 	"log"
 	"os"
+
+	"github.com/spf13/cobra"
 )
 
-func main() {
-	// Print usage if no arguments provided
-	if len(os.Args) < 2 {
-		printUsage()
-		return
-	}
+var rootCmd = &cobra.Command{
+	Use:   "dotool",
+	Short: "Dotfiles management tool",
+	Long:  `A tool for managing dotfiles across multiple machines using symbolic links.`,
+}
 
-	command := os.Args[1]
-
-	switch command {
-	case "infect":
+var infectCmd = &cobra.Command{
+	Use:   "infect",
+	Short: "Install dotfiles and link all configuration files",
+	Run: func(cmd *cobra.Command, args []string) {
 		if err := runInfect(); err != nil {
 			log.Fatalf("Error running infect: %v", err)
 		}
-	case "vim":
+	},
+}
+
+var vimCmd = &cobra.Command{
+	Use:   "vim",
+	Short: "Update vim plugins and sort spell file",
+	Run: func(cmd *cobra.Command, args []string) {
 		if err := runVim(); err != nil {
 			log.Fatalf("Error running vim: %v", err)
 		}
-	case "test":
+	},
+}
+
+var testCmd = &cobra.Command{
+	Use:   "test",
+	Short: "Run tests",
+	Run: func(cmd *cobra.Command, args []string) {
 		if err := runTest(); err != nil {
 			log.Fatalf("Error running test: %v", err)
 		}
-	case "help", "-h", "--help":
-		printUsage()
-	default:
-		fmt.Printf("Unknown command: %s\n", command)
-		printUsage()
-		os.Exit(1)
-	}
+	},
 }
 
-func printUsage() {
-	fmt.Println("dotool - Dotfiles management tool")
-	fmt.Println()
-	fmt.Println("USAGE:")
-	fmt.Println("  go run ./dotool <command>")
-	fmt.Println()
-	fmt.Println("COMMANDS:")
-	fmt.Println("  infect     Install dotfiles and link all configuration files")
-	fmt.Println("  vim        Update vim plugins and sort spell file")
-	fmt.Println("  test       Run tests")
-	fmt.Println("  help       Show this help message")
-	fmt.Println()
-	fmt.Println("EXAMPLES:")
-	fmt.Println("  go run ./dotool infect")
-	fmt.Println("  go run ./dotool vim")
-	fmt.Println("  go run ./dotool test")
+func init() {
+	rootCmd.AddCommand(infectCmd)
+	rootCmd.AddCommand(vimCmd)
+	rootCmd.AddCommand(testCmd)
+}
+
+func main() {
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
 
 func runInfect() error {
