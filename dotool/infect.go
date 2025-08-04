@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -19,7 +20,7 @@ func buildStructure() error {
 	for _, dir := range dirs {
 		dirPath := filepath.Join(homeDir, dir)
 		if _, err := os.Stat(dirPath); os.IsNotExist(err) {
-			fmt.Printf("Creating directory: %s\n", dirPath)
+			log.Printf("Creating directory: %s\n", dirPath)
 			if err := os.MkdirAll(dirPath, 0755); err != nil {
 				return fmt.Errorf("failed to create directory %s: %w", dirPath, err)
 			}
@@ -149,7 +150,7 @@ func createSymlink(source, target string) error {
 			return fmt.Errorf("failed to create backup directory %s: %w", backupDir, err)
 		}
 
-		fmt.Printf("Backing up %s to %s\n", target, backupPath)
+		log.Printf("Backing up %s to %s\n", target, backupPath)
 		if err := exec.Command("cp", "-r", target, backupPath).Run(); err != nil {
 			return fmt.Errorf("failed to backup %s: %w", target, err)
 		}
@@ -167,7 +168,7 @@ func createSymlink(source, target string) error {
 	}
 
 	// Create symlink
-	fmt.Printf("Linking %s -> %s\n", target, absSource)
+	log.Printf("Linking %s -> %s\n", target, absSource)
 	if err := os.Symlink(absSource, target); err != nil {
 		return fmt.Errorf("failed to create symlink %s -> %s: %w", target, absSource, err)
 	}

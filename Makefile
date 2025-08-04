@@ -1,4 +1,4 @@
-.PHONY: help infect vim test build clean brew
+.PHONY: help infect vim test update-zsh build clean brew
 
 # Default target - let dotool handle help
 help:
@@ -15,6 +15,10 @@ vim:
 # Run tests
 test:
 	@go run ./dotool test
+
+# Update oh-my-zsh
+update-zsh:
+	@go run ./dotool update-zsh
 
 # Build the dotool binary
 build:

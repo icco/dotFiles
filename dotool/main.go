@@ -44,10 +44,21 @@ var testCmd = &cobra.Command{
 	},
 }
 
+var updateZshCmd = &cobra.Command{
+	Use:   "update-zsh",
+	Short: "Update oh-my-zsh to latest version",
+	Run: func(cmd *cobra.Command, args []string) {
+		if err := runUpdateZsh(); err != nil {
+			log.Fatalf("Error updating oh-my-zsh: %v", err)
+		}
+	},
+}
+
 func init() {
 	rootCmd.AddCommand(infectCmd)
 	rootCmd.AddCommand(vimCmd)
 	rootCmd.AddCommand(testCmd)
+	rootCmd.AddCommand(updateZshCmd)
 }
 
 func main() {
@@ -58,7 +69,7 @@ func main() {
 }
 
 func runInfect() error {
-	fmt.Println("Running infect command...")
+	log.Println("Running infect command...")
 
 	// Run test first
 	if err := runTest(); err != nil {
@@ -75,12 +86,12 @@ func runInfect() error {
 		return fmt.Errorf("failed to link files: %w", err)
 	}
 
-	fmt.Println("Infect completed successfully!")
+	log.Println("Infect completed successfully!")
 	return nil
 }
 
 func runVim() error {
-	fmt.Println("Running vim command...")
+	log.Println("Running vim command...")
 
 	// Sort vim spell
 	if err := sortVimSpell(); err != nil {
@@ -92,14 +103,25 @@ func runVim() error {
 		return fmt.Errorf("failed to upgrade vim plugins: %w", err)
 	}
 
-	fmt.Println("Vim command completed successfully!")
+	log.Println("Vim command completed successfully!")
 	return nil
 }
 
 func runTest() error {
-	fmt.Println("Running tests...")
+	log.Println("Running tests...")
 	// This would check Go version instead of Ruby version
 	// For now, just return success
-	fmt.Println("Tests passed!")
+	log.Println("Tests passed!")
+	return nil
+}
+
+func runUpdateZsh() error {
+	log.Println("Updating oh-my-zsh...")
+
+	if err := updateOhMyZsh(); err != nil {
+		return fmt.Errorf("failed to update oh-my-zsh: %w", err)
+	}
+
+	log.Println("Oh-my-zsh updated successfully!")
 	return nil
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -10,7 +11,7 @@ import (
 
 // sortVimSpell sorts the vim spell file and commits the changes
 func sortVimSpell() error {
-	fmt.Println("Sorting vim spell...")
+	log.Println("Sorting vim spell...")
 
 	spellFile := "link/vim/spell/en.utf-8.add"
 
@@ -39,19 +40,19 @@ func sortVimSpell() error {
 	if output, err := cmd.CombinedOutput(); err != nil {
 		// Check if the error is due to no changes to commit
 		if strings.Contains(string(output), "nothing to commit") {
-			fmt.Println("No changes to commit - spell file was already sorted")
+			log.Println("No changes to commit - spell file was already sorted")
 		} else {
 			return fmt.Errorf("failed to commit spell changes: %s, %w", string(output), err)
 		}
 	}
 
-	fmt.Println("Vim spell sorted and committed successfully!")
+	log.Println("Vim spell sorted and committed successfully!")
 	return nil
 }
 
 // upgradeVimPlugins upgrades all vim plugins by cloning them fresh
 func upgradeVimPlugins() error {
-	fmt.Println("Upgrading vim plugins...")
+	log.Println("Upgrading vim plugins...")
 
 	repos := []string{
 		"airblade/vim-rooter",
@@ -91,19 +92,19 @@ func upgradeVimPlugins() error {
 		// Check if the error is due to no changes to commit
 		if strings.Contains(string(output), "nothing to commit") ||
 			strings.Contains(string(output), "nothing added to commit") {
-			fmt.Println("No changes to commit - plugins were already up to date")
+			log.Println("No changes to commit - plugins were already up to date")
 		} else {
 			return fmt.Errorf("failed to commit plugin changes: %s, %w", string(output), err)
 		}
 	}
 
-	fmt.Println("All vim plugins upgraded successfully!")
+	log.Println("All vim plugins upgraded successfully!")
 	return nil
 }
 
 // upgradePlugin upgrades a single vim plugin
 func upgradePlugin(repo string) error {
-	fmt.Printf("Upgrading plugin: %s\n", repo)
+	log.Printf("Upgrading plugin: %s\n", repo)
 
 	// Extract plugin name from repo
 	parts := strings.Split(repo, "/")
