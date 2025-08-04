@@ -93,7 +93,7 @@ func updateOhMyZsh() error {
 		return fmt.Errorf("failed to add oh-my-zsh to git: %s, %w", string(output), err)
 	}
 
-	cmd = exec.Command("git", "commit", "-m", "oh-my-zsh update")
+	cmd = exec.Command("git", "commit", "-m", "chore: oh-my-zsh update")
 	if output, err := cmd.CombinedOutput(); err != nil {
 		// Check if the error is due to no changes to commit
 		if strings.Contains(string(output), "nothing to commit") ||

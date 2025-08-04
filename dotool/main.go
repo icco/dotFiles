@@ -44,11 +44,11 @@ var testCmd = &cobra.Command{
 	},
 }
 
-var updateZshCmd = &cobra.Command{
-	Use:   "update-zsh",
+var omzCmd = &cobra.Command{
+	Use:   "omz",
 	Short: "Update oh-my-zsh to latest version",
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := runUpdateZsh(); err != nil {
+		if err := runOmz(); err != nil {
 			log.Fatalf("Error updating oh-my-zsh: %v", err)
 		}
 	},
@@ -58,7 +58,7 @@ func init() {
 	rootCmd.AddCommand(infectCmd)
 	rootCmd.AddCommand(vimCmd)
 	rootCmd.AddCommand(testCmd)
-	rootCmd.AddCommand(updateZshCmd)
+	rootCmd.AddCommand(omzCmd)
 }
 
 func main() {
@@ -115,7 +115,7 @@ func runTest() error {
 	return nil
 }
 
-func runUpdateZsh() error {
+func runOmz() error {
 	log.Println("Updating oh-my-zsh...")
 
 	if err := updateOhMyZsh(); err != nil {
