@@ -72,3 +72,7 @@ The dotool infect command:
 ### Vim Plugin Management
 
 Vim plugins are managed by cloning fresh copies from GitHub, removing `.git` directories, and committing them directly to the dotfiles repo. This approach ensures reproducible plugin versions across machines without requiring external plugin managers.
+
+## Design Principles
+
+- We should always prefer the standard library over manually implementing things
