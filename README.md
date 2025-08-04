@@ -9,22 +9,39 @@ This repository holds my config files for just about everything. Use this to set
 
 Originally I did this entirely with shell scripts, then Ruby/Rake. Now I use Go for better performance and easier distribution.
 
-### Go Commands
+### Commands
 
 ```bash
+# Show usage help
+go run ./dotool
+# or
+make help
+
 # Install dotfiles (equivalent to old `rake` command)
-go run ./infect
+go run ./dotool install
+# or
+make install
 
 # Update vim plugins and sort spell file (equivalent to old `rake vim`)
-go run ./infect vim
+go run ./dotool vim
+# or
+make vim
 
 # Run tests
-go run ./infect test
+go run ./dotool test
+# or
+make test
+
+# Build standalone binary
+make build
+
+# Clean built binaries
+make clean
 ```
 
 ### Other Setup
 
-To install all the needed OSX packages, `brew bundle` in the top directory.
+To install all the needed OSX packages, `brew bundle` in the top directory, or use `make brew`.
 
 To switch to homebrew's version of Bash ([according to this doc](https://johndjameson.com/blog/updating-your-shell-with-homebrew/))
 
@@ -40,13 +57,15 @@ chsh -s /usr/local/bin/bash
 
 ## Notes
 
-Apparently other people have made similar things to my infect script.
+Apparently other people have made similar things to my dotool script.
 
  * [technicalpickles/homesick](https://github.com/technicalpickles/homesick)
  * [holman/dotfiles](https://github.com/holman/dotfiles)
  * [ryanb/dotfiles](https://github.com/ryanb/dotfiles)
 
 This only initializes the configuration of a user. I assume you've used something like [Fog](http://fog.io) to automate your system deployment and configuration.
+
+The dotool command provides helpful usage information when run without arguments.
 
 ## Assumptions
 

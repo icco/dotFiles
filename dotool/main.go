@@ -7,16 +7,18 @@ import (
 )
 
 func main() {
-	// Default to infect command if no arguments
-	command := "infect"
-	if len(os.Args) > 1 {
-		command = os.Args[1]
+	// Print usage if no arguments provided
+	if len(os.Args) < 2 {
+		printUsage()
+		return
 	}
 
+	command := os.Args[1]
+
 	switch command {
-	case "infect":
-		if err := runInfect(); err != nil {
-			log.Fatalf("Error running infect: %v", err)
+	case "install":
+		if err := runInstall(); err != nil {
+			log.Fatalf("Error running install: %v", err)
 		}
 	case "vim":
 		if err := runVim(); err != nil {
@@ -26,15 +28,35 @@ func main() {
 		if err := runTest(); err != nil {
 			log.Fatalf("Error running test: %v", err)
 		}
+	case "help", "-h", "--help":
+		printUsage()
 	default:
 		fmt.Printf("Unknown command: %s\n", command)
-		fmt.Println("Available commands: infect, vim, test")
+		printUsage()
 		os.Exit(1)
 	}
 }
 
-func runInfect() error {
-	fmt.Println("Running infect command...")
+func printUsage() {
+	fmt.Println("dotool - Dotfiles management tool")
+	fmt.Println()
+	fmt.Println("USAGE:")
+	fmt.Println("  go run ./dotool <command>")
+	fmt.Println()
+	fmt.Println("COMMANDS:")
+	fmt.Println("  install    Install dotfiles and link all configuration files")
+	fmt.Println("  vim        Update vim plugins and sort spell file")
+	fmt.Println("  test       Run tests")
+	fmt.Println("  help       Show this help message")
+	fmt.Println()
+	fmt.Println("EXAMPLES:")
+	fmt.Println("  go run ./dotool install")
+	fmt.Println("  go run ./dotool vim")
+	fmt.Println("  go run ./dotool test")
+}
+
+func runInstall() error {
+	fmt.Println("Installing dotfiles...")
 
 	// Run test first
 	if err := runTest(); err != nil {
@@ -51,7 +73,7 @@ func runInfect() error {
 		return fmt.Errorf("failed to link files: %w", err)
 	}
 
-	fmt.Println("Infect completed successfully!")
+	fmt.Println("Dotfiles installation completed successfully!")
 	return nil
 }
 

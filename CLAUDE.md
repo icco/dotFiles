@@ -6,17 +6,28 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Development Commands
 ```bash
+# Show usage help
+go run ./dotool
+make help
+
 # Install dotfiles and link all configuration files
-go run ./infect
+go run ./dotool install
+make install
 
 # Update vim plugins and sort spell file
-go run ./infect vim
+go run ./dotool vim
+make vim
 
 # Run tests
-go run ./infect test
+go run ./dotool test
+make test
+
+# Build standalone binary
+make build
 
 # Install OSX packages (requires Homebrew)
 brew bundle
+make brew
 ```
 
 ## Architecture
@@ -25,10 +36,12 @@ This is a personal dotfiles repository that manages configuration files across m
 
 ### Key Components
 
-- **`infect/`** - Go application that manages dotfile installation and vim plugin updates
-  - `main.go` - Entry point with commands: infect (default), vim, test
+- **`dotool/`** - Go application that manages dotfile installation and vim plugin updates
+  - `main.go` - Entry point with commands: install, vim, test (shows usage by default)
   - `infect.go` - Core linking logic that creates directory structure and symlinks
   - `vim_impl.go` - Vim-specific functionality for plugin management and spell file sorting
+
+- **`Makefile`** - Convenient make targets for common operations (install, vim, test, build, brew)
 
 - **`link/`** - Files that get symlinked to `~/.{filename}` (with dot prefix added)
   - Contains shell configurations (bashrc, zshrc), vim config, git config, etc.
@@ -41,7 +54,7 @@ This is a personal dotfiles repository that manages configuration files across m
 
 ### Linking Behavior
 
-The infect tool:
+The dotool install command:
 1. Creates backup copies of existing files in `~/tmp/` before overwriting
 2. Creates absolute symlinks to repository files
 3. Builds standard directory structure (`~/Projects`, `~/bin`, `~/tmp`)
