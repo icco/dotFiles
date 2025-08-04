@@ -1,11 +1,13 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"slices"
 	"strings"
 )
 
@@ -20,23 +22,13 @@ func sortVimSpell() error {
 		return fmt.Errorf("spell file %s does not exist", spellFile)
 	}
 
-	// Create temporary file
-	tempFile := "t"
-
-	// Sort the spell file
-	cmd := exec.Command("sh", "-c", fmt.Sprintf("cat %s | sort -if | uniq > %s", spellFile, tempFile))
-	if output, err := cmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("failed to sort spell file: %s, %w", string(output), err)
-	}
-
-	// Move temporary file back
-	cmd = exec.Command("mv", tempFile, spellFile)
-	if output, err := cmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("failed to move sorted file: %s, %w", string(output), err)
+	// Read and sort spell file using native Go
+	if err := sortSpellFile(spellFile); err != nil {
+		return fmt.Errorf("failed to sort spell file: %w", err)
 	}
 
 	// Commit the changes
-	cmd = exec.Command("git", "commit", "-a", "-m", "vim spell sort")
+	cmd := exec.Command("git", "commit", "-a", "-m", "vim spell sort")
 	if output, err := cmd.CombinedOutput(); err != nil {
 		// Check if the error is due to no changes to commit
 		if strings.Contains(string(output), "nothing to commit") {
@@ -140,4 +132,46 @@ func upgradePlugin(repo string) error {
 	}
 
 	return nil
+}
+
+// sortSpellFile reads, sorts, and deduplicates a spell file using native Go
+func sortSpellFile(filename string) error {
+	// Read all lines from the file
+	file, err := os.Open(filename)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	var lines []string
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		line := strings.TrimSpace(scanner.Text())
+		if line != "" { // Skip empty lines
+			lines = append(lines, line)
+		}
+	}
+
+	if err := scanner.Err(); err != nil {
+		return err
+	}
+
+	// Sort case-insensitively and remove duplicates
+	slices.SortFunc(lines, func(a, b string) int {
+		return strings.Compare(strings.ToLower(a), strings.ToLower(b))
+	})
+
+	// Remove duplicates (case-insensitive)
+	unique := make([]string, 0, len(lines))
+	seen := make(map[string]bool)
+	for _, line := range lines {
+		lower := strings.ToLower(line)
+		if !seen[lower] {
+			seen[lower] = true
+			unique = append(unique, line)
+		}
+	}
+
+	// Write back to file
+	return os.WriteFile(filename, []byte(strings.Join(unique, "\n")+"\n"), 0644)
 }

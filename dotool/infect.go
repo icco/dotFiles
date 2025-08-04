@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"io/fs"
 	"log"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"time"
 )
@@ -85,14 +85,14 @@ func linkDirectory(sourceDir, homeDir string, addDot bool) error {
 	return nil
 }
 
-// linkSpecificFiles links files from the specific/ directory
+// linkSpecificFiles links files from the specific/ directory using WalkDir
 func linkSpecificFiles(homeDir string) error {
-	return filepath.Walk("specific", func(path string, info os.FileInfo, err error) error {
+	return filepath.WalkDir("specific", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 
-		if info.IsDir() {
+		if d.IsDir() {
 			return nil
 		}
 
@@ -151,7 +151,7 @@ func createSymlink(source, target string) error {
 		}
 
 		log.Printf("Backing up %s to %s\n", target, backupPath)
-		if err := exec.Command("cp", "-r", target, backupPath).Run(); err != nil {
+		if err := backupFile(target, backupPath); err != nil {
 			return fmt.Errorf("failed to backup %s: %w", target, err)
 		}
 
@@ -174,4 +174,81 @@ func createSymlink(source, target string) error {
 	}
 
 	return nil
+}
+
+// backupFile creates a backup copy of a file or directory using native Go operations
+func backupFile(src, dst string) error {
+	srcInfo, err := os.Stat(src)
+	if err != nil {
+		return err
+	}
+
+	if srcInfo.IsDir() {
+		return copyDir(src, dst)
+	} else {
+		return copyFile(src, dst)
+	}
+}
+
+// copyFile copies a single file from src to dst using Go's standard library
+func copyFile(src, dst string) error {
+	// Get source file info for permissions
+	srcInfo, err := os.Stat(src)
+	if err != nil {
+		return err
+	}
+
+	// Copy file content
+	data, err := os.ReadFile(src)
+	if err != nil {
+		return err
+	}
+
+	// Write to destination with same permissions
+	return os.WriteFile(dst, data, srcInfo.Mode())
+}
+
+// copyDir recursively copies a directory from src to dst using filepath.WalkDir
+func copyDir(src, dst string) error {
+	// Get source directory info
+	srcInfo, err := os.Stat(src)
+	if err != nil {
+		return err
+	}
+
+	// Create destination directory
+	if err := os.MkdirAll(dst, srcInfo.Mode()); err != nil {
+		return err
+	}
+
+	// Use WalkDir (more efficient than Walk)
+	return filepath.WalkDir(src, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		// Get relative path from source
+		relPath, err := filepath.Rel(src, path)
+		if err != nil {
+			return err
+		}
+
+		// Skip the root directory
+		if relPath == "." {
+			return nil
+		}
+
+		dstPath := filepath.Join(dst, relPath)
+
+		if d.IsDir() {
+			// Get directory info for permissions
+			info, err := d.Info()
+			if err != nil {
+				return err
+			}
+			return os.MkdirAll(dstPath, info.Mode())
+		} else {
+			return copyFile(path, dstPath)
+		}
+	})
 }
