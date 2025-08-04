@@ -1,4 +1,4 @@
-.PHONY: help install vim test clean build brew
+.PHONY: help infect vim test clean build brew
 
 # Default target
 help:
@@ -6,7 +6,7 @@ help:
 	@echo ""
 	@echo "Available targets:"
 	@echo "  help     Show this help message"
-	@echo "  install  Install dotfiles and link all configuration files"
+	@echo "  infect   Install dotfiles and link all configuration files"
 	@echo "  vim      Update vim plugins and sort spell file"
 	@echo "  test     Run tests"
 	@echo "  build    Build the dotool binary"
@@ -14,13 +14,13 @@ help:
 	@echo "  brew     Install OSX packages using Homebrew"
 	@echo ""
 	@echo "Examples:"
-	@echo "  make install"
+	@echo "  make infect"
 	@echo "  make vim"
 	@echo "  make test"
 
 # Install dotfiles
-install:
-	go run ./dotool install
+infect:
+	go run ./dotool infect
 
 # Update vim plugins and sort spell file
 vim:

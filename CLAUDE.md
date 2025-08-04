@@ -11,8 +11,8 @@ go run ./dotool
 make help
 
 # Install dotfiles and link all configuration files
-go run ./dotool install
-make install
+go run ./dotool infect
+make infect
 
 # Update vim plugins and sort spell file
 go run ./dotool vim
@@ -54,7 +54,7 @@ This is a personal dotfiles repository that manages configuration files across m
 
 ### Linking Behavior
 
-The dotool install command:
+The dotool infect command:
 1. Creates backup copies of existing files in `~/tmp/` before overwriting
 2. Creates absolute symlinks to repository files
 3. Builds standard directory structure (`~/Projects`, `~/bin`, `~/tmp`)

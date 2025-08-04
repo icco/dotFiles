@@ -16,9 +16,9 @@ func main() {
 	command := os.Args[1]
 
 	switch command {
-	case "install":
-		if err := runInstall(); err != nil {
-			log.Fatalf("Error running install: %v", err)
+	case "infect":
+		if err := runInfect(); err != nil {
+			log.Fatalf("Error running infect: %v", err)
 		}
 	case "vim":
 		if err := runVim(); err != nil {
@@ -44,19 +44,19 @@ func printUsage() {
 	fmt.Println("  go run ./dotool <command>")
 	fmt.Println()
 	fmt.Println("COMMANDS:")
-	fmt.Println("  install    Install dotfiles and link all configuration files")
+	fmt.Println("  infect     Install dotfiles and link all configuration files")
 	fmt.Println("  vim        Update vim plugins and sort spell file")
 	fmt.Println("  test       Run tests")
 	fmt.Println("  help       Show this help message")
 	fmt.Println()
 	fmt.Println("EXAMPLES:")
-	fmt.Println("  go run ./dotool install")
+	fmt.Println("  go run ./dotool infect")
 	fmt.Println("  go run ./dotool vim")
 	fmt.Println("  go run ./dotool test")
 }
 
-func runInstall() error {
-	fmt.Println("Installing dotfiles...")
+func runInfect() error {
+	fmt.Println("Running infect command...")
 
 	// Run test first
 	if err := runTest(); err != nil {
@@ -73,7 +73,7 @@ func runInstall() error {
 		return fmt.Errorf("failed to link files: %w", err)
 	}
 
-	fmt.Println("Dotfiles installation completed successfully!")
+	fmt.Println("Infect completed successfully!")
 	return nil
 }
 

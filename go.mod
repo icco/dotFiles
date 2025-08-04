@@ -1,3 +1,3 @@
-module github.com/icco/dotfiles/dotool
+module github.com/icco/dotfiles
 
 go 1.24

@@ -18,9 +18,9 @@ go run ./dotool
 make help
 
 # Install dotfiles (equivalent to old `rake` command)
-go run ./dotool install
+go run ./dotool infect
 # or
-make install
+make infect
 
 # Update vim plugins and sort spell file (equivalent to old `rake vim`)
 go run ./dotool vim
