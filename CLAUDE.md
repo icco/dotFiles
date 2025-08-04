@@ -7,7 +7,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Development Commands
 ```bash
 # Show usage help
-go run ./dotool
+go run ./dotool --help
 make help
 
 # Install dotfiles and link all configuration files
@@ -26,7 +26,6 @@ make test
 make build
 
 # Install OSX packages (requires Homebrew)
-brew bundle
 make brew
 ```
 
@@ -37,7 +36,7 @@ This is a personal dotfiles repository that manages configuration files across m
 ### Key Components
 
 - **`dotool/`** - Go application that manages dotfile installation and vim plugin updates
-  - `main.go` - Entry point with commands: install, vim, test (shows usage by default)
+  - `main.go` - Entry point using Cobra CLI framework with commands: infect, vim, test
   - `infect.go` - Core linking logic that creates directory structure and symlinks
   - `vim_impl.go` - Vim-specific functionality for plugin management and spell file sorting
 
