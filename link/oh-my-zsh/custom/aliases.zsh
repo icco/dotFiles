@@ -38,6 +38,15 @@ alias bim="vim"
 alias cim="vim"
 alias vi='vim'
 
+# Terraform
+alias tf="tofu"
+alias tfdocs="terraform-docs"
+
+# Github
+alias ghr='gh repo view --web'
+alias ghpr='gh pr view --web'
+alias ghprc='gh pr create --web'
+
 # Csh compatability:
 alias unsetenv=unset
 function setenv () {
