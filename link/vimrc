@@ -120,6 +120,7 @@ let g:vim_markdown_frontmatter = 1
 let g:vim_markdown_strikethrough = 1
 
 au BufRead,BufNewFile *.md set ft=markdown
+au BufRead,BufNewFile *.md let b:copilot_enabled = v:false
 
 " Makefiles
 au BufRead,BufNewFile [Mm]akefile* set noet ts=8 sw=8 nocindent list lcs=tab:>-,trail:x
