@@ -1,17 +1,14 @@
 name: Project tracking
 on:
   issues:
-    types:
-      - opened
-      - reopened
+    types: [opened, reopened]
   pull_request_target:
-    types:
-      - opened
-      - reopened
-      - synchronize
+    types: [opened, reopened, synchronize]
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
+
 permissions: {}
 jobs:
   add-to-project:
@@ -56,6 +53,7 @@ jobs:
           PLUGIN_FIELD_ID=$(jq '.data.organization.projectV2.fields.nodes[] | select(.name == "Plugin") | .id' project_data.json)
           THEME_FIELD_ID=$(jq '.data.organization.projectV2.fields.nodes[] | select(.name == "Theme") | .id' project_data.json)
           EOF
+
       - name: Add to project
         env:
           ISSUE_OR_PR_ID: ${{ github.event.issue.node_id || github.event.pull_request.node_id }}
@@ -71,6 +69,7 @@ jobs:
           ' -f project=$PROJECT_ID -f content=$ISSUE_OR_PR_ID --jq '.data.addProjectV2ItemById.item.id')"
 
           echo "ITEM_ID=$item_id" >> $GITHUB_ENV
+
       - name: Classify Pull Request
         if: github.event_name == 'pull_request_target'
         run: |
@@ -103,6 +102,7 @@ jobs:
           if [[ $(wc -l < themes.list) = 1 ]]; then
             echo "THEME=$(cat themes.list)" >> $GITHUB_ENV
           fi
+
       - name: Fill Pull Request fields in project
         if: github.event_name == 'pull_request_target'
         run: |

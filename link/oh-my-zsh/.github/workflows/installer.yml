@@ -3,14 +3,17 @@ on:
   workflow_dispatch: {}
   push:
     paths:
-      - tools/install.sh
-      - .github/workflows/installer/**
-      - .github/workflows/installer.yml
+      - 'tools/install.sh'
+      - '.github/workflows/installer/**'
+      - '.github/workflows/installer.yml'
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: false
+
 permissions:
   contents: read # to checkout
+
 jobs:
   test:
     name: Test installer
@@ -29,6 +32,7 @@ jobs:
         run: sudo apt-get update; sudo apt-get install zsh
       - name: Test installer
         run: sh ./tools/install.sh
+
   deploy:
     name: Deploy installer in install.ohmyz.sh
     if: github.ref == 'refs/heads/master'
