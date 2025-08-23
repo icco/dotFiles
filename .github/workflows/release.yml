@@ -21,7 +21,7 @@ jobs:
         run: echo "timestamp=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
       - name: Build binaries
         run: |
-          cd infect
+          cd dotool
 
           # Create release directory
           mkdir -p ../release
