@@ -40,7 +40,7 @@ brew 'zsh'
 
 cask '1password'
 cask '1password-cli'
-cask 'flux'
+cask 'flux-app'
 cask 'font-meslo-lg-nerd-font'
 cask 'gpg-suite'
 cask 'notion'
