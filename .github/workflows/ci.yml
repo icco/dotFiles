@@ -67,7 +67,7 @@ jobs:
             yq -iP '.' "$file"
           done
       - name: Commit YAML formatting changes
-        uses: stefanzweifel/git-auto-commit-action@v6
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: 'feat: format YAML files with yq'
           file_pattern: '*.yml *.yaml :!.github/workflows/*'
