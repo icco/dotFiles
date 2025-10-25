@@ -1,3 +1,9 @@
+" SPDX-FileCopyrightText: © 2022 Caleb Maclennan <caleb@alerque.com>
+" SPDX-FileCopyrightText: © 2009 Benjamin D. Williams <benw@plasticboy.com>
+" SPDX-License-Identifier: MIT
+
+scriptencoding utf-8
+
 "TODO print messages when on visual mode. I only see VISUAL, not the messages.
 
 " Function interface philosophy:
@@ -364,7 +370,7 @@ function! s:Toc(...)
     let l:header_list = s:GetHeaderList()
     let l:indented_header_list = []
     if len(l:header_list) == 0
-        echom 'Toc: No headers.'
+        echomsg 'Toc: No headers.'
         return
     endif
     let l:header_max_len = 0
@@ -441,7 +447,7 @@ function! s:InsertToc(format, ...)
     let l:toc = []
     let l:header_list = s:GetHeaderList()
     if len(l:header_list) == 0
-        echom 'InsertToc: No headers.'
+        echomsg 'InsertToc: No headers.'
         return
     endif
 
@@ -575,15 +581,15 @@ endfunction
 " Wrapper to do move commands in visual mode.
 "
 function! s:VisMove(f)
-    norm! gv
+    normal! gv
     call function(a:f)()
 endfunction
 
 " Map in both normal and visual modes.
 "
 function! s:MapNormVis(rhs,lhs)
-    execute 'nn <buffer><silent> ' . a:rhs . ' :call ' . a:lhs . '()<cr>'
-    execute 'vn <buffer><silent> ' . a:rhs . ' <esc>:call <sid>VisMove(''' . a:lhs . ''')<cr>'
+    execute 'nnoremap <buffer><silent> ' . a:rhs . ' :call ' . a:lhs . '()<cr>'
+    execute 'vnoremap <buffer><silent> ' . a:rhs . ' <esc>:call <sid>VisMove(''' . a:lhs . ''')<cr>'
 endfunction
 
 " Parameters:
@@ -744,12 +750,14 @@ if !exists('*s:EditUrlUnderCursor')
 endif
 
 function! s:VersionAwareNetrwBrowseX(url)
-    if has('patch-7.4.567')
+    if has('patch-9.1.1588')
+        call netrw#BrowseX(a:url)
+    elseif has('patch-7.4.567')
         call netrw#BrowseX(a:url, 0)
     else
         call netrw#NetrwBrowseX(a:url, 0)
     endif
-endf
+endfunction
 
 function! s:MapNotHasmapto(lhs, rhs)
     if !hasmapto('<Plug>' . a:rhs)

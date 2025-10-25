@@ -1,4 +1,7 @@
-" vim: ts=4 sw=4:
+" SPDX-FileCopyrightText: © 2022 Caleb Maclennan <caleb@alerque.com>
+" SPDX-FileCopyrightText: © 2009 Benjamin D. Williams <benw@plasticboy.com>
+" SPDX-License-Identifier: MIT
+
 " folding for Markdown headers, both styles (atx- and setex-)
 " http://daringfireball.net/projects/markdown/syntax#header
 "
@@ -6,6 +9,8 @@
 "   $HOME/.vim/after/ftplugin/markdown.vim
 "
 " original version from Steve Losh's gist: https://gist.github.com/1038710
+
+scriptencoding utf-8
 
 function! s:is_mkdCode(lnum)
     let name = synIDattr(synID(a:lnum, 1, 0), 'name')
@@ -174,7 +179,6 @@ else " vim_markdown_folding_style_pythonic == 0
         endif
     endfunction
 endif
-
 
 let b:fenced_block = 0
 let b:front_matter = 0

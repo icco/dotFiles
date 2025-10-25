@@ -46,7 +46,7 @@ function! zoxide#handle_select_result(cd_command, result) abort
     call s:change_directory(a:cd_command, directory)
 endfunction
 
-if has('nvim') && get(g:, 'zoxide_use_select', 0)
+if has('nvim') && (!exists('g:loaded_fzf') || get(g:, 'zoxide_use_select', 0))
     function! zoxide#zi(cd_command, bang, ...) abort
         call luaeval('require("zoxide-vim").select(_A[1], _A[2])', [
                     \ zoxide#exec(['query', '--list', '--score'], a:000),
@@ -64,33 +64,30 @@ else
                 \ ]
     " Previews are only supported on UNIX.
     if has('unix')
-        let s:default_fzf_options += ['--preview=\command -p ls -p {2..}', '--preview-window=down']
+        " Non-POSIX args are only available on certain operating systems.
+        let s:default_fzf_options += [
+                    \ has('linux') ?
+                    \ '--preview=\command -p ls -Cp --color=always --group-directories-first {2..}' :
+                    \ '--preview=\command -p ls -Cp {2..}',
+                    \ ]
+
+        " Rounded edges don't display correctly on some terminals.
+        let s:default_fzf_options += ['--preview-window=down,30%,sharp']
+        " `CLICOLOR=1` Enables colorized `ls` output on macOS / FreeBSD.
+        " `FORCE_CLICOLOR=1` Forces colorized `ls` output when the output is
+        " not a TTY (like in fzf's preview window) on macOS / FreeBSD.
+        " `sh -c` Ensures that the preview command is run in a POSIX-compliant
+        " shell, regardless of what shell the user has selected.
+        let s:default_fzf_options += ['--with-shell=env CLICOLOR=1 CLICOLOR_FORCE=1 sh -c']
     endif
 
     function! zoxide#zi(cd_command, bang, ...) abort
         if !exists('g:loaded_fzf') | echoerr 'The fzf.vim plugin must be installed' | return | endif
-
-        let saved_shell_var = $SHELL
-        let shell_var_is_defined = exists('$SHELL')
-
-        if has('unix')
-            " Ensures that the preview command is run in a POSIX-compliant
-            " shell.
-            let $SHELL = 'sh'
-        endif
 
         call fzf#run(fzf#wrap('zoxide', {
                     \ 'source': s:build_cmd(['query', '--list', '--score'], a:000),
                     \ 'sink': funcref('zoxide#handle_select_result', [a:cd_command]),
                     \ 'options': get(g:, 'zoxide_fzf_options', s:default_fzf_options),
                     \ }, a:bang))
-
-        if has('unix')
-            if shell_var_is_defined
-                let $SHELL = saved_shell_var
-            else
-                unlet $SHELL
-            endif
-        endif
     endfunction
 endif

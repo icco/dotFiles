@@ -164,8 +164,8 @@ function! sy#util#popup_create(hunkdiff) abort
   if exists('*nvim_open_win')
     call sy#util#popup_close()
     let buf = nvim_create_buf(0, 1)
-    call nvim_buf_set_option(buf, 'syntax', 'diff')
     call nvim_buf_set_lines(buf, 0, -1, 0, map(a:hunkdiff, 'v:val[0].padding.v:val[1:]'))
+    call nvim_buf_set_option(buf, 'syntax', 'diff')
     let s:popup_window = nvim_open_win(buf, v:false, {
           \ 'relative': 'win',
           \ 'row': winline,
