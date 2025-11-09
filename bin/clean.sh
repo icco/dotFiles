@@ -8,6 +8,9 @@ rm -rf ~/Work/**/.terraform
 rm -rf ~/Projects/*/node_modules
 rm -rf ~/Projects/**/.terraform
 
+yarn cache clean
+npm cache clean --force
+
 sudo rm -rf $GOPATH/pkg/
 
 docker system prune -af
