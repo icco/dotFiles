@@ -3,17 +3,14 @@ on:
   workflow_dispatch: {}
   push:
     paths:
-      - 'tools/install.sh'
-      - '.github/workflows/installer/**'
-      - '.github/workflows/installer.yml'
-
+      - tools/install.sh
+      - .github/workflows/installer/**
+      - .github/workflows/installer.yml
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: false
-
 permissions:
   contents: read # to checkout
-
 jobs:
   test:
     name: Test installer
@@ -29,7 +26,6 @@ jobs:
         uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
         with:
           egress-policy: audit
-
       - name: Set up git repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Install zsh
@@ -37,7 +33,6 @@ jobs:
         run: sudo apt-get update; sudo apt-get install zsh
       - name: Test installer
         run: sh ./tools/install.sh
-
   deploy:
     name: Deploy installer in install.ohmyz.sh
     if: github.ref == 'refs/heads/master'
@@ -50,7 +45,6 @@ jobs:
         uses: step-security/harden-runner@f4a75cfd619ee5ce8d5b864b0d183aff3c69b55a # v2.13.1
         with:
           egress-policy: audit
-
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - name: Install Vercel CLI
