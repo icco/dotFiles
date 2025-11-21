@@ -38,8 +38,11 @@ brew 'yq'
 brew 'zoxide'
 brew 'zsh'
 
+tap 'icco/tap'
+
 cask '1password'
 cask '1password-cli'
+cask 'etu'
 cask 'flux-app'
 cask 'font-meslo-lg-nerd-font'
 cask 'gpg-suite'
