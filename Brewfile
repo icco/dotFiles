@@ -1,5 +1,8 @@
 # https://robots.thoughtbot.com/brewfile-a-gemfile-but-for-homebrew
 
+tap 'icco/tap'
+tap 'go-task/tap'
+
 brew 'bash'
 brew 'bash-completion'
 brew 'coreutils'
@@ -13,6 +16,7 @@ brew 'git-delta'
 brew 'gnu-sed'
 brew 'gnu-which'
 brew 'go'
+brew 'go-task'
 brew 'grc'
 brew 'htop'
 brew 'imagemagick'
@@ -37,8 +41,6 @@ brew 'wget'
 brew 'yq'
 brew 'zoxide'
 brew 'zsh'
-
-tap 'icco/tap'
 
 cask '1password'
 cask '1password-cli'
