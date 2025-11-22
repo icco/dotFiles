@@ -3,6 +3,8 @@ DISABLE_AUTO_UPDATE="true"
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
+export HOMEBREW_NO_ENV_HINTS=1
+
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 [[ -d "/opt/homebrew/bin" ]] && export PATH="/opt/homebrew/bin:$PATH"
 
