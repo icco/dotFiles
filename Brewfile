@@ -58,8 +58,6 @@ brew "rclone"
 brew "rust"
 brew "spark"
 brew "ssh-copy-id"
-brew "terraform"
-brew "tfenv", link: false
 brew "tflint"
 brew "the_silver_searcher"
 brew "thefuck"
