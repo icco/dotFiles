@@ -20,6 +20,10 @@ source /usr/share/doc/fzf/examples/key-bindings.zsh
 # python
 export PATH="$PATH:$HOME/.local/bin"
 
+yq() {
+  docker run --rm -i -v "${PWD}":/workdir mikefarah/yq:latest "$@"
+}
+
 # zmv
 autoload -Uz zmv
 
