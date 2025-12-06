@@ -85,6 +85,9 @@ infra() {
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 export PATH="$PATH:$HOME/.rvm/bin"
 
+# postgres
+export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"
+
 # zmv
 autoload -Uz zmv
 
