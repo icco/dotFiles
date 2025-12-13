@@ -1,0 +1,34 @@
+version: "3"
+
+tasks:
+  default:
+    desc: Show help
+    cmd: go run ./dotool --help
+
+  infect:
+    desc: Install dotfiles
+    cmd: go run ./dotool infect
+
+  vim:
+    desc: Update vim plugins and sort spell file
+    cmd: go run ./dotool vim
+
+  test:
+    desc: Run tests
+    cmd: go run ./dotool test
+
+  omz:
+    desc: Update oh-my-zsh
+    cmd: go run ./dotool omz
+
+  build:
+    desc: Build the dotool binary
+    cmd: go build -o bin/dotool ./dotool
+
+  clean:
+    desc: Clean built binaries
+    cmd: rm -f bin/dotool
+
+  brew:
+    desc: Install OSX packages using Homebrew
+    cmd: brew bundle
