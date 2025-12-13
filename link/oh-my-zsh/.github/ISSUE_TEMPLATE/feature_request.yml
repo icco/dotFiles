@@ -1,7 +1,6 @@
 name: Feature request
 description: Suggest a feature for Oh My Zsh
-labels:
-  - Feature
+labels: ["Feature"]
 body:
   - type: markdown
     attributes:
@@ -16,7 +15,7 @@ body:
   - type: textarea
     attributes:
       label: If the feature solves a problem you have, specify it here.
-      description: A description of what the problem is.
+      description: A description of what the problem is. 
       placeholder: Ex. I'm always frustrated when...
   - type: textarea
     attributes:
