@@ -421,7 +421,7 @@ formatting.
   * [pandoc](https://pandoc.org)
   * [prettier](https://github.com/prettier/prettier)
   * [proselint](http://proselint.com/)
-  * [pymarkdown](https://github.com/jackdewinter/pymarkdown)
+  * [pymarkdown](https://github.com/jackdewinter/pymarkdown) :floppy_disk:
   * [redpen](http://redpen.cc/)
   * [remark-lint](https://github.com/wooorm/remark-lint)
   * [textlint](https://textlint.github.io/)
@@ -592,6 +592,9 @@ formatting.
   * [cspell](https://github.com/streetsidesoftware/cspell/tree/main/packages/cspell)
   * [opacheck](https://www.openpolicyagent.org/docs/latest/cli/#opa-check)
   * [opafmt](https://www.openpolicyagent.org/docs/latest/cli/#opa-fmt)
+* ReScript
+  * [rescript-language-server](https://www.npmjs.com/package/@rescript/language-server) :speech_balloon:
+  * [rescript_format](https://rescript-lang.org/)
 * REST
   * [kulala_fmt](https://github.com/mistweaverco/kulala-fmt)
 * reStructuredText
