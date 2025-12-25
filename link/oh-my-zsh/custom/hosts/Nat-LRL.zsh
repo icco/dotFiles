@@ -7,14 +7,13 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 # Try and fix PATH
 export PATH="/opt/homebrew/bin:/usr/local/sbin:/usr/local/bin:$PATH"
 
-# Mac ls does not have color option...
-alias ls="/bin/ls";
-
-export PATH="/usr/local/opt/gettext/bin:$PATH"
+# alias ls to GNU ls with colors
+alias ls="/opt/homebrew/bin/gls --color";
 
 # Colors
 export CLICOLOR=1
 export LSCOLORS=ExFxCxDxBxegedabagacad
+export LS_COLORS=$(vivid generate iceberg-dark)
 
 # Golang
 export GOPATH="$HOME/Projects"
