@@ -16,6 +16,7 @@ plugins=(... kubectl)
 | k        | `kubectl`                                               | The kubectl command                                                                              |
 | kca      | `kubectl --all-namespaces`                              | The kubectl command targeting all namespaces                                                     |
 | kaf      | `kubectl apply -f`                                      | Apply a YML file                                                                                 |
+| kapk     | `kubectl apply -k`                                      | Apply a kustomization directory                                                                  |
 | keti     | `kubectl exec -ti`                                      | Drop into an interactive terminal on a container                                                 |
 |          |                                                         | **Manage configuration quickly to switch contexts between local, dev and staging**               |
 | kcuc     | `kubectl config use-context`                            | Set the current-context in a kubeconfig file                                                     |
@@ -26,6 +27,7 @@ plugins=(... kubectl)
 |          |                                                         | **General aliases**                                                                              |
 | kdel     | `kubectl delete`                                        | Delete resources by filenames, stdin, resources and names, or by resources and label selector    |
 | kdelf    | `kubectl delete -f`                                     | Delete a pod using the type and name specified in -f argument                                    |
+| kdelk    | `kubectl delete -k`                                     | Delete all resources defined in a kustomization directory                                        |
 | kge      | `kubectl get events --sort-by=".lastTimestamp"`         | Get events (sorted by timestamp)                                                                 |
 | kgew     | `kubectl get events --watch --sort-by=".lastTimestamp"` | Get events and watch as they occur (sorted by timestamp)                                         |
 |          |                                                         | **Pod management**                                                                               |
@@ -88,7 +90,7 @@ plugins=(... kubectl)
 | kga      | `kubectl get all`                                       | List all resources in ps format                                                                  |
 | kgaa     | `kubectl get all --all-namespaces`                      | List the requested object(s) across all namespaces                                               |
 |          |                                                         | **Logs**                                                                                         |
-| kl       | `kubectl logs`                                          | Print the logs for a container or resource                                                       |
+| klog     | `kubectl logs`                                          | Print the logs for a container or resource                                                       |
 | klf      | `kubectl logs -f`                                       | Stream the logs for a container or resource (follow)                                             |
 |          |                                                         | **File copy**                                                                                    |
 | kcp      | `kubectl cp`                                            | Copy files and directories to and from containers                                                |

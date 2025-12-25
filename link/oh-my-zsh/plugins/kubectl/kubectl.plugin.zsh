@@ -21,6 +21,9 @@ alias kca='_kca(){ kubectl "$@" --all-namespaces;  unset -f _kca; }; _kca'
 # Apply a YML file
 alias kaf='kubectl apply -f'
 
+# Apply a kustomization directory
+alias kapk='kubectl apply -k'
+
 # Drop into an interactive terminal on a container
 alias keti='kubectl exec -t -i'
 
@@ -36,6 +39,7 @@ alias kcgc='kubectl config get-contexts'
 # General aliases
 alias kdel='kubectl delete'
 alias kdelf='kubectl delete -f'
+alias kdelk='kubectl delete -k'
 alias kge='kubectl get events --sort-by=".lastTimestamp"'
 alias kgew='kubectl get events --sort-by=".lastTimestamp" --watch'
 
@@ -131,7 +135,7 @@ alias kga='kubectl get all'
 alias kgaa='kubectl get all --all-namespaces'
 
 # Logs
-alias kl='kubectl logs'
+alias klog='kubectl logs'
 alias kl1h='kubectl logs --since 1h'
 alias kl1m='kubectl logs --since 1m'
 alias kl1s='kubectl logs --since 1s'
