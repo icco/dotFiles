@@ -39,6 +39,7 @@ plugins=(
   virtualenvwrapper
   pip
   rvm
+  tirith
   git-prompt
 )
 
