@@ -70,7 +70,7 @@
 [interactive]
 	diffFilter = delta --color-only
 [merge]
-	conflictstyle = zdiff3
+	conflictStyle = diff3
 	stat = true
 [pager]
 	color = true
@@ -88,3 +88,6 @@
 	submodulesummary = 1
 [url "git@github.com:"]
 	insteadOf = https://github.com/
+[merge "mergiraf"]
+	name = mergiraf
+	driver = mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L
