@@ -543,6 +543,12 @@ CTRL-t
 
     If [!] is not given, the first error is jumped to.
 
+*:GoCallers*
+:GoCallers
+
+    Show "callers" relation for a selected function. A list of possible
+    callers for the selected function under the cursor is shown in a location
+    list.
 
                                                                 *:GoReferrers*
 :GoReferrers
@@ -1021,38 +1027,12 @@ Show the interfaces that the type under the cursor implements.
 
 Rename the identifier under the cursor to the desired new name.
 
-                                                                *(go-callees)*
-
-Show the call targets for the type under the cursor.
-
                                                                 *(go-callers)*
 
 Show possible callers of selected function.
-
-                                                               *(go-describe)*
-
-Describe selected syntax: definition, methods, etc.
-
-                                                              *(go-callstack)*
-
-Show path from callgraph root to selected function.
-
-                                                               *(go-freevars)*
-
-Show free variables of selection.
-
-                                                           *(go-channelpeers)*
-                                                          *(go-channel-peers)*
-
-Show send/receive corresponding to selected channel op.
-
                                                               *(go-referrers)*
 
 Show all refs to entity denoted by selected identifier.
-
-                                                               *(go-pointsto)*
-
-Show all variables to which the pointer under the cursor may point.
 
                                                              *(go-metalinter)*
 
