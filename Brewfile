@@ -1,6 +1,5 @@
 tap "charmbracelet/tap"
 tap "go-task/tap"
-tap "homebrew/bundle"
 tap "icco/tap"
 
 brew "bash"
