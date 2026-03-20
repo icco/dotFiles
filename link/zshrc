@@ -36,8 +36,6 @@ plugins=(
   iterm2
   zoxide
   macos
-  virtualenvwrapper
-  pip
   rvm
   tirith
   git-prompt
