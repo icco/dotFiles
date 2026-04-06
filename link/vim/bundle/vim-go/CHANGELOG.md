@@ -5,6 +5,9 @@ BACKWARDS INCOMPATIBILITIES:
   [[GH-3710]](https://github.com/fatih/vim-go/pull/3710)
 
 IMPROVEMENTS:
+* Improving handling of strings from delve that Neovim marshals to a Blob
+  value.
+  [[GH-3744]](https://github.com/fatih/vim-go/pull/3744)
 
 BUG FIXES:
 * Fix delay when listing breakpoints when stepping in Neovim.
