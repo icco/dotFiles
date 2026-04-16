@@ -23,12 +23,24 @@
 
 call graphql#embed_syntax('typescriptGraphQL')
 
-let s:tags = '\%(' . join(graphql#javascript_tags(), '\|') . '\)'
-let s:functions = '\%(' . join(graphql#javascript_functions(), '\|') . '\)'
+let s:tags = graphql#javascript_tags()
+let s:functions = graphql#javascript_functions()
 
-exec 'syntax region graphqlTemplateString matchgroup=typescriptTemplate start=+' . s:tags . '\@20<=`+ skip=+\\`+ end=+`+ contains=@typescriptGraphQL,typescriptTemplateSubstitution extend'
-exec 'syntax match graphqlTaggedTemplate +' . s:tags . '\ze`+ nextgroup=graphqlTemplateString'
-exec 'syntax region graphqlTemplateString matchgroup=typescriptTemplate start=+\%(' . s:functions . '\s*(\)\@40<=`+ skip=+\\`+ end=+`+ contains=@typescriptGraphQL,typescriptTemplateSubstitution containedin=typescriptFuncCallArg extend'
+if !empty(s:tags)
+  exec 'syntax region graphqlTemplateString matchgroup=typescriptTemplate '
+        \ 'start=+\%(' . join(s:tags, '\|') . '\)\@20<=`+ skip=+\\`+ end=+`+ '
+        \ 'contains=@typescriptGraphQL,typescriptTemplateSubstitution extend'
+  exec 'syntax match graphqlTaggedTemplate +\%(' . join(s:tags, '\|') . '\)\ze`+ '
+        \ 'nextgroup=graphqlTemplateString'
+endif
+if !empty(s:functions)
+  exec 'syntax match graphqlFunctionCall +\%(' . join(s:functions, '\|') . '\)\ze\s*(+ '
+        \ 'nextgroup=typescriptFuncCallArg skipwhite skipnl'
+  syntax region graphqlFunctionLiteral matchgroup=typescriptTemplate
+        \ start=+`+ skip=+\\`+ end=+`+
+        \ contains=@typescriptGraphQL,typescriptTemplateSubstitution
+        \ containedin=typescriptFuncCallArg contained extend
+endif
 
 " Support expression interpolation ((${...})) inside template strings.
 syntax region graphqlTemplateExpression start=+${+ end=+}+ contained contains=typescriptTemplateSubstitution containedin=graphqlFold keepend
@@ -43,7 +55,9 @@ syntax region graphqlTemplateString
       \ contains=@typescriptGraphQL,typescriptTemplateSubstitution extend
 
 hi def link graphqlTemplateString typescriptTemplate
+hi def link graphqlFunctionLiteral typescriptTemplate
+hi def link graphqlFunctionCall typescriptFuncName
 hi def link graphqlTemplateExpression typescriptTemplateSubstitution
 
-syn cluster typescriptExpression add=graphqlTaggedTemplate
-syn cluster graphqlTaggedTemplate add=graphqlTemplateString
+syn cluster typescriptExpression add=graphqlTaggedTemplate,graphqlFunctionCall
+syn cluster graphqlTaggedTemplate add=graphqlTemplateString,graphqlFunctionLiteral
