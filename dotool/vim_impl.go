@@ -125,6 +125,18 @@ func upgradePlugin(repo string) error {
 		return fmt.Errorf("failed to remove .git directory from %s: %w", pluginDir, err)
 	}
 
+	// Remove .terraform directories that shouldn't be committed
+	filepath.WalkDir(pluginDir, func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if d.IsDir() && d.Name() == ".terraform" {
+			os.RemoveAll(path)
+			return filepath.SkipDir
+		}
+		return nil
+	})
+
 	// Add plugin to git
 	cmd = exec.Command("git", "add", pluginDir)
 	if output, err := cmd.CombinedOutput(); err != nil {
