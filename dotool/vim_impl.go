@@ -52,7 +52,6 @@ func upgradeVimPlugins() error {
 		"dense-analysis/ale",
 		"editorconfig/editorconfig-vim",
 		"fatih/vim-go",
-		"github/copilot.vim",
 		"godlygeek/tabular",
 		"google/vim-jsonnet",
 		"grafana/vim-alloy",
