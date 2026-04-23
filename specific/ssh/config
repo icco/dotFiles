@@ -1,8 +1,10 @@
-Host norns
+Host morns
   User we
-  ForwardAgent yes
-  Hostname norns.local
-  RemoteForward /run/user/1000/gnupg/S.gpg-agent /Users/nat/.gnupg/S.gpg-agent.extra
+  Hostname morns.local
+
+Host corns
+  User we
+  Hostname corns.local
 
 Host storm
   User nat
@@ -67,11 +69,6 @@ Host piaware
 Host magicmirroros
   User pi
   Hostname magicmirroros.local
-
-Host cabin
-  Hostname cabin.welch.io
-  User nat
-  Compression yes
 
 Host newyork
   Hostname newyork.welch.io
