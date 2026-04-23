@@ -1,0 +1,16 @@
+#!/bin/sh
+#
+# Show GitHub Actions check status for the most recent commit
+
+SHA=$(git rev-parse HEAD)
+SHORT=$(git rev-parse --short HEAD)
+echo "$SHORT checks:"
+gh api "repos/{owner}/{repo}/commits/$SHA/check-runs" \
+  --jq '.check_runs[] | [
+    (if .conclusion == "success" then "✓"
+     elif .conclusion == "failure" then "✗"
+     elif .status == "in_progress" then "●"
+     else "○" end),
+    .name
+  ] | @tsv' \
+  | column -t
