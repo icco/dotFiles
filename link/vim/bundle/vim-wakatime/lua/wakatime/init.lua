@@ -1188,13 +1188,18 @@ end
 -- Setup Function (Main entry point)
 
 function M.setup(user_config)
+  user_config = user_config or {}
+
   if state.initialized then
-    vim.notify('[WakaTime] Already initialized.', vim.log.levels.WARN)
+    -- Re-apply opts when called again (e.g. user setup runs after auto-init from plugin/wakatime.vim)
+    if next(user_config) ~= nil then
+      state.config = vim.tbl_deep_extend('force', state.config, user_config)
+    end
     return
   end
 
   -- Merge user config with defaults
-  state.config = vim.tbl_deep_extend('force', state.config, user_config or {})
+  state.config = vim.tbl_deep_extend('force', state.config, user_config)
 
   -- Determine home directory
   local wakatime_home_env = os.getenv('WAKATIME_HOME')
@@ -1217,15 +1222,19 @@ function M.setup(user_config)
   state.shared_state_file = state.shared_state_parent_dir .. '/vim_shared_state'
 
   -- Apply settings from config file if they exist (e.g., vi_redraw)
-  local vi_redraw = get_ini_setting('settings', 'vi_redraw')
-  if vi_redraw == 'enabled' or vi_redraw == 'auto' or vi_redraw == 'disabled' then
-    state.config.redraw_setting = vi_redraw
+  if user_config.redraw_setting == nil then
+    local vi_redraw = get_ini_setting('settings', 'vi_redraw')
+    if vi_redraw == 'enabled' or vi_redraw == 'auto' or vi_redraw == 'disabled' then
+      state.config.redraw_setting = vi_redraw
+    end
   end
-  local status_bar_enabled = get_ini_setting('settings', 'status_bar_enabled')
-  if status_bar_enabled == 'false' then
-    state.config.status_bar_enabled = false
-  elseif status_bar_enabled == 'true' then
-    state.config.status_bar_enabled = true
+  if user_config.status_bar_enabled == nil then
+    local status_bar_enabled = get_ini_setting('settings', 'status_bar_enabled')
+    if status_bar_enabled == 'false' then
+      state.config.status_bar_enabled = false
+    elseif status_bar_enabled == 'true' then
+      state.config.status_bar_enabled = true
+    end
   end
   -- Apply debug from config file (will be re-checked in setup_debug_mode)
   local debug_setting = get_ini_setting('settings', 'debug')
