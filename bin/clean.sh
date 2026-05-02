@@ -10,6 +10,7 @@ rm -rf ~/Projects/**/.terraform
 
 yarn cache clean
 npm cache clean --force
+pnpm cache delete
 
 sudo rm -rf $GOPATH/pkg/
 
