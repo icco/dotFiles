@@ -91,6 +91,7 @@ local state = {
   status_bar_refresh_interval = 60,
   status_bar_refresh_in_progress = false,
   status_bar_component_added = false,
+  status_bar_requested = false,
   -- Line change tracking
   lines_in_files = {},
   human_line_changes = {},
@@ -347,18 +348,8 @@ end
 local function neovim_async_install_exit_handler(job_id, exit_code, event)
   local output = strip_whitespace(table.concat(state.nvim_async_output, '\n'))
   state.nvim_async_output = {} -- Clear buffer
-  if state.is_debug_on then
-    if exit_code ~= 0 or output ~= '' then
-      vim.notify(fmt('[WakaTime] Install script exited with code %d:\n%s', exit_code, output), vim.log.levels.INFO)
-    else
-      vim.notify('[WakaTime] Install script finished successfully.', vim.log.levels.INFO)
-    end
-  end
-  if exit_code ~= 0 and not contains(output, 'wakatime-cli is up to date') then
-    vim.notify('[WakaTime] Background install failed. Attempting foreground install...', vim.log.levels.WARN)
-    -- Maybe trigger a synchronous install attempt here if needed, or just notify user.
-    -- For simplicity, we'll just notify for now. A foreground retry might block Neovim.
-    -- install_cli(false) -- Avoid recursion for now
+  if state.is_debug_on and (exit_code ~= 0 or output ~= '') then
+    vim.notify(fmt('[WakaTime] Install script exited with code %d:\n%s', exit_code, output), vim.log.levels.INFO)
   end
 end
 
@@ -673,24 +664,21 @@ local function neovim_async_exit_handler(job_id, exit_code, event, cmd_args_str)
   local output = strip_whitespace(table.concat(state.nvim_async_output, '\n'))
   state.nvim_async_output = {} -- Clear buffer
 
-  local is_error = false
+  local is_special_error = exit_code == EXIT_CODE_API_KEY_ERROR or exit_code == EXIT_CODE_CONFIG_PARSE_ERROR
   local error_msg = output
 
   if exit_code == EXIT_CODE_API_KEY_ERROR then
     error_msg = error_msg .. (error_msg ~= '' and '\n' or '') .. 'Invalid API Key. Use :WakaTimeApiKey'
-    is_error = true
     -- Potentially disable future heartbeats until key is fixed?
     state.config_file_already_setup = false -- Force re-check on next event
   elseif exit_code == EXIT_CODE_CONFIG_PARSE_ERROR then
     error_msg = error_msg .. (error_msg ~= '' and '\n' or '') .. 'Error parsing config file: ' .. state.config_file
-    is_error = true
-  elseif exit_code ~= 0 then
+  elseif exit_code ~= 0 and state.is_debug_on then
     error_msg = error_msg .. (error_msg ~= '' and '\n' or '') .. fmt('CLI exited with code %d', exit_code)
-    is_error = true
   end
 
-  if is_error or (state.is_debug_on and output ~= '') then
-    local level = is_error and vim.log.levels.ERROR or vim.log.levels.DEBUG
+  if (state.is_debug_on or is_special_error) and error_msg ~= '' then
+    local level = exit_code ~= 0 and vim.log.levels.ERROR or vim.log.levels.DEBUG
     local cmd_str = cmd_args_str or join_args(state.last_sent_cmd or {}) -- Use saved command if available
     vim.notify(fmt('[WakaTime] Command: %s\nOutput (Exit Code %d):\n%s', cmd_str, exit_code, error_msg), level)
   end
@@ -1008,18 +996,20 @@ local function run_cli_command(args, output_buffer_key, callback_key, exit_handl
       local output = strip_whitespace(table.concat(state[output_buffer_key], '\n'))
       state[output_buffer_key] = {} -- Clear buffer after use
 
-      if exit_code ~= 0 then
-        local err_msg = fmt('Command failed (Exit Code %d)', exit_code)
-        if exit_code == EXIT_CODE_API_KEY_ERROR then err_msg = err_msg .. ': Invalid API Key' end
-        output = output .. (output ~= '' and '\n' or '') .. err_msg
+      local is_special_error = exit_code == EXIT_CODE_API_KEY_ERROR or exit_code == EXIT_CODE_CONFIG_PARSE_ERROR
+      if exit_code == EXIT_CODE_API_KEY_ERROR then
+        output = output .. (output ~= '' and '\n' or '') .. 'Invalid API Key'
+      elseif exit_code == EXIT_CODE_CONFIG_PARSE_ERROR then
+        output = output .. (output ~= '' and '\n' or '') .. 'Error parsing config file: ' .. state.config_file
+      elseif exit_code ~= 0 and state.is_debug_on then
+        output = output .. (output ~= '' and '\n' or '') .. fmt('Command failed (Exit Code %d)', exit_code)
+      end
+
+      if (state.is_debug_on or is_special_error) and output ~= '' then
+        local level = exit_code ~= 0 and vim.log.levels.ERROR or vim.log.levels.DEBUG
         vim.notify(
-          fmt('[WakaTime] %s\nCommand: %s\nOutput:\n%s', err_msg, cmd_str_for_notify, output),
-          vim.log.levels.ERROR
-        )
-      elseif state.is_debug_on then
-        vim.notify(
-          fmt('[WakaTime] Command finished: %s\nOutput:\n%s', cmd_str_for_notify, output),
-          vim.log.levels.DEBUG
+          fmt('[WakaTime] Command: %s\nOutput (Exit Code %d):\n%s', cmd_str_for_notify, exit_code, output),
+          level
         )
       end
 
@@ -1061,6 +1051,7 @@ end
 
 maybe_refresh_status_bar = function(force)
   if not state.config.status_bar_enabled then return end
+  if not state.status_bar_requested then return end
   if not executable(state.wakatime_cli) then return end
   if state.status_bar_refresh_in_progress then return end
 
@@ -1112,6 +1103,8 @@ maybe_attach_lualine_status_bar = function(attempt)
   for _, component in ipairs(config.sections.lualine_x) do
     if is_wakatime_lualine_component(component) then
       state.status_bar_component_added = true
+      state.status_bar_requested = true
+      maybe_refresh_status_bar(false)
       return
     end
   end
@@ -1119,10 +1112,17 @@ maybe_attach_lualine_status_bar = function(attempt)
   table.insert(config.sections.lualine_x, 1, make_lualine_component())
   lualine.setup(config)
   state.status_bar_component_added = true
+  state.status_bar_requested = true
+  maybe_refresh_status_bar(false)
 end
 
 function M.statusline()
   if not state.config.status_bar_enabled then return '' end
+
+  if not state.status_bar_requested then
+    state.status_bar_requested = true
+    maybe_refresh_status_bar(false)
+  end
 
   return state.status_bar_text
 end
