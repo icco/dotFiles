@@ -9,7 +9,6 @@ import (
 	"time"
 )
 
-// buildStructure creates the required directory structure in the home directory
 func buildStructure(homeDir string) error {
 	for _, dir := range []string{"Projects", "bin", "tmp"} {
 		dirPath := filepath.Join(homeDir, dir)
@@ -20,7 +19,6 @@ func buildStructure(homeDir string) error {
 	return nil
 }
 
-// linkFiles links all the dotfiles and builds directory structure
 func linkFiles() error {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
@@ -46,7 +44,6 @@ func linkFiles() error {
 	return nil
 }
 
-// linkDirectory links all files in a directory to the home directory
 func linkDirectory(sourceDir, homeDir string, addDot bool) error {
 	entries, err := os.ReadDir(sourceDir)
 	if err != nil {
@@ -69,7 +66,6 @@ func linkDirectory(sourceDir, homeDir string, addDot bool) error {
 	return nil
 }
 
-// linkSpecificFiles links files from the specific/ directory using WalkDir
 func linkSpecificFiles(homeDir string) error {
 	return filepath.WalkDir("specific", func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -93,7 +89,6 @@ func linkSpecificFiles(homeDir string) error {
 	})
 }
 
-// linkBinFiles links files from the bin/ directory
 func linkBinFiles(homeDir string) error {
 	entries, err := os.ReadDir("bin")
 	if err != nil {
@@ -112,7 +107,7 @@ func linkBinFiles(homeDir string) error {
 	return nil
 }
 
-// createSymlink creates a symbolic link, backing up existing files into ~/tmp.
+// createSymlink replaces target with a symlink, backing the existing file up to ~/tmp.
 func createSymlink(source, target, homeDir string) error {
 	if _, err := os.Lstat(target); err == nil {
 		backupDir := filepath.Join(homeDir, "tmp")
@@ -144,7 +139,6 @@ func createSymlink(source, target, homeDir string) error {
 	return nil
 }
 
-// backupFile creates a backup copy of a file or directory using native Go operations
 func backupFile(src, dst string) error {
 	srcInfo, err := os.Stat(src)
 	if err != nil {
@@ -156,7 +150,6 @@ func backupFile(src, dst string) error {
 	return copyFile(src, dst)
 }
 
-// copyFile copies a single file from src to dst using Go's standard library
 func copyFile(src, dst string) error {
 	srcInfo, err := os.Stat(src)
 	if err != nil {
@@ -171,7 +164,6 @@ func copyFile(src, dst string) error {
 	return os.WriteFile(dst, data, srcInfo.Mode())
 }
 
-// copyDir recursively copies a directory from src to dst using filepath.WalkDir
 func copyDir(src, dst string) error {
 	srcInfo, err := os.Stat(src)
 	if err != nil {

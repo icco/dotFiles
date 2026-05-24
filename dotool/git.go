@@ -7,13 +7,11 @@ import (
 	"strings"
 )
 
-// gitCommitAll runs `git commit -a -m <msg>`. A "nothing to commit" result is
-// not an error — the caller wanted an idempotent sync.
 func gitCommitAll(msg string) error {
 	return runGit("commit", "-a", "-m", msg)
 }
 
-// runGit runs a git command, treating "nothing to commit" output as success.
+// runGit treats "nothing to commit" as success so callers can be idempotent.
 func runGit(args ...string) error {
 	out, err := exec.Command("git", args...).CombinedOutput()
 	if err == nil {

@@ -9,7 +9,6 @@ import (
 	"strings"
 )
 
-// updateOhMyZsh clones the latest oh-my-zsh and copies everything except .git and custom
 func updateOhMyZsh() error {
 	tmpDir, err := os.MkdirTemp("", "ohmyzsh-update-*")
 	if err != nil {
@@ -26,7 +25,7 @@ func updateOhMyZsh() error {
 
 	targetDir := "link/oh-my-zsh"
 
-	// Preserve the local custom/ directory across the wipe-and-recopy below.
+	// custom/ holds local overrides — preserve across the wipe below.
 	customDir := filepath.Join(targetDir, "custom")
 	customBackup := ""
 	if _, err := os.Stat(customDir); err == nil {
@@ -77,7 +76,7 @@ func updateOhMyZsh() error {
 		}
 	}
 
-	// Strip the upstream `custom/` rule from .gitignore — we commit custom/.
+	// Upstream ignores custom/; we commit it, so strip the rule.
 	if err := stripCustomFromGitignore(filepath.Join(targetDir, ".gitignore")); err != nil {
 		return fmt.Errorf("failed to strip custom from .gitignore: %w", err)
 	}

@@ -11,7 +11,6 @@ import (
 	"strings"
 )
 
-// vimPlugins is the canonical set of vim plugins managed under link/vim/bundle/.
 var vimPlugins = []string{
 	"airblade/vim-rooter",
 	"craigmac/vim-mermaid",
@@ -37,7 +36,6 @@ var vimPlugins = []string{
 	"wakatime/vim-wakatime",
 }
 
-// sortVimSpell sorts the vim spell file and commits the changes
 func sortVimSpell() error {
 	log.Println("Sorting vim spell...")
 
@@ -58,7 +56,6 @@ func sortVimSpell() error {
 	return nil
 }
 
-// upgradeVimPlugins upgrades all vim plugins by cloning them fresh
 func upgradeVimPlugins() error {
 	log.Println("Upgrading vim plugins...")
 
@@ -76,7 +73,6 @@ func upgradeVimPlugins() error {
 	return nil
 }
 
-// upgradePlugin upgrades a single vim plugin
 func upgradePlugin(repo string) error {
 	log.Printf("Upgrading plugin: %s\n", repo)
 
@@ -100,7 +96,7 @@ func upgradePlugin(repo string) error {
 		return fmt.Errorf("failed to remove .git directory from %s: %w", pluginDir, err)
 	}
 
-	// Drop any .terraform directories pulled in by terraform-related plugins.
+	// Strip .terraform/ — vendored by hashivim/vim-terraform fixtures, shouldn't be committed.
 	walkErr := filepath.WalkDir(pluginDir, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
 			return err
@@ -124,7 +120,6 @@ func upgradePlugin(repo string) error {
 	return nil
 }
 
-// sortSpellFile reads, sorts, and deduplicates a spell file using native Go
 func sortSpellFile(filename string) error {
 	file, err := os.Open(filename)
 	if err != nil {
