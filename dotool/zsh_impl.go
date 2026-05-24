@@ -86,6 +86,12 @@ func updateOhMyZsh() error {
 		}
 	}
 
+	// Strip the upstream `custom/` rule from .gitignore — we commit custom/
+	gitignorePath := filepath.Join(targetDir, ".gitignore")
+	if err := stripCustomFromGitignore(gitignorePath); err != nil {
+		return fmt.Errorf("failed to strip custom from .gitignore: %w", err)
+	}
+
 	// Commit the changes
 	cmd = exec.Command("git", "add", targetDir)
 	if output, err := cmd.CombinedOutput(); err != nil {
@@ -106,3 +112,24 @@ func updateOhMyZsh() error {
 	return nil
 }
 
+func stripCustomFromGitignore(path string) error {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		}
+		return err
+	}
+
+	lines := strings.Split(string(data), "\n")
+	out := make([]string, 0, len(lines))
+	for i := range lines {
+		line := strings.TrimSpace(lines[i])
+		if line == "# custom files" || line == "custom/" {
+			continue
+		}
+		out = append(out, lines[i])
+	}
+
+	return os.WriteFile(path, []byte(strings.Join(out, "\n")), 0644)
+}
