@@ -12,7 +12,7 @@ dependencies:
   plugins/gradle:
     repo: gradle/gradle-completion
     branch: master
-    version: dd3a8adb47e51b1f6e4dc180cb04bd02d5fccd4a
+    version: d8bc301a1fdeed8dc1dd9675138e1d9b7ddc5e4e
     precopy: |
       set -e
       find . ! -name _gradle ! -name LICENSE -delete
@@ -30,7 +30,7 @@ dependencies:
   plugins/kube-ps1:
     repo: jonmosco/kube-ps1
     branch: master
-    version: 9b41c091d5dd4a99e58cf58b5d98a4847937b1bb
+    version: 7d575c6d53f60130159a3db28e33d2967201cd64
     precopy: |
       set -e
       find . ! -name kube-ps1.sh ! -name LICENSE ! -name README.md -delete
@@ -46,7 +46,7 @@ dependencies:
   plugins/z:
     branch: master
     repo: agkozak/zsh-z
-    version: cf9225feebfae55e557e103e95ce20eca5eff270
+    version: acd0e1984df350c189f8f9c4956ec586b6c73fca
     precopy: |
       set -e
       test -e README.md && mv -f README.md MANUAL.md

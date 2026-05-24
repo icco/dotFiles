@@ -87,8 +87,8 @@ _build_tmux_alias "tkss" "kill-session" "-t"
 
 unfunction _build_tmux_alias
 
-# Determine if the terminal supports 256 colors
-if [[ $terminfo[colors] == 256 ]]; then
+# Determine if the terminal supports at least 256 colors
+if (( ${+terminfo[colors]} )) && [[ $terminfo[colors] -ge 256 ]]; then
   export ZSH_TMUX_TERM=$ZSH_TMUX_FIXTERM_WITH_256COLOR
 else
   export ZSH_TMUX_TERM=$ZSH_TMUX_FIXTERM_WITHOUT_256COLOR
@@ -183,7 +183,10 @@ function _tmux_directory_session() {
   # human friendly unique session name for this directory
   local session_name="${dir}-${md5:0:6}"
   # create or attach to the session
-  tmux new -As "$session_name"
+  local -a tmux_cmd
+  tmux_cmd=(command tmux)
+  [[ "$ZSH_TMUX_UNICODE" == "true" ]] && tmux_cmd+=(-u)
+  $tmux_cmd new -As "$session_name"
 }
 
 alias tds=_tmux_directory_session
