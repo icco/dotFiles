@@ -10,8 +10,8 @@ tasks:
     desc: Update vim plugins and sort spell file
     cmd: go run ./dotool vim
   test:
-    desc: Run tests
-    cmd: go run ./dotool test
+    desc: Run Go tests
+    cmd: go test ./...
   omz:
     desc: Update oh-my-zsh
     cmd: go run ./dotool omz
