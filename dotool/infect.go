@@ -109,16 +109,19 @@ func linkBinFiles(homeDir string) error {
 
 // createSymlink replaces target with a symlink, backing the existing file up to ~/tmp.
 func createSymlink(source, target, homeDir string) error {
-	if _, err := os.Lstat(target); err == nil {
-		backupDir := filepath.Join(homeDir, "tmp")
-		if err := os.MkdirAll(backupDir, 0755); err != nil {
-			return fmt.Errorf("failed to create backup directory %s: %w", backupDir, err)
-		}
-		backupPath := filepath.Join(backupDir, fmt.Sprintf("%s.%d.backup", filepath.Base(target), time.Now().Unix()))
+	if info, err := os.Lstat(target); err == nil {
+		// A pre-existing symlink has no data to preserve — just drop it.
+		if info.Mode()&os.ModeSymlink == 0 {
+			backupDir := filepath.Join(homeDir, "tmp")
+			if err := os.MkdirAll(backupDir, 0755); err != nil {
+				return fmt.Errorf("failed to create backup directory %s: %w", backupDir, err)
+			}
+			backupPath := filepath.Join(backupDir, fmt.Sprintf("%s.%d.backup", filepath.Base(target), time.Now().Unix()))
 
-		log.Printf("Backing up %s to %s\n", target, backupPath)
-		if err := backupFile(target, backupPath); err != nil {
-			return fmt.Errorf("failed to backup %s: %w", target, err)
+			log.Printf("Backing up %s to %s\n", target, backupPath)
+			if err := backupFile(target, backupPath); err != nil {
+				return fmt.Errorf("failed to backup %s: %w", target, err)
+			}
 		}
 
 		if err := os.RemoveAll(target); err != nil {

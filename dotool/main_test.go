@@ -24,20 +24,50 @@ func TestCreateSymlink(t *testing.T) {
 	tempDir := t.TempDir()
 
 	sourceFile := filepath.Join(tempDir, "source.txt")
-	targetFile := filepath.Join(tempDir, "target.txt")
 	if err := os.WriteFile(sourceFile, []byte("test content"), 0644); err != nil {
 		t.Fatalf("failed to create source file: %v", err)
 	}
 
-	if err := createSymlink(sourceFile, targetFile, tempDir); err != nil {
-		t.Errorf("createSymlink() error = %v", err)
-	}
-	if _, err := os.Lstat(targetFile); err != nil {
-		t.Errorf("symlink was not created at %s: %v", targetFile, err)
+	countBackups := func() int {
+		entries, _ := os.ReadDir(filepath.Join(tempDir, "tmp"))
+		return len(entries)
 	}
 
-	// Re-linking over an existing target should succeed (and back the old one up).
-	if err := createSymlink(sourceFile, targetFile, tempDir); err != nil {
-		t.Errorf("createSymlink() over existing file error = %v", err)
-	}
+	t.Run("fresh target", func(t *testing.T) {
+		target := filepath.Join(tempDir, "fresh.txt")
+		if err := createSymlink(sourceFile, target, tempDir); err != nil {
+			t.Fatalf("createSymlink() error = %v", err)
+		}
+		if _, err := os.Lstat(target); err != nil {
+			t.Errorf("symlink not created: %v", err)
+		}
+	})
+
+	t.Run("over existing symlink — no backup", func(t *testing.T) {
+		target := filepath.Join(tempDir, "linked.txt")
+		if err := createSymlink(sourceFile, target, tempDir); err != nil {
+			t.Fatalf("setup symlink: %v", err)
+		}
+		before := countBackups()
+		if err := createSymlink(sourceFile, target, tempDir); err != nil {
+			t.Fatalf("re-link error: %v", err)
+		}
+		if countBackups() != before {
+			t.Errorf("expected no new backup when replacing a symlink")
+		}
+	})
+
+	t.Run("over existing regular file — backed up", func(t *testing.T) {
+		target := filepath.Join(tempDir, "regular.txt")
+		if err := os.WriteFile(target, []byte("pre-existing"), 0644); err != nil {
+			t.Fatalf("setup file: %v", err)
+		}
+		before := countBackups()
+		if err := createSymlink(sourceFile, target, tempDir); err != nil {
+			t.Fatalf("link error: %v", err)
+		}
+		if countBackups() != before+1 {
+			t.Errorf("expected one new backup when replacing a regular file")
+		}
+	})
 }
