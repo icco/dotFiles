@@ -11,7 +11,6 @@ import (
 
 // updateOhMyZsh clones the latest oh-my-zsh and copies everything except .git and custom
 func updateOhMyZsh() error {
-	// Create temporary directory for cloning
 	tmpDir, err := os.MkdirTemp("", "ohmyzsh-update-*")
 	if err != nil {
 		return fmt.Errorf("failed to create temp directory: %w", err)
@@ -21,16 +20,13 @@ func updateOhMyZsh() error {
 	cloneDir := filepath.Join(tmpDir, "ohmyzsh")
 	log.Printf("Cloning oh-my-zsh to %s...\n", cloneDir)
 
-	// Clone oh-my-zsh repository
-	cmd := exec.Command("git", "clone", "https://github.com/ohmyzsh/ohmyzsh.git", cloneDir)
-	if output, err := cmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("failed to clone oh-my-zsh: %s, %w", string(output), err)
+	if out, err := exec.Command("git", "clone", "https://github.com/ohmyzsh/ohmyzsh.git", cloneDir).CombinedOutput(); err != nil {
+		return fmt.Errorf("failed to clone oh-my-zsh: %s: %w", string(out), err)
 	}
 
-	// Target directory
 	targetDir := "link/oh-my-zsh"
 
-	// Backup custom directory if it exists
+	// Preserve the local custom/ directory across the wipe-and-recopy below.
 	customDir := filepath.Join(targetDir, "custom")
 	customBackup := ""
 	if _, err := os.Stat(customDir); err == nil {
@@ -41,44 +37,39 @@ func updateOhMyZsh() error {
 		}
 	}
 
-	// Remove existing oh-my-zsh directory (except custom)
 	if err := os.RemoveAll(targetDir); err != nil {
 		return fmt.Errorf("failed to remove existing oh-my-zsh directory: %w", err)
 	}
-
-	// Create target directory
 	if err := os.MkdirAll(targetDir, 0755); err != nil {
 		return fmt.Errorf("failed to create target directory: %w", err)
 	}
 
-	// Copy everything from cloned repo except .git and custom
 	entries, err := os.ReadDir(cloneDir)
 	if err != nil {
 		return fmt.Errorf("failed to read cloned directory: %w", err)
 	}
-
 	for _, entry := range entries {
-		if entry.Name() == ".git" || entry.Name() == "custom" {
-			log.Printf("Skipping %s...\n", entry.Name())
+		name := entry.Name()
+		if name == ".git" || name == "custom" {
+			log.Printf("Skipping %s...\n", name)
 			continue
 		}
 
-		srcPath := filepath.Join(cloneDir, entry.Name())
-		dstPath := filepath.Join(targetDir, entry.Name())
+		srcPath := filepath.Join(cloneDir, name)
+		dstPath := filepath.Join(targetDir, name)
 
-		log.Printf("Copying %s...\n", entry.Name())
+		log.Printf("Copying %s...\n", name)
 		if entry.IsDir() {
 			if err := copyDir(srcPath, dstPath); err != nil {
-				return fmt.Errorf("failed to copy directory %s: %w", entry.Name(), err)
+				return fmt.Errorf("failed to copy directory %s: %w", name, err)
 			}
-		} else {
-			if err := copyFile(srcPath, dstPath); err != nil {
-				return fmt.Errorf("failed to copy file %s: %w", entry.Name(), err)
-			}
+			continue
+		}
+		if err := copyFile(srcPath, dstPath); err != nil {
+			return fmt.Errorf("failed to copy file %s: %w", name, err)
 		}
 	}
 
-	// Restore custom directory if it was backed up
 	if customBackup != "" {
 		log.Printf("Restoring custom directory from backup...\n")
 		if err := copyDir(customBackup, customDir); err != nil {
@@ -86,30 +77,16 @@ func updateOhMyZsh() error {
 		}
 	}
 
-	// Strip the upstream `custom/` rule from .gitignore — we commit custom/
-	gitignorePath := filepath.Join(targetDir, ".gitignore")
-	if err := stripCustomFromGitignore(gitignorePath); err != nil {
+	// Strip the upstream `custom/` rule from .gitignore — we commit custom/.
+	if err := stripCustomFromGitignore(filepath.Join(targetDir, ".gitignore")); err != nil {
 		return fmt.Errorf("failed to strip custom from .gitignore: %w", err)
 	}
 
-	// Commit the changes
-	cmd = exec.Command("git", "add", targetDir)
-	if output, err := cmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("failed to add oh-my-zsh to git: %s, %w", string(output), err)
+	if out, err := exec.Command("git", "add", targetDir).CombinedOutput(); err != nil {
+		return fmt.Errorf("failed to add oh-my-zsh to git: %s: %w", string(out), err)
 	}
 
-	cmd = exec.Command("git", "commit", "-m", "chore: oh-my-zsh update")
-	if output, err := cmd.CombinedOutput(); err != nil {
-		// Check if the error is due to no changes to commit
-		if strings.Contains(string(output), "nothing to commit") ||
-			strings.Contains(string(output), "nothing added to commit") {
-			log.Println("No changes to commit - oh-my-zsh was already up to date")
-		} else {
-			return fmt.Errorf("failed to commit oh-my-zsh changes: %s, %w", string(output), err)
-		}
-	}
-
-	return nil
+	return runGit("commit", "-m", "chore: oh-my-zsh update")
 }
 
 func stripCustomFromGitignore(path string) error {
@@ -123,12 +100,12 @@ func stripCustomFromGitignore(path string) error {
 
 	lines := strings.Split(string(data), "\n")
 	out := make([]string, 0, len(lines))
-	for i := range lines {
-		line := strings.TrimSpace(lines[i])
-		if line == "# custom files" || line == "custom/" {
+	for _, line := range lines {
+		trimmed := strings.TrimSpace(line)
+		if trimmed == "# custom files" || trimmed == "custom/" {
 			continue
 		}
-		out = append(out, lines[i])
+		out = append(out, line)
 	}
 
 	return os.WriteFile(path, []byte(strings.Join(out, "\n")), 0644)
