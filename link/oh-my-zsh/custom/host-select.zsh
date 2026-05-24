@@ -9,6 +9,8 @@ if [[ "$host" == "localhost" ]] && (( $+commands[getprop] )); then
    [[ -n "$real" ]] && host=$real
 fi
 
+export SHELL_HOST=$host
+
 if [[ -f $custom/$host.zsh ]]; then
    . $custom/$host.zsh
    echo "===> Loaded $host.zsh";
