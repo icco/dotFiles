@@ -85,7 +85,7 @@ func updateOhMyZsh() error {
 		return fmt.Errorf("failed to add oh-my-zsh to git: %s: %w", string(out), err)
 	}
 
-	return runGit("commit", "-m", "chore: oh-my-zsh update")
+	return gitCommitAll("chore: oh-my-zsh update")
 }
 
 func stripCustomFromGitignore(path string) error {
