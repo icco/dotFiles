@@ -14,13 +14,14 @@ sync_dir () {
     rm -f .DS_Store
     if [ -d $PROJ$f/.git/ ]; then
       git fetch --prune
-      upstream=$(git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null)
-      if [ -n "$upstream" ] && ! git rev-parse --verify --quiet "$upstream" >/dev/null; then
-        remote=${upstream%%/*}
+      branch=$(git symbolic-ref --short HEAD 2>/dev/null)
+      track=$(git for-each-ref --format='%(upstream:track)' "refs/heads/$branch" 2>/dev/null)
+      if [ "$track" = "[gone]" ]; then
+        remote=$(git config "branch.$branch.remote")
         default=$(git symbolic-ref --short "refs/remotes/$remote/HEAD" 2>/dev/null) \
           || { git remote set-head "$remote" -a >/dev/null 2>&1 && default=$(git symbolic-ref --short "refs/remotes/$remote/HEAD" 2>/dev/null); }
         if [ -n "$default" ]; then
-          echo "Upstream $upstream is gone; switching to ${default#$remote/}."
+          echo "Upstream for $branch is gone; switching to ${default#$remote/}."
           git checkout "${default#$remote/}"
         fi
       fi
