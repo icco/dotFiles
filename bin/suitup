@@ -14,6 +14,16 @@ sync_dir () {
     rm -f .DS_Store
     if [ -d $PROJ$f/.git/ ]; then
       git fetch --prune
+      upstream=$(git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null)
+      if [ -n "$upstream" ] && ! git rev-parse --verify --quiet "$upstream" >/dev/null; then
+        remote=${upstream%%/*}
+        default=$(git symbolic-ref --short "refs/remotes/$remote/HEAD" 2>/dev/null) \
+          || { git remote set-head "$remote" -a >/dev/null 2>&1 && default=$(git symbolic-ref --short "refs/remotes/$remote/HEAD" 2>/dev/null); }
+        if [ -n "$default" ]; then
+          echo "Upstream $upstream is gone; switching to ${default#$remote/}."
+          git checkout "${default#$remote/}"
+        fi
+      fi
       git pull
       git status -sb
       return 0;
