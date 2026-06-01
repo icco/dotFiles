@@ -24,7 +24,7 @@ func TestCreateSymlink(t *testing.T) {
 	tempDir := t.TempDir()
 
 	sourceFile := filepath.Join(tempDir, "source.txt")
-	if err := os.WriteFile(sourceFile, []byte("test content"), 0644); err != nil {
+	if err := os.WriteFile(sourceFile, []byte("test content"), 0600); err != nil {
 		t.Fatalf("failed to create source file: %v", err)
 	}
 
@@ -59,7 +59,7 @@ func TestCreateSymlink(t *testing.T) {
 
 	t.Run("over existing regular file — backed up", func(t *testing.T) {
 		target := filepath.Join(tempDir, "regular.txt")
-		if err := os.WriteFile(target, []byte("pre-existing"), 0644); err != nil {
+		if err := os.WriteFile(target, []byte("pre-existing"), 0600); err != nil {
 			t.Fatalf("setup file: %v", err)
 		}
 		before := countBackups()
