@@ -90,4 +90,8 @@ export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"
 # zmv
 autoload -Uz zmv
 
+# Wiz
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /opt/homebrew/bin/wizcli wizcli
+
 # vim: set filetype=zsh:
