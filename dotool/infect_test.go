@@ -10,13 +10,13 @@ func TestLinkDirectory(t *testing.T) {
 	tempDir := t.TempDir()
 
 	sourceDir := filepath.Join(tempDir, "link")
-	if err := os.MkdirAll(sourceDir, 0755); err != nil {
+	if err := os.MkdirAll(sourceDir, 0750); err != nil {
 		t.Fatalf("failed to create source directory: %v", err)
 	}
 
 	testFiles := []string{"file1.txt", "file2.txt", "config.conf"}
 	for _, file := range testFiles {
-		if err := os.WriteFile(filepath.Join(sourceDir, file), []byte("test content for "+file), 0644); err != nil {
+		if err := os.WriteFile(filepath.Join(sourceDir, file), []byte("test content for "+file), 0600); err != nil {
 			t.Fatalf("failed to create test file %s: %v", file, err)
 		}
 	}
@@ -57,16 +57,16 @@ func TestLinkSpecificFiles(t *testing.T) {
 	}
 	for filePath, content := range testFiles {
 		fullPath := filepath.Join(tempDir, "specific", filePath)
-		if err := os.MkdirAll(filepath.Dir(fullPath), 0755); err != nil {
+		if err := os.MkdirAll(filepath.Dir(fullPath), 0750); err != nil {
 			t.Fatalf("failed to create directory for %s: %v", filePath, err)
 		}
-		if err := os.WriteFile(fullPath, []byte(content), 0644); err != nil {
+		if err := os.WriteFile(fullPath, []byte(content), 0600); err != nil {
 			t.Fatalf("failed to create test file %s: %v", filePath, err)
 		}
 	}
 
 	homeDir := filepath.Join(tempDir, "home")
-	if err := os.MkdirAll(homeDir, 0755); err != nil {
+	if err := os.MkdirAll(homeDir, 0750); err != nil {
 		t.Fatalf("failed to create home directory: %v", err)
 	}
 
@@ -85,18 +85,18 @@ func TestLinkBinFiles(t *testing.T) {
 	tempDir := t.TempDir()
 	t.Chdir(tempDir)
 
-	if err := os.MkdirAll(filepath.Join(tempDir, "bin"), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Join(tempDir, "bin"), 0750); err != nil {
 		t.Fatalf("failed to create bin directory: %v", err)
 	}
 	testFiles := []string{"script1.sh", "script2.py", "tool"}
 	for _, file := range testFiles {
-		if err := os.WriteFile(filepath.Join(tempDir, "bin", file), []byte("#!/bin/bash\necho test"), 0755); err != nil {
+		if err := os.WriteFile(filepath.Join(tempDir, "bin", file), []byte("#!/bin/bash\necho test"), 0600); err != nil {
 			t.Fatalf("failed to create test file %s: %v", file, err)
 		}
 	}
 
 	homeDir := filepath.Join(tempDir, "home")
-	if err := os.MkdirAll(filepath.Join(homeDir, "bin"), 0755); err != nil {
+	if err := os.MkdirAll(filepath.Join(homeDir, "bin"), 0750); err != nil {
 		t.Fatalf("failed to create home bin directory: %v", err)
 	}
 

@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -36,7 +37,7 @@ var vimPlugins = []string{
 	"wakatime/vim-wakatime",
 }
 
-func sortVimSpell() error {
+func sortVimSpell(ctx context.Context) error {
 	log.Println("Sorting vim spell...")
 
 	spellFile := "link/vim/spell/en.utf-8.add"
@@ -48,7 +49,7 @@ func sortVimSpell() error {
 		return fmt.Errorf("failed to sort spell file: %w", err)
 	}
 
-	if err := gitCommitAll("vim spell sort"); err != nil {
+	if err := gitCommitAll(ctx, "vim spell sort"); err != nil {
 		return err
 	}
 
@@ -56,16 +57,16 @@ func sortVimSpell() error {
 	return nil
 }
 
-func upgradeVimPlugins() error {
+func upgradeVimPlugins(ctx context.Context) error {
 	log.Println("Upgrading vim plugins...")
 
 	for _, repo := range vimPlugins {
-		if err := upgradePlugin(repo); err != nil {
+		if err := upgradePlugin(ctx, repo); err != nil {
 			return fmt.Errorf("failed to upgrade plugin %s: %w", repo, err)
 		}
 	}
 
-	if err := gitCommitAll("vim upgrades"); err != nil {
+	if err := gitCommitAll(ctx, "vim upgrades"); err != nil {
 		return err
 	}
 
@@ -73,7 +74,7 @@ func upgradeVimPlugins() error {
 	return nil
 }
 
-func upgradePlugin(repo string) error {
+func upgradePlugin(ctx context.Context, repo string) error {
 	log.Printf("Upgrading plugin: %s\n", repo)
 
 	owner, name, ok := strings.Cut(repo, "/")
@@ -88,7 +89,8 @@ func upgradePlugin(repo string) error {
 	}
 
 	cloneURL := fmt.Sprintf("git@github.com:%s.git", repo)
-	if out, err := exec.Command("git", "clone", cloneURL, pluginDir).CombinedOutput(); err != nil {
+	// #nosec G204 -- repo comes from the program's hardcoded vimPlugins list, not user input.
+	if out, err := exec.CommandContext(ctx, "git", "clone", cloneURL, pluginDir).CombinedOutput(); err != nil {
 		return fmt.Errorf("failed to clone plugin %s: %s: %w", repo, string(out), err)
 	}
 
@@ -102,6 +104,7 @@ func upgradePlugin(repo string) error {
 			return err
 		}
 		if d.IsDir() && d.Name() == ".terraform" {
+			// #nosec G122 -- pluginDir is program-controlled, not user-supplied; symlink TOCTOU not a concern for a local dev tool.
 			if err := os.RemoveAll(path); err != nil {
 				return err
 			}
@@ -113,19 +116,20 @@ func upgradePlugin(repo string) error {
 		return fmt.Errorf("failed to scrub .terraform from %s: %w", pluginDir, walkErr)
 	}
 
-	if out, err := exec.Command("git", "add", pluginDir).CombinedOutput(); err != nil {
-		return fmt.Errorf("failed to add plugin %s to git: %s: %w", pluginDir, string(out), err)
+	if err := runGit(ctx, "add", pluginDir); err != nil {
+		return fmt.Errorf("failed to add plugin %s to git: %w", pluginDir, err)
 	}
 
 	return nil
 }
 
 func sortSpellFile(filename string) error {
+	// #nosec G304 -- filename is a program-controlled path under link/vim/spell.
 	file, err := os.Open(filename)
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
 	seen := make(map[string]bool)
 	var lines []string
@@ -150,5 +154,6 @@ func sortSpellFile(filename string) error {
 		return strings.Compare(strings.ToLower(a), strings.ToLower(b))
 	})
 
+	// #nosec G306 -- vim spell file is a user-facing config; 0644 is the standard mode.
 	return os.WriteFile(filename, []byte(strings.Join(lines, "\n")+"\n"), 0644)
 }

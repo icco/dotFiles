@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"os"
 	"path/filepath"
 	"slices"
@@ -13,7 +14,7 @@ func TestSortSpellFile(t *testing.T) {
 	spellFile := filepath.Join(tempDir, "en.utf-8.add")
 
 	input := "zebra\nalpha\nBeta\nzebra\nalpha\n\nbeta\n"
-	if err := os.WriteFile(spellFile, []byte(input), 0644); err != nil {
+	if err := os.WriteFile(spellFile, []byte(input), 0600); err != nil {
 		t.Fatalf("failed to create spell file: %v", err)
 	}
 
@@ -21,6 +22,7 @@ func TestSortSpellFile(t *testing.T) {
 		t.Fatalf("sortSpellFile() error = %v", err)
 	}
 
+	// #nosec G304 -- spellFile is a t.TempDir() path in test scope.
 	data, err := os.ReadFile(spellFile)
 	if err != nil {
 		t.Fatalf("failed to read spell file: %v", err)
@@ -35,7 +37,7 @@ func TestSortSpellFile(t *testing.T) {
 
 func TestSortVimSpellMissingFile(t *testing.T) {
 	t.Chdir(t.TempDir())
-	if err := sortVimSpell(); err == nil {
+	if err := sortVimSpell(context.Background()); err == nil {
 		t.Error("sortVimSpell() should return error when spell file doesn't exist")
 	}
 }
@@ -44,7 +46,7 @@ func TestUpgradePluginInvalidFormat(t *testing.T) {
 	cases := []string{"invalid-repo-format", "", "/missing-owner", "missing-name/"}
 	for _, repo := range cases {
 		t.Run(repo, func(t *testing.T) {
-			if err := upgradePlugin(repo); err == nil {
+			if err := upgradePlugin(context.Background(), repo); err == nil {
 				t.Errorf("upgradePlugin(%q) expected error", repo)
 			}
 		})

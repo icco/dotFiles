@@ -12,7 +12,7 @@ import (
 func buildStructure(homeDir string) error {
 	for _, dir := range []string{"Projects", "bin", "tmp"} {
 		dirPath := filepath.Join(homeDir, dir)
-		if err := os.MkdirAll(dirPath, 0755); err != nil {
+		if err := os.MkdirAll(dirPath, 0750); err != nil {
 			return fmt.Errorf("failed to create directory %s: %w", dirPath, err)
 		}
 	}
@@ -81,7 +81,7 @@ func linkSpecificFiles(homeDir string) error {
 		}
 
 		targetPath := filepath.Join(homeDir, "."+relativePath)
-		if err := os.MkdirAll(filepath.Dir(targetPath), 0755); err != nil {
+		if err := os.MkdirAll(filepath.Dir(targetPath), 0750); err != nil {
 			return fmt.Errorf("failed to create directory for %s: %w", targetPath, err)
 		}
 
@@ -113,7 +113,7 @@ func createSymlink(source, target, homeDir string) error {
 		// A pre-existing symlink has no data to preserve — just drop it.
 		if info.Mode()&os.ModeSymlink == 0 {
 			backupDir := filepath.Join(homeDir, "tmp")
-			if err := os.MkdirAll(backupDir, 0755); err != nil {
+			if err := os.MkdirAll(backupDir, 0750); err != nil {
 				return fmt.Errorf("failed to create backup directory %s: %w", backupDir, err)
 			}
 			backupPath := filepath.Join(backupDir, fmt.Sprintf("%s.%d.backup", filepath.Base(target), time.Now().Unix()))
@@ -159,11 +159,13 @@ func copyFile(src, dst string) error {
 		return err
 	}
 
+	// #nosec G304 -- src is a program-controlled path inside link/ or a temp clone dir.
 	data, err := os.ReadFile(src)
 	if err != nil {
 		return err
 	}
 
+	// #nosec G306,G703 -- preserves srcInfo.Mode() to faithfully mirror the source file; dst is program-controlled.
 	return os.WriteFile(dst, data, srcInfo.Mode())
 }
 

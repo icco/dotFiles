@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -9,17 +10,18 @@ import (
 	"strings"
 )
 
-func updateOhMyZsh() error {
+func updateOhMyZsh(ctx context.Context) error {
 	tmpDir, err := os.MkdirTemp("", "ohmyzsh-update-*")
 	if err != nil {
 		return fmt.Errorf("failed to create temp directory: %w", err)
 	}
-	defer os.RemoveAll(tmpDir)
+	defer func() { _ = os.RemoveAll(tmpDir) }()
 
 	cloneDir := filepath.Join(tmpDir, "ohmyzsh")
 	log.Printf("Cloning oh-my-zsh to %s...\n", cloneDir)
 
-	if out, err := exec.Command("git", "clone", "https://github.com/ohmyzsh/ohmyzsh.git", cloneDir).CombinedOutput(); err != nil {
+	// #nosec G204 -- cloneDir is a program-controlled temp path; clone URL is hardcoded.
+	if out, err := exec.CommandContext(ctx, "git", "clone", "https://github.com/ohmyzsh/ohmyzsh.git", cloneDir).CombinedOutput(); err != nil {
 		return fmt.Errorf("failed to clone oh-my-zsh: %s: %w", string(out), err)
 	}
 
@@ -39,7 +41,7 @@ func updateOhMyZsh() error {
 	if err := os.RemoveAll(targetDir); err != nil {
 		return fmt.Errorf("failed to remove existing oh-my-zsh directory: %w", err)
 	}
-	if err := os.MkdirAll(targetDir, 0755); err != nil {
+	if err := os.MkdirAll(targetDir, 0750); err != nil {
 		return fmt.Errorf("failed to create target directory: %w", err)
 	}
 
@@ -81,14 +83,15 @@ func updateOhMyZsh() error {
 		return fmt.Errorf("failed to strip custom from .gitignore: %w", err)
 	}
 
-	if out, err := exec.Command("git", "add", targetDir).CombinedOutput(); err != nil {
-		return fmt.Errorf("failed to add oh-my-zsh to git: %s: %w", string(out), err)
+	if err := runGit(ctx, "add", targetDir); err != nil {
+		return fmt.Errorf("failed to add oh-my-zsh to git: %w", err)
 	}
 
-	return gitCommitAll("chore: oh-my-zsh update")
+	return gitCommitAll(ctx, "chore: oh-my-zsh update")
 }
 
 func stripCustomFromGitignore(path string) error {
+	// #nosec G304 -- path is a program-controlled location inside link/oh-my-zsh.
 	data, err := os.ReadFile(path)
 	if err != nil {
 		if os.IsNotExist(err) {
@@ -107,5 +110,6 @@ func stripCustomFromGitignore(path string) error {
 		out = append(out, line)
 	}
 
+	// #nosec G306,G703 -- .gitignore is a user-facing config at a program-controlled path; 0644 is the standard mode.
 	return os.WriteFile(path, []byte(strings.Join(out, "\n")), 0644)
 }

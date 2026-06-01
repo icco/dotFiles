@@ -1,6 +1,9 @@
+// Package main implements dotool, a CLI for managing dotfiles via symlinks
+// and for updating bundled vim plugins and oh-my-zsh.
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -17,19 +20,19 @@ var rootCmd = &cobra.Command{
 var infectCmd = &cobra.Command{
 	Use:   "infect",
 	Short: "Install dotfiles and link all configuration files",
-	RunE:  func(cmd *cobra.Command, args []string) error { return runInfect() },
+	RunE:  func(_ *cobra.Command, _ []string) error { return runInfect() },
 }
 
 var vimCmd = &cobra.Command{
 	Use:   "vim",
 	Short: "Update vim plugins and sort spell file",
-	RunE:  func(cmd *cobra.Command, args []string) error { return runVim() },
+	RunE:  func(cmd *cobra.Command, _ []string) error { return runVim(cmd.Context()) },
 }
 
 var omzCmd = &cobra.Command{
 	Use:   "omz",
 	Short: "Update oh-my-zsh to latest version",
-	RunE:  func(cmd *cobra.Command, args []string) error { return updateOhMyZsh() },
+	RunE:  func(cmd *cobra.Command, _ []string) error { return updateOhMyZsh(cmd.Context()) },
 }
 
 func init() {
@@ -56,14 +59,14 @@ func runInfect() error {
 	return nil
 }
 
-func runVim() error {
+func runVim(ctx context.Context) error {
 	log.Println("Running vim command...")
 
-	if err := sortVimSpell(); err != nil {
+	if err := sortVimSpell(ctx); err != nil {
 		return fmt.Errorf("failed to sort vim spell: %w", err)
 	}
 
-	if err := upgradeVimPlugins(); err != nil {
+	if err := upgradeVimPlugins(ctx); err != nil {
 		return fmt.Errorf("failed to upgrade vim plugins: %w", err)
 	}
 
