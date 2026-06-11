@@ -50,6 +50,7 @@ brew "yarn"
 brew "yq"
 brew "zoxide"
 brew "zsh"
+brew "wakatime"
 brew "sheeki03/tap/tirith"
 
 cask "1password"
