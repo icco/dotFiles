@@ -1,7 +1,7 @@
 #! /bin/zsh
 
 brew update
-brew upgrade
+brew upgrade -y
 brew cleanup
 
 cd ~/Projects/dotfiles && \
