@@ -21,8 +21,8 @@ export PATH="$GOPATH/bin:$PATH"
 export GO111MODULE="on"
 export GOPRIVATE="github.com/pinginc/*"
 
-# search!
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# search! (fzf >= 0.48 integration: CTRL-R history, CTRL-T files, ALT-C cd, **<TAB> completion)
+(( $+commands[fzf] )) && source <(fzf --zsh)
 alias fr='open -R "$(fzf)"'
 alias f='open "$(fzf)"'
 alias fv='vim "$(fzf)"'
