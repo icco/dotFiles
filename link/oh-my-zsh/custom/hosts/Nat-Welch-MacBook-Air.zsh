@@ -29,6 +29,9 @@ alias fv='vim "$(fzf)"'
 
 alias k='kubectl'
 
+# krew (kubectl plugin manager) bin
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
 wordcount() {
   pandoc --lua-filter wordcount.lua "$@"
 }
