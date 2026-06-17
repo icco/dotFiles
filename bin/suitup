@@ -16,12 +16,14 @@ sync_dir () {
       git fetch --prune
       branch=$(git symbolic-ref --short HEAD 2>/dev/null)
       track=$(git for-each-ref --format='%(upstream:track)' "refs/heads/$branch" 2>/dev/null)
-      if [ "$track" = "[gone]" ]; then
+      upstream=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null)
+      if [ "$track" = "[gone]" ] || [ -z "$upstream" ]; then
         remote=$(git config "branch.$branch.remote")
+        [ -n "$remote" ] || remote=origin
         default=$(git symbolic-ref --short "refs/remotes/$remote/HEAD" 2>/dev/null) \
           || { git remote set-head "$remote" -a >/dev/null 2>&1 && default=$(git symbolic-ref --short "refs/remotes/$remote/HEAD" 2>/dev/null); }
-        if [ -n "$default" ]; then
-          echo "Upstream for $branch is gone; switching to ${default#$remote/}."
+        if [ -n "$default" ] && [ "${default#$remote/}" != "$branch" ]; then
+          echo "Upstream for $branch is gone/unresolvable; switching to ${default#$remote/}."
           git checkout "${default#$remote/}"
         fi
       fi
