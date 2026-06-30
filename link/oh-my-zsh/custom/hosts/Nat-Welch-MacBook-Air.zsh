@@ -1,6 +1,9 @@
 # ZSH config for work mbp
 export TZ="UTC"
 
+export ART_API_URL=https://art.natwelch.com
+export ART_API_AUDIENCE=32555940559.apps.googleusercontent.com
+
 # Add iterm2 support
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
