@@ -26,7 +26,7 @@
 [color]
 	ui = auto
 [commit]
-	gpgsign = false
+	gpgsign = true
 	verbose = true
 [core]
 	abbrev = 12
@@ -61,8 +61,6 @@
 	autocorrect = 1
 [http]
 	cookiefile = ~/.gitcookies
-[includeIf "gitdir:~/HFP/"]
-	path = "~/.hfp.gitconfig"
 [includeIf "gitdir:~/Work/"]
 	path = "~/.work.gitconfig"
 [init]
@@ -91,3 +89,5 @@
 [merge "mergiraf"]
 	name = mergiraf
 	driver = mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L
+[tag]
+	gpgsign = true
