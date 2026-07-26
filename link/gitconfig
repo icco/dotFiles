@@ -26,7 +26,7 @@
 [color]
 	ui = auto
 [commit]
-	gpgsign = true
+	gpgsign = false
 	verbose = true
 [core]
 	abbrev = 12
