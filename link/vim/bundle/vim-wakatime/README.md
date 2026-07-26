@@ -54,6 +54,11 @@ The vim-wakatime plugin automatically downloads and updates [wakatime-cli][wakat
 WakaTime plugins also share a common [$WAKATIME_HOME/.wakatime.cfg config file][wakatime-cli-config].
 `$WAKATIME_HOME` defaults to your `$HOME` folder.
 
+To disable the lualine status bar item:
+```lua
+{ 'wakatime/vim-wakatime', lazy = false, opts = { status_bar_enabled = false } }
+```
+
 
 ## Troubleshooting
 

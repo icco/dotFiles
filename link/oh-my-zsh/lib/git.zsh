@@ -36,7 +36,7 @@ function _omz_git_prompt_info() {
     && upstream=" -> ${upstream}"
   fi
 
-  echo "${ZSH_THEME_GIT_PROMPT_PREFIX}${ref:gs/%/%%}${upstream:gs/%/%%}$(parse_git_dirty)${ZSH_THEME_GIT_PROMPT_SUFFIX}"
+  echo "${ZSH_THEME_GIT_PROMPT_PREFIX}${ref//\%/%%}${upstream//\%/%%}$(parse_git_dirty)${ZSH_THEME_GIT_PROMPT_SUFFIX}"
 }
 
 function _omz_git_prompt_status() {
@@ -117,7 +117,7 @@ function _omz_git_prompt_status() {
   fi
 
   # For each status prefix, do a regex comparison
-  for status_prefix in ${(k)prefix_constant_map}; do
+  for status_prefix in "${(@k)prefix_constant_map}"; do
     local status_constant="${prefix_constant_map[$status_prefix]}"
     local status_regex=$'(^|\n)'"$status_prefix"
 
@@ -162,13 +162,13 @@ if zstyle -t ':omz:alpha:lib:git' async-prompt \
   # or any of the other prompt variables
   function _defer_async_git_register() {
     # Check if git_prompt_info is used in a prompt variable
-    case "${PS1}:${PS2}:${PS3}:${PS4}:${RPROMPT}:${RPS1}:${RPS2}:${RPS3}:${RPS4}" in
+    case "${PS1}:${PS2}:${PS3}:${PS4}:${RPROMPT-}:${RPS1-}:${RPS2-}:${RPS3-}:${RPS4-}" in
     *(\$\(git_prompt_info\)|\`git_prompt_info\`)*)
       _omz_register_handler _omz_git_prompt_info
       ;;
     esac
 
-    case "${PS1}:${PS2}:${PS3}:${PS4}:${RPROMPT}:${RPS1}:${RPS2}:${RPS3}:${RPS4}" in
+    case "${PS1}:${PS2}:${PS3}:${PS4}:${RPROMPT-}:${RPS1-}:${RPS2-}:${RPS3-}:${RPS4-}" in
     *(\$\(git_prompt_status\)|\`git_prompt_status\`)*)
       _omz_register_handler _omz_git_prompt_status
       ;;
@@ -255,7 +255,7 @@ function git_remote_status() {
         fi
 
         if [[ -n $ZSH_THEME_GIT_PROMPT_REMOTE_STATUS_DETAILED ]]; then
-            git_remote_status="$ZSH_THEME_GIT_PROMPT_REMOTE_STATUS_PREFIX${remote:gs/%/%%}$git_remote_status_detailed$ZSH_THEME_GIT_PROMPT_REMOTE_STATUS_SUFFIX"
+            git_remote_status="$ZSH_THEME_GIT_PROMPT_REMOTE_STATUS_PREFIX${remote//\%/%%}$git_remote_status_detailed$ZSH_THEME_GIT_PROMPT_REMOTE_STATUS_SUFFIX"
         fi
 
         echo $git_remote_status

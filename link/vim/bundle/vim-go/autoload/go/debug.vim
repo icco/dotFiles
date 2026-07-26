@@ -1039,8 +1039,9 @@ function! s:eval_tree(var, nest, isMapOrSliceChild) abort
       endif
 
     elseif kind == 'String'
+      " Value can end up being of type Blob. Handle in s:printf_string_value.
       let v .= printf("%s[%d]%s", a:var.type, a:var.len,
-            \ len(a:var.value) > 0 ? ': ' . a:var.value : '')
+            \ len(a:var.value) > 0 ? ': ' . s:printf_string_value(a:var.value) : '')
 
     elseif kind == 'Slice' || kind == 'String' || kind == 'Map' || kind == 'Array'
       let v .= printf("%s[%d]", a:var.type, a:var.len)
@@ -1087,6 +1088,24 @@ function! s:eval_tree(var, nest, isMapOrSliceChild) abort
     endfor
   endif
   return v
+endfunction
+
+function! s:printf_string_value(value) abort
+  if type(a:value) != v:t_blob
+    return printf("%s", a:value)
+  endif
+  let l:specials = ['\a', '\b', '\t', '\n', '\v', '\f', '\r']
+  let l:str = ''
+  for b in a:value
+    if 7 <= b && b <= 13
+      let l:str .= specials[b-7]
+    elseif 32 <= b && b <= 126
+      let l:str .= printf("%c", b)
+    else
+      let l:str .= '\x'.printf("%.2x", b)
+    endif
+  endfor
+  return l:str
 endfunction
 
 function! s:eval(arg) abort

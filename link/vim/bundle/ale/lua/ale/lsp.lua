@@ -1,11 +1,41 @@
 local module = {}
 
+local function remove_invalid_lsp_table_keys(value, seen)
+    if type(value) ~= "table" then
+        return value
+    end
+
+    seen = seen or {}
+
+    if seen[value] then
+        return value
+    end
+
+    seen[value] = true
+
+    for key, child in pairs(value) do
+        local key_type = type(key)
+
+        if key_type ~= "number" and key_type ~= "string" then
+            value[key] = nil
+        else
+            remove_invalid_lsp_table_keys(child, seen)
+        end
+    end
+
+    return value
+end
+
 module.start = function(config)
     -- Neovim's luaeval sometimes adds a Boolean key to table we need to remove.
+    remove_invalid_lsp_table_keys(config.init_options)
+
+    -- ensure init_options uses empty_dict if empty
     if type(config.init_options) == "table"
-    and config.init_options[true] ~= nil
+    and next(config.init_options) == nil
+    and getmetatable(config.init_options) == nil
     then
-        config.init_options[true] = nil
+        config.init_options = vim.empty_dict()
     end
 
     -- If configuring LSP via a socket connection, then generate the cmd
@@ -130,10 +160,22 @@ module.send_message = function(args)
         return 0
     end
 
-    if args.is_notification then
-        -- For notifications we send a request and expect no direct response.
-        local success = client.notify(args.method, args.params)
+    local params = remove_invalid_lsp_table_keys(args.params)
 
+    if args.is_notification then
+        local success
+
+        if vim.version().minor >= 11 then
+            -- Supporting Neovim 0.11+
+            ---@diagnostic disable-next-line
+            success = client.notify(client, args.method, params)
+        else
+            -- Supporting Neovim 0.10 and below
+            ---@diagnostic disable-next-line
+            success = client.notify(args.method, params)
+        end
+
+        -- For notifications we send a request and expect no direct response.
         if success then
             return -1
         end
@@ -142,24 +184,27 @@ module.send_message = function(args)
     end
 
     local success, request_id
+    local handle_func = function(_, result, _, _)
+        vim.fn["ale#lsp#HandleResponse"](client.name, {
+            id = request_id,
+            result = result,
+        })
+    end
 
-    -- For request we send a request and handle the response.
-    --
-    -- We set the bufnr to -1 to prevent Neovim from flushing anything, as ALE
-    -- already flushes changes to files before sending requests.
-    success, request_id = client.request(
-        args.method,
-        args.params,
-        ---@diagnostic disable-next-line: param-type-mismatch
-        function(_, result, _, _)
-            vim.fn["ale#lsp#HandleResponse"](client.name, {
-                id = request_id,
-                result = result,
-            })
-        end,
-        ---@diagnostic disable-next-line: param-type-mismatch
-        -1
-    )
+    if vim.version().minor >= 11 then
+        -- Supporting Neovim 0.11+
+
+        -- We send a request and handle the response.
+        --
+        -- We set the bufnr to -1 to prevent Neovim from flushing anything, as ALE
+        -- already flushes changes to files before sending requests.
+        ---@diagnostic disable-next-line
+        success, request_id = client.request(client, args.method, params, handle_func, -1)
+    else
+        -- Supporting Neovim 0.10 and below
+        ---@diagnostic disable-next-line
+        success, request_id = client.request(args.method, params, handle_func, -1)
+    end
 
     if success then
         return request_id

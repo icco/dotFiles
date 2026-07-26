@@ -1,5 +1,6 @@
 let g:ale_default_navigation = get(g:, 'ale_default_navigation', 'buffer')
 let g:ale_references_show_contents = get(g:, 'ale_references_show_contents', 1)
+let g:ale_references_use_fzf = get(g:, 'ale_references_use_fzf', 0)
 
 let s:references_map = {}
 
@@ -17,23 +18,62 @@ function! ale#references#ClearLSPData() abort
     let s:references_map = {}
 endfunction
 
-function! ale#references#FormatTSResponseItem(response_item, options) abort
-    let l:match = substitute(a:response_item.lineText, '^\s*\(.\{-}\)\s*$', '\1', '')
+function! ale#references#FormatResponseItem(response_item, options) abort
+    let l:filename = get(a:response_item, 'filename', '')
+    let l:column = get(a:response_item, 'column', 0)
+    let l:line = get(a:response_item, 'line', 0)
+    let l:line_text = get(a:response_item, 'line_text', '')
+
+    try
+        let l:line_text = substitute(
+        \ l:line_text,
+        \ '^\s*\(.\{-}\)\s*$', '\1', ''
+        \)
+    catch
+        " This happens in tests
+    endtry
+
+
+    if get(a:options, 'use_fzf') == 1
+        " grep-style output (filename:line:col:text) so that fzf can properly
+        " show matches and previews using ':' as delimiter
+        return l:filename . ':' . l:line . ':' . l:column . ':' . l:line_text
+    endif
 
     if get(a:options, 'open_in') is# 'quickfix'
         return {
-        \ 'filename': a:response_item.file,
-        \ 'lnum': a:response_item.start.line,
-        \ 'col': a:response_item.start.offset,
-        \ 'text': l:match,
+        \ 'filename': l:filename,
+        \ 'lnum': l:line,
+        \ 'col': l:column,
+        \ 'text': l:line_text,
         \}
     else
         return {
-        \ 'filename': a:response_item.file,
-        \ 'line': a:response_item.start.line,
-        \ 'column': a:response_item.start.offset,
-        \ 'match': l:match,
+        \ 'filename': l:filename,
+        \ 'line': l:line,
+        \ 'column': l:column,
+        \ 'match': l:line_text,
         \}
+    endif
+endfunction
+
+function! ale#references#DisplayReferences(item_list, options) abort
+    if empty(a:item_list)
+        call ale#util#Execute('echom ''No references found.''')
+    else
+        if get(a:options, 'use_fzf') == 1
+            if !exists('*fzf#run')
+                throw 'fzf#run function not found. You also need Vim plugin from the main fzf repository (i.e. junegunn/fzf *and* junegunn/fzf.vim)'
+            endif
+
+            call ale#fzf#ShowReferences(a:item_list, a:options)
+        elseif get(a:options, 'open_in') is# 'quickfix'
+            call setqflist([], 'r')
+            call setqflist(a:item_list, 'a')
+            call ale#util#Execute('cc 1')
+        else
+            call ale#preview#ShowSelection(a:item_list, a:options)
+        endif
     endif
 endfunction
 
@@ -41,93 +81,60 @@ function! ale#references#HandleTSServerResponse(conn_id, response) abort
     if get(a:response, 'command', '') is# 'references'
     \&& has_key(s:references_map, a:response.request_seq)
         let l:options = remove(s:references_map, a:response.request_seq)
+        let l:format_options = copy(l:options)
 
         if get(a:response, 'success', v:false) is v:true
             let l:item_list = []
 
             for l:response_item in a:response.body.refs
+                let l:format_response_item = {
+                \ 'filename': l:response_item.file,
+                \ 'line': l:response_item.start.line,
+                \ 'column': l:response_item.start.offset,
+                \ 'line_text': l:response_item.lineText,
+                \ }
                 call add(
                 \ l:item_list,
-                \ ale#references#FormatTSResponseItem(l:response_item, l:options)
+                \ ale#references#FormatResponseItem(l:format_response_item, l:format_options)
                 \)
             endfor
 
-            if empty(l:item_list)
-                call ale#util#Execute('echom ''No references found.''')
-            else
-                if get(l:options, 'open_in') is# 'quickfix'
-                    call setqflist([], 'r')
-                    call setqflist(l:item_list, 'a')
-                    call ale#util#Execute('cc 1')
-                else
-                    call ale#preview#ShowSelection(l:item_list, l:options)
-                endif
-            endif
+            call ale#references#DisplayReferences(l:item_list, l:format_options)
         endif
-    endif
-endfunction
-
-function! ale#references#FormatLSPResponseItem(response_item, options) abort
-    let l:line_text = ''
-
-    let l:line= a:response_item.range.start.line
-    let l:col = a:response_item.range.start.character
-    let l:filename = ale#util#ToResource(a:response_item.uri)
-
-    if get(a:options, 'show_contents') == 1
-        try
-            let l:line_text = substitute(readfile(l:filename)[l:line], '^\s*\(.\{-}\)\s*$', '\1', '')
-        catch
-            " This happens in tests
-        endtry
-    endif
-
-    if get(a:options, 'open_in') is# 'quickfix'
-        return {
-        \ 'filename': l:filename,
-        \ 'lnum': a:response_item.range.start.line + 1,
-        \ 'col': a:response_item.range.start.character + 1,
-        \ 'text': l:line_text,
-        \}
-    else
-        return {
-        \ 'filename': l:filename,
-        \ 'line': l:line + 1,
-        \ 'column': l:col + 1,
-        \ 'match': l:line_text,
-        \}
     endif
 endfunction
 
 function! ale#references#HandleLSPResponse(conn_id, response) abort
-    if has_key(a:response, 'id')
-    \&& has_key(s:references_map, a:response.id)
-        let l:options = remove(s:references_map, a:response.id)
-
-        " The result can be a Dictionary item, a List of the same, or null.
-        let l:result = get(a:response, 'result', [])
-        let l:item_list = []
-
-        if type(l:result) is v:t_list
-            for l:response_item in l:result
-                call add(l:item_list,
-                \ ale#references#FormatLSPResponseItem(l:response_item, l:options)
-                \)
-            endfor
-        endif
-
-        if empty(l:item_list)
-            call ale#util#Execute('echom ''No references found.''')
-        else
-            if get(l:options, 'open_in') is# 'quickfix'
-                call setqflist([], 'r')
-                call setqflist(l:item_list, 'a')
-                call ale#util#Execute('cc 1')
-            else
-                call ale#preview#ShowSelection(l:item_list, l:options)
-            endif
-        endif
+    if ! (has_key(a:response, 'id') && has_key(s:references_map, a:response.id))
+        return
     endif
+
+    let l:options = remove(s:references_map, a:response.id)
+
+    " The result can be a Dictionary item, a List of the same, or null.
+    let l:result = get(a:response, 'result', [])
+    let l:item_list = []
+
+    if type(l:result) is v:t_list
+        for l:response_item in l:result
+            let l:filename = ale#util#ToResource(get(l:response_item, 'uri', ''))
+            let l:read_line = l:response_item.range.start.line
+            let l:line = l:read_line + 1
+            let l:format_response_item = {
+            \ 'filename': l:filename,
+            \ 'line': l:line,
+            \ 'column': l:response_item.range.start.character + 1,
+            \ 'line_text': get(l:options, 'show_contents') == 1
+            \   ? readfile(l:filename)[l:read_line]
+            \   : '',
+            \ }
+            call add(l:item_list,
+            \ ale#references#FormatResponseItem(l:format_response_item, l:options)
+            \)
+        endfor
+    endif
+
+    call ale#references#DisplayReferences(l:item_list, l:options)
 endfunction
 
 function! s:OnReady(line, column, options, linter, lsp_details) abort
@@ -165,6 +172,7 @@ function! s:OnReady(line, column, options, linter, lsp_details) abort
     \ 'use_relative_paths': has_key(a:options, 'use_relative_paths') ? a:options.use_relative_paths : 0,
     \ 'open_in': get(a:options, 'open_in', 'current-buffer'),
     \ 'show_contents': a:options.show_contents,
+    \ 'use_fzf': get(a:options, 'use_fzf', g:ale_references_use_fzf),
     \}
 endfunction
 
@@ -185,6 +193,8 @@ function! ale#references#Find(...) abort
                 let l:options.open_in = 'quickfix'
             elseif l:option is? '-contents'
                 let l:options.show_contents = 1
+            elseif l:option is? '-fzf'
+                let l:options.use_fzf = 1
             endif
         endfor
     endif

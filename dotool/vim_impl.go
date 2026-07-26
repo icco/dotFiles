@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -11,167 +12,148 @@ import (
 	"strings"
 )
 
-// sortVimSpell sorts the vim spell file and commits the changes
-func sortVimSpell() error {
+var vimPlugins = []string{
+	"airblade/vim-rooter",
+	"craigmac/vim-mermaid",
+	"dense-analysis/ale",
+	"editorconfig/editorconfig-vim",
+	"fatih/vim-go",
+	"godlygeek/tabular",
+	"google/vim-jsonnet",
+	"grafana/vim-alloy",
+	"hashivim/vim-terraform",
+	"isobit/vim-caddyfile",
+	"jparise/vim-graphql",
+	"junegunn/fzf.vim",
+	"kaarmu/typst.vim",
+	"mhinz/vim-signify",
+	"nanotee/zoxide.vim",
+	"nathanielc/vim-tickscript",
+	"preservim/tagbar",
+	"preservim/vim-markdown",
+	"tpope/vim-commentary",
+	"tpope/vim-fugitive",
+	"uarun/vim-protobuf",
+	"wakatime/vim-wakatime",
+}
+
+func sortVimSpell(ctx context.Context) error {
 	log.Println("Sorting vim spell...")
 
 	spellFile := "link/vim/spell/en.utf-8.add"
-
-	// Check if spell file exists
-	if _, err := os.Stat(spellFile); os.IsNotExist(err) {
-		return fmt.Errorf("spell file %s does not exist", spellFile)
+	if _, err := os.Stat(spellFile); err != nil {
+		return fmt.Errorf("spell file %s: %w", spellFile, err)
 	}
 
-	// Read and sort spell file using native Go
 	if err := sortSpellFile(spellFile); err != nil {
 		return fmt.Errorf("failed to sort spell file: %w", err)
 	}
 
-	// Commit the changes
-	cmd := exec.Command("git", "commit", "-a", "-m", "vim spell sort")
-	if output, err := cmd.CombinedOutput(); err != nil {
-		// Check if the error is due to no changes to commit
-		if strings.Contains(string(output), "nothing to commit") {
-			log.Println("No changes to commit - spell file was already sorted")
-		} else {
-			return fmt.Errorf("failed to commit spell changes: %s, %w", string(output), err)
-		}
+	if err := gitCommitAll(ctx, "vim spell sort"); err != nil {
+		return err
 	}
 
 	log.Println("Vim spell sorted and committed successfully!")
 	return nil
 }
 
-// upgradeVimPlugins upgrades all vim plugins by cloning them fresh
-func upgradeVimPlugins() error {
+func upgradeVimPlugins(ctx context.Context) error {
 	log.Println("Upgrading vim plugins...")
 
-	repos := []string{
-		"airblade/vim-rooter",
-		"craigmac/vim-mermaid",
-		"dense-analysis/ale",
-		"editorconfig/editorconfig-vim",
-		"fatih/vim-go",
-		"github/copilot.vim",
-		"godlygeek/tabular",
-		"google/vim-jsonnet",
-		"grafana/vim-alloy",
-		"hashivim/vim-terraform",
-		"isobit/vim-caddyfile",
-		"jparise/vim-graphql",
-		"junegunn/fzf.vim",
-		"kaarmu/typst.vim",
-		"mhinz/vim-signify",
-		"nanotee/zoxide.vim",
-		"nathanielc/vim-tickscript",
-		"preservim/tagbar",
-		"preservim/vim-markdown",
-		"tpope/vim-commentary",
-		"tpope/vim-fugitive",
-		"uarun/vim-protobuf",
-		"wakatime/vim-wakatime",
-	}
-
-	for _, repo := range repos {
-		if err := upgradePlugin(repo); err != nil {
+	for _, repo := range vimPlugins {
+		if err := upgradePlugin(ctx, repo); err != nil {
 			return fmt.Errorf("failed to upgrade plugin %s: %w", repo, err)
 		}
 	}
 
-	// Commit all plugin changes
-	cmd := exec.Command("git", "commit", "-a", "-m", "vim upgrades")
-	if output, err := cmd.CombinedOutput(); err != nil {
-		// Check if the error is due to no changes to commit
-		if strings.Contains(string(output), "nothing to commit") ||
-			strings.Contains(string(output), "nothing added to commit") {
-			log.Println("No changes to commit - plugins were already up to date")
-		} else {
-			return fmt.Errorf("failed to commit plugin changes: %s, %w", string(output), err)
-		}
+	if err := gitCommitAll(ctx, "vim upgrades"); err != nil {
+		return err
 	}
 
 	log.Println("All vim plugins upgraded successfully!")
 	return nil
 }
 
-// upgradePlugin upgrades a single vim plugin
-func upgradePlugin(repo string) error {
+func upgradePlugin(ctx context.Context, repo string) error {
 	log.Printf("Upgrading plugin: %s\n", repo)
 
-	// Extract plugin name from repo
-	parts := strings.Split(repo, "/")
-	if len(parts) != 2 {
+	owner, name, ok := strings.Cut(repo, "/")
+	if !ok || owner == "" || name == "" {
 		return fmt.Errorf("invalid repo format: %s", repo)
 	}
-	pluginName := parts[1]
 
-	// Plugin directory path
-	pluginDir := filepath.Join("link/vim/bundle", pluginName)
+	pluginDir := filepath.Join("link/vim/bundle", name)
 
-	// Remove existing plugin directory
 	if err := os.RemoveAll(pluginDir); err != nil {
 		return fmt.Errorf("failed to remove existing plugin directory %s: %w", pluginDir, err)
 	}
 
-	// Clone the plugin
-	cmd := exec.Command("git", "clone", fmt.Sprintf("git@github.com:%s.git", repo), pluginDir)
-	if output, err := cmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("failed to clone plugin %s: %s, %w", repo, string(output), err)
+	cloneURL := fmt.Sprintf("git@github.com:%s.git", repo)
+	// #nosec G204 -- repo comes from the program's hardcoded vimPlugins list, not user input.
+	if out, err := exec.CommandContext(ctx, "git", "clone", cloneURL, pluginDir).CombinedOutput(); err != nil {
+		return fmt.Errorf("failed to clone plugin %s: %s: %w", repo, string(out), err)
 	}
 
-	// Remove .git directory from plugin
-	gitDir := filepath.Join(pluginDir, ".git")
-	if err := os.RemoveAll(gitDir); err != nil {
+	if err := os.RemoveAll(filepath.Join(pluginDir, ".git")); err != nil {
 		return fmt.Errorf("failed to remove .git directory from %s: %w", pluginDir, err)
 	}
 
-	// Add plugin to git
-	cmd = exec.Command("git", "add", pluginDir)
-	if output, err := cmd.CombinedOutput(); err != nil {
-		return fmt.Errorf("failed to add plugin %s to git: %s, %w", pluginDir, string(output), err)
+	// Strip .terraform/ — vendored by hashivim/vim-terraform fixtures, shouldn't be committed.
+	walkErr := filepath.WalkDir(pluginDir, func(path string, d os.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if d.IsDir() && d.Name() == ".terraform" {
+			// #nosec G122 -- pluginDir is program-controlled, not user-supplied; symlink TOCTOU not a concern for a local dev tool.
+			if err := os.RemoveAll(path); err != nil {
+				return err
+			}
+			return filepath.SkipDir
+		}
+		return nil
+	})
+	if walkErr != nil {
+		return fmt.Errorf("failed to scrub .terraform from %s: %w", pluginDir, walkErr)
+	}
+
+	if err := runGit(ctx, "add", pluginDir); err != nil {
+		return fmt.Errorf("failed to add plugin %s to git: %w", pluginDir, err)
 	}
 
 	return nil
 }
 
-// sortSpellFile reads, sorts, and deduplicates a spell file using native Go
 func sortSpellFile(filename string) error {
-	// Read all lines from the file
+	// #nosec G304 -- filename is a program-controlled path under link/vim/spell.
 	file, err := os.Open(filename)
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer func() { _ = file.Close() }()
 
+	seen := make(map[string]bool)
 	var lines []string
 	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
-		if line != "" { // Skip empty lines
-			lines = append(lines, line)
+		if line == "" {
+			continue
 		}
+		key := strings.ToLower(line)
+		if seen[key] {
+			continue
+		}
+		seen[key] = true
+		lines = append(lines, line)
 	}
-
 	if err := scanner.Err(); err != nil {
 		return err
 	}
 
-	// Sort case-insensitively and remove duplicates
 	slices.SortFunc(lines, func(a, b string) int {
 		return strings.Compare(strings.ToLower(a), strings.ToLower(b))
 	})
 
-	// Remove duplicates (case-insensitive)
-	unique := make([]string, 0, len(lines))
-	seen := make(map[string]bool)
-	for _, line := range lines {
-		lower := strings.ToLower(line)
-		if !seen[lower] {
-			seen[lower] = true
-			unique = append(unique, line)
-		}
-	}
-
-	// Write back to file
-	return os.WriteFile(filename, []byte(strings.Join(unique, "\n")+"\n"), 0644)
+	// #nosec G306 -- vim spell file is a user-facing config; 0644 is the standard mode.
+	return os.WriteFile(filename, []byte(strings.Join(lines, "\n")+"\n"), 0644)
 }

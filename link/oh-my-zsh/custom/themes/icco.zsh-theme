@@ -34,8 +34,8 @@ ZSH_THEME_GIT_PROMPT_UNTRACKED="%{…%G%}"
 ZSH_THEME_GIT_PROMPT_STASHED="%{⚑%G%}"
 ZSH_THEME_GIT_PROMPT_CLEAN="%{✔%G%}"
 
-PROMPT=$'\n[ %{$fg[red]%}%D{%a %b %d %H:%M:%S}%{$reset_color%} ]%{$fg[grey]%}$(etu_prompt_status)%{$reset_color%} $(git_super_status) %{$fg[green]%}$(virtualenv_prompt_info)%{$reset_color%}% \n[ %b%n@%m %{$fg[blue]%}$(shrink_path -f)%{$reset_color%} ]\\$ '
-#PROMPT=$'\n[ %{$fg[red]%}%D{%a %b %d %H:%M:%S}%{$reset_color%} ] $(git_prompt_info) \n[ %b%n@%m %{$fg[blue]%}$(shrink_path -f)%{$reset_color%} ]\\$ '
+PROMPT=$'\n[ %{$fg[red]%}%D{%a %b %d %H:%M:%S}%{$reset_color%} ]%{$fg[grey]%}$(etu_prompt_status)%{$reset_color%} $(git_super_status) %{$fg[green]%}$(virtualenv_prompt_info)%{$reset_color%}% \n[ %b%n@${SHELL_HOST:-%m} %{$fg[blue]%}$(shrink_path -f)%{$reset_color%} ]\\$ '
+#PROMPT=$'\n[ %{$fg[red]%}%D{%a %b %d %H:%M:%S}%{$reset_color%} ] $(git_prompt_info) \n[ %b%n@${SHELL_HOST:-%m} %{$fg[blue]%}$(shrink_path -f)%{$reset_color%} ]\\$ '
 
 PS2=$' \e[0;34m%}%B>%{\e[0m%}%b '
 RPROMPT=''

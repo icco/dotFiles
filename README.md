@@ -1,23 +1,33 @@
 # Nat Welch's .Files
 
-This repository holds my config files for just about everything. Use this to set up a fresh OSX or Linux box, and Nat will be a happy user.
+This repository holds my config files for just about everything. Use this to set up a fresh macOS or Linux box, and Nat will be a happy user.
 
 Originally I did this entirely with shell scripts, then Ruby/Rake. Now I use Go for better performance and easier distribution.
+
+## Prerequisites
+
+- Go (see `go.mod` for the minimum version)
+- [Task](https://taskfile.dev)
+- git, with an SSH key registered on GitHub (`task vim` clones plugins over `git@github.com:`)
+- Homebrew (macOS only, for `brew bundle`)
 
 ## Usage
 
 ```bash
 # Install dotfiles
-make infect
+task infect
 
 # Update vim plugins
-make vim
+task vim
 
-# Install system packages
-make brew
+# Update oh-my-zsh
+task omz
+
+# Install system packages (macOS)
+brew bundle
 ```
 
-For more options: `go run ./dotool --help`
+For more options: `go run ./dotool --help` or `task --list`.
 
 ## Structure
 

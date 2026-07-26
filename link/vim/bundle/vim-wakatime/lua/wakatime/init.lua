@@ -16,7 +16,7 @@ local cmd = vim.cmd
 local fmt = string.format
 local json = vim.json
 
-local VERSION = '11.3.0'
+local VERSION = '12.0.0'
 
 -- Constants
 local EXIT_CODE_CONFIG_PARSE_ERROR = 103
@@ -27,11 +27,10 @@ local EXIT_CODE_API_KEY_ERROR = 104
 --- @field cli_path? string # Absolute path to wakatime-cli. Overrides auto-detection. Defaults to nil.
 --- @field python_binary? string # Path to Python executable for CLI installation. Overrides auto-detection. Defaults to nil.
 --- @field debug? boolean # Enable verbose logging. Defaults to false.
---- @field hidefilenames? boolean # (Currently unused) Option for hiding filenames. Defaults to false.
---- @field ignore? string[] # List of Lua patterns for files/paths to ignore. Defaults to git message patterns.
 --- @field redraw_setting? "'auto'" | "'enabled'" | "'disabled'" # Screen redraw behavior after sending heartbeats. Defaults to 'auto'.
 --- @field api_key_vault_cmd? string # Shell command to retrieve the API key. Defaults to nil.
 --- @field plugin_name? string # Plugin name used in User Agent. Defaults to 'wakatime.nvim'.
+--- @field status_bar_enabled? boolean # Enable cached statusline text from `require('wakatime').statusline()`. Defaults to true unless disabled in ~/.wakatime.cfg.
 
 -- Module state (equivalent to s: variables)
 local state = {
@@ -42,16 +41,10 @@ local state = {
     cli_path = nil, -- Auto-detect if nil
     python_binary = nil, -- Auto-detect if nil
     debug = false,
-    hidefilenames = false, -- Note: This seems unused in the original script's logic, but kept for parity
-    ignore = { -- Default ignore patterns
-      'COMMIT_EDITMSG$',
-      'PULLREQ_EDITMSG$',
-      'MERGE_MSG$',
-      'TAG_EDITMSG$',
-    },
     redraw_setting = 'auto', -- 'auto', 'enabled', 'disabled'
     api_key_vault_cmd = nil,
     plugin_name = 'wakatime.nvim',
+    status_bar_enabled = true,
   },
   home = '',
   plugin_root_folder = '',
@@ -77,6 +70,8 @@ local state = {
   is_debug_on = false,
   local_cache_expire = 10, -- seconds
   last_heartbeat = { last_activity_at = 0, last_heartbeat_at = 0, file = '' },
+  last_interaction_at = 0,
+  interaction_timeout = 120,
   heartbeats_buffer = {},
   send_buffer_seconds = 30, -- seconds
   last_sent = fn.localtime(),
@@ -86,16 +81,20 @@ local state = {
   nvim_async_output_today = {},
   nvim_async_output_file_expert = {},
   nvim_async_output_version = {},
+  nvim_async_output_status_bar = {},
   async_callback_today = nil,
   async_callback_file_expert = nil,
   async_callback_version = nil,
-  -- AI vs Human line change tracking
-  is_ai_code_generating = false,
+  async_callback_status_bar = nil,
+  status_bar_text = '',
+  status_bar_last_update = 0,
+  status_bar_refresh_interval = 60,
+  status_bar_refresh_in_progress = false,
+  status_bar_component_added = false,
+  status_bar_requested = false,
+  -- Line change tracking
   lines_in_files = {},
-  ai_line_changes = {},
   human_line_changes = {},
-  ai_debounce_timer = nil,
-  ai_debounce_count = 0,
 }
 
 -- Forward declarations for helper functions
@@ -117,15 +116,19 @@ local current_time_str
 local set_last_heartbeat_in_memory
 local set_last_heartbeat
 local get_last_heartbeat
+local record_interaction
+local has_recent_interaction
 local append_heartbeat
 local send_heartbeats
 local handle_activity
 local init_and_handle_activity
+local is_macro_executing
 local print_msg
 local print_today
 local print_file_expert
 local update_line_numbers
-local detect_ai_code_generation
+local maybe_refresh_status_bar
+local maybe_attach_lualine_status_bar
 
 -- Helper Functions (Ported from Vimscript s: functions)
 
@@ -281,7 +284,7 @@ setup_debug_mode = function()
   if not state.debug_mode_already_setup then
     -- Prioritize config file setting if it exists
     local debug_setting = get_ini_setting('settings', 'debug')
-    if debug_setting == 'true' or state.config.debug == 'true' then
+    if debug_setting == 'true' or state.config.debug == true then
       state.is_debug_on = true
     end
     state.debug_mode_already_setup = true
@@ -345,18 +348,8 @@ end
 local function neovim_async_install_exit_handler(job_id, exit_code, event)
   local output = strip_whitespace(table.concat(state.nvim_async_output, '\n'))
   state.nvim_async_output = {} -- Clear buffer
-  if state.is_debug_on then
-    if exit_code ~= 0 or output ~= '' then
-      vim.notify(fmt('[WakaTime] Install script exited with code %d:\n%s', exit_code, output), vim.log.levels.INFO)
-    else
-      vim.notify('[WakaTime] Install script finished successfully.', vim.log.levels.INFO)
-    end
-  end
-  if exit_code ~= 0 and not contains(output, 'wakatime-cli is up to date') then
-    vim.notify('[WakaTime] Background install failed. Attempting foreground install...', vim.log.levels.WARN)
-    -- Maybe trigger a synchronous install attempt here if needed, or just notify user.
-    -- For simplicity, we'll just notify for now. A foreground retry might block Neovim.
-    -- install_cli(false) -- Avoid recursion for now
+  if state.is_debug_on and (exit_code ~= 0 or output ~= '') then
+    vim.notify(fmt('[WakaTime] Install script exited with code %d:\n%s', exit_code, output), vim.log.levels.INFO)
   end
 end
 
@@ -446,22 +439,32 @@ setup_cli = function()
         state.wakatime_cli = 'wakatime' -- Legacy name check
         state.autoupdate_cli = false
         if state.is_debug_on then vim.notify('[WakaTime] Using legacy wakatime found in PATH', vim.log.levels.DEBUG) end
+      elseif fn.filereadable(default_path) == 1 then
+        state.wakatime_cli = default_path
+        state.autoupdate_cli = false
+        if state.is_debug_on then vim.notify('[WakaTime] Using managed wakatime-cli', vim.log.levels.DEBUG) end
+      elseif not state.is_windows and fn.filereadable('/opt/homebrew/bin/wakatime-cli') == 1 then
+        state.wakatime_cli = '/opt/homebrew/bin/wakatime-cli' -- Homebrew on Apple Silicon
+        state.autoupdate_cli = false
+        if state.is_debug_on then vim.notify('[WakaTime] Using Homebrew wakatime-cli', vim.log.levels.DEBUG) end
       elseif not state.is_windows and fn.filereadable('/usr/local/bin/wakatime-cli') == 1 then
-        state.wakatime_cli = '/usr/local/bin/wakatime-cli' -- Homebrew check
+        state.wakatime_cli = '/usr/local/bin/wakatime-cli' -- Homebrew on Intel macOS
         state.autoupdate_cli = false
         if state.is_debug_on then vim.notify('[WakaTime] Using Homebrew wakatime-cli', vim.log.levels.DEBUG) end
       else
-        -- Default to ~/.wakatime location and enable auto-update
+        -- Default to ~/.wakatime location and enable auto-update ONLY if no user cli_path was given
         state.wakatime_cli = default_path
-        state.autoupdate_cli = true
+        state.autoupdate_cli = (state.config.cli_path == nil)
         if state.is_debug_on then
           vim.notify(
-            fmt('[WakaTime] Using default CLI path: %s (autoupdate enabled)', state.wakatime_cli),
+            fmt('[WakaTime] Using default CLI path: %s (autoupdate %s)', state.wakatime_cli, state.autoupdate_cli and 'enabled' or 'disabled'),
             vim.log.levels.DEBUG
           )
         end
-        -- Try installing/updating if using the default path
-        install_cli()
+        -- Try installing/updating if using the default path and autoupdate is enabled
+        if state.autoupdate_cli and not executable(state.wakatime_cli) then
+          install_cli()
+        end
       end
     end
 
@@ -486,6 +489,17 @@ setup_cli = function()
 end
 
 get_current_file = function()
+  local buftype = vim.bo.buftype
+  local non_file_buftypes = {
+    help = true,
+    nofile = true,
+    nowrite = true,
+    prompt = true,
+    quickfix = true,
+    terminal = true,
+  }
+  if non_file_buftypes[buftype] then return '' end
+
   return fn.expand('%:p') -- Get full path of the current buffer
 end
 
@@ -552,6 +566,15 @@ set_last_heartbeat = function(last_activity_at, last_heartbeat_at, file)
   end
 end
 
+record_interaction = function()
+  state.last_interaction_at = fn.localtime()
+  if state.initialized and state.config_file_already_setup then maybe_refresh_status_bar(false) end
+end
+
+has_recent_interaction = function(now)
+  return state.last_interaction_at > 0 and (now - state.last_interaction_at) <= state.interaction_timeout
+end
+
 get_last_heartbeat = function()
   local now = fn.localtime()
   -- Check cache expiry
@@ -588,11 +611,8 @@ get_last_heartbeat = function()
 end
 
 local function order_time(time_str, loop_count)
-  -- Add microsecond precision based on loop count to ensure order
-  if not time_str:find('%.') then time_str = time_str .. '.0' end
-  -- Pad loop count to 6 digits for microseconds
-  local micro = string.format('%06d', loop_count)
-  return time_str .. micro
+  if not time_str:find('%.', 1, true) then return string.format('%s.%06d', time_str, loop_count) end
+  return time_str
 end
 
 local function get_heartbeats_json()
@@ -615,9 +635,6 @@ local function get_heartbeats_json()
         hb_data.alternate_language = heartbeat.language
       end
     end
-    if heartbeat.ai_line_changes then
-      hb_data.ai_line_changes = heartbeat.ai_line_changes
-    end
     if heartbeat.human_line_changes then
       hb_data.human_line_changes = heartbeat.human_line_changes
     end
@@ -633,6 +650,11 @@ local function get_heartbeats_json()
   return '[' .. table.concat(arr, ',') .. ']'
 end
 
+local function has_active_debug_session()
+  local dap = package.loaded['dap']
+  return type(dap) == 'table' and type(dap.session) == 'function' and dap.session() ~= nil
+end
+
 local function neovim_async_output_handler(job_id, data, event)
   -- Collect output for potential debugging or error reporting
   if data then table.insert(state.nvim_async_output, table.concat(data, '\n')) end
@@ -642,24 +664,21 @@ local function neovim_async_exit_handler(job_id, exit_code, event, cmd_args_str)
   local output = strip_whitespace(table.concat(state.nvim_async_output, '\n'))
   state.nvim_async_output = {} -- Clear buffer
 
-  local is_error = false
+  local is_special_error = exit_code == EXIT_CODE_API_KEY_ERROR or exit_code == EXIT_CODE_CONFIG_PARSE_ERROR
   local error_msg = output
 
   if exit_code == EXIT_CODE_API_KEY_ERROR then
     error_msg = error_msg .. (error_msg ~= '' and '\n' or '') .. 'Invalid API Key. Use :WakaTimeApiKey'
-    is_error = true
     -- Potentially disable future heartbeats until key is fixed?
     state.config_file_already_setup = false -- Force re-check on next event
   elseif exit_code == EXIT_CODE_CONFIG_PARSE_ERROR then
     error_msg = error_msg .. (error_msg ~= '' and '\n' or '') .. 'Error parsing config file: ' .. state.config_file
-    is_error = true
-  elseif exit_code ~= 0 then
+  elseif exit_code ~= 0 and state.is_debug_on then
     error_msg = error_msg .. (error_msg ~= '' and '\n' or '') .. fmt('CLI exited with code %d', exit_code)
-    is_error = true
   end
 
-  if is_error or (state.is_debug_on and output ~= '') then
-    local level = is_error and vim.log.levels.ERROR or vim.log.levels.DEBUG
+  if (state.is_debug_on or is_special_error) and error_msg ~= '' then
+    local level = exit_code ~= 0 and vim.log.levels.ERROR or vim.log.levels.DEBUG
     local cmd_str = cmd_args_str or join_args(state.last_sent_cmd or {}) -- Use saved command if available
     vim.notify(fmt('[WakaTime] Command: %s\nOutput (Exit Code %d):\n%s', cmd_str, exit_code, error_msg), level)
   end
@@ -718,10 +737,6 @@ send_heartbeats = function()
       table.insert(cmd_args, heartbeat.language)
     end
   end
-  if heartbeat.ai_line_changes then
-    table.insert(cmd_args, '--ai-line-changes')
-    table.insert(cmd_args, tostring(heartbeat.ai_line_changes))
-  end
   if heartbeat.human_line_changes then
     table.insert(cmd_args, '--human-line-changes')
     table.insert(cmd_args, tostring(heartbeat.human_line_changes))
@@ -733,9 +748,7 @@ send_heartbeats = function()
   --   table.insert(cmd_args, '--category')
   --   table.insert(cmd_args, 'debugging')
   -- end
-  -- Or check dap status if available:
-  local dap_ok, dap = pcall(require, 'dap')
-  if dap_ok and dap.session() then
+  if has_active_debug_session() then
     table.insert(cmd_args, '--category')
     table.insert(cmd_args, 'debugging')
   end
@@ -778,8 +791,9 @@ send_heartbeats = function()
   state.last_sent = now
 
   -- Clear line changes after sending
-  state.ai_line_changes = {}
   state.human_line_changes = {}
+
+  maybe_refresh_status_bar(false)
 
   -- Redraw logic (less critical with async, but kept for parity)
 
@@ -819,13 +833,10 @@ append_heartbeat = function(file, now, is_write, last)
     heartbeat.cursorpos = cursor[2] + 1 -- WakaTime expects 1-based cursor position? Check CLI docs. Vim getpos is byte index. Let's assume col is fine.
     heartbeat.lines = api.nvim_buf_line_count(0) -- Total lines in buffer
 
-    -- Add AI vs Human line changes
-    -- if state.ai_line_changes[current_file] and state.ai_line_changes[current_file] ~= 0 then
-    --   heartbeat.ai_line_changes = state.ai_line_changes[current_file]
-    -- end
-    -- if state.human_line_changes[current_file] and state.human_line_changes[current_file] ~= 0 then
-    --   heartbeat.human_line_changes = state.human_line_changes[current_file]
-    -- end
+    -- Always classify line changes as human; wakatime-cli decides final category.
+    if state.human_line_changes[current_file] and state.human_line_changes[current_file] ~= 0 then
+      heartbeat.human_line_changes = state.human_line_changes[current_file]
+    end
 
     table.insert(state.heartbeats_buffer, heartbeat)
     set_last_heartbeat(now, now, current_file) -- Update last heartbeat time
@@ -841,6 +852,10 @@ append_heartbeat = function(file, now, is_write, last)
   end
 end
 
+is_macro_executing = function()
+  return fn.exists('*reg_executing') == 1 and fn.reg_executing() ~= ''
+end
+
 handle_activity = function(is_write)
   if not state.config_file_already_setup then
     if state.is_debug_on then
@@ -849,9 +864,17 @@ handle_activity = function(is_write)
     return
   end
 
-  -- Update line numbers and detect AI code generation
+  if is_macro_executing() then
+    if state.is_debug_on then
+      vim.notify('[WakaTime] Skipping activity from macro execution.', vim.log.levels.DEBUG)
+    end
+    return
+  end
+
+  if is_write then record_interaction() end
+
+  -- Update line numbers for heartbeat metadata
   update_line_numbers()
-  detect_ai_code_generation()
 
   local file = get_current_file()
   -- Ignore transient buffers or special schemes
@@ -867,7 +890,7 @@ handle_activity = function(is_write)
 
     local enough_time_passed = (now - last.last_heartbeat_at) > (state.config.heartbeat_frequency * 60)
 
-    if is_write or enough_time_passed or file ~= last.file then
+    if is_write or file ~= last.file or (enough_time_passed and has_recent_interaction(now)) then
       append_heartbeat(file, now, is_write, last)
     else
       -- No heartbeat needed, but update activity time in memory if cache expired
@@ -923,6 +946,13 @@ local function set_debug_mode(enable)
   vim.notify(fmt('[WakaTime] Debug mode %s.', enable and 'enabled' or 'disabled'), vim.log.levels.INFO)
 end
 
+local function set_status_bar(enable)
+  local val = enable and 'true' or 'false'
+  set_ini_setting('settings', 'status_bar_enabled', val)
+  state.config.status_bar_enabled = enable
+  vim.notify(fmt('[WakaTime] Status bar %s.', enable and 'enabled' or 'disabled'), vim.log.levels.INFO)
+end
+
 local function set_redraw_setting(setting)
   if setting == 'enabled' or setting == 'disabled' or setting == 'auto' then
     set_ini_setting('settings', 'vi_redraw', setting)
@@ -939,7 +969,7 @@ local function run_cli_command(args, output_buffer_key, callback_key, exit_handl
     vim.notify(fmt('[WakaTime] Cannot run command, CLI not executable: %s', state.wakatime_cli), vim.log.levels.ERROR)
     local cb = state[callback_key] or print_msg
     pcall(cb, 'Error: wakatime-cli not found or not executable.')
-    return
+    return -1
   end
 
   local cmd_args = { state.wakatime_cli }
@@ -955,29 +985,31 @@ local function run_cli_command(args, output_buffer_key, callback_key, exit_handl
     vim.notify(fmt('[WakaTime] Running command: %s', cmd_str_for_notify), vim.log.levels.DEBUG)
   end
 
-  fn.jobstart(cmd_args, {
+  local job_id = fn.jobstart(cmd_args, {
     on_stdout = function(job_id, data, event)
-      if data then table.insert(state[output_buffer_key], table.concat(data)) end
+      if data then table.insert(state[output_buffer_key], table.concat(data, '\n')) end
     end,
     on_stderr = function(job_id, data, event)
-      if data then table.insert(state[output_buffer_key], table.concat(data)) end -- Mix stderr for simplicity
+      if data then table.insert(state[output_buffer_key], table.concat(data, '\n')) end -- Mix stderr for simplicity
     end,
     on_exit = function(job_id, exit_code, event)
       local output = strip_whitespace(table.concat(state[output_buffer_key], '\n'))
       state[output_buffer_key] = {} -- Clear buffer after use
 
-      if exit_code ~= 0 then
-        local err_msg = fmt('Command failed (Exit Code %d)', exit_code)
-        if exit_code == EXIT_CODE_API_KEY_ERROR then err_msg = err_msg .. ': Invalid API Key' end
-        output = output .. (output ~= '' and '\n' or '') .. err_msg
+      local is_special_error = exit_code == EXIT_CODE_API_KEY_ERROR or exit_code == EXIT_CODE_CONFIG_PARSE_ERROR
+      if exit_code == EXIT_CODE_API_KEY_ERROR then
+        output = output .. (output ~= '' and '\n' or '') .. 'Invalid API Key'
+      elseif exit_code == EXIT_CODE_CONFIG_PARSE_ERROR then
+        output = output .. (output ~= '' and '\n' or '') .. 'Error parsing config file: ' .. state.config_file
+      elseif exit_code ~= 0 and state.is_debug_on then
+        output = output .. (output ~= '' and '\n' or '') .. fmt('Command failed (Exit Code %d)', exit_code)
+      end
+
+      if (state.is_debug_on or is_special_error) and output ~= '' then
+        local level = exit_code ~= 0 and vim.log.levels.ERROR or vim.log.levels.DEBUG
         vim.notify(
-          fmt('[WakaTime] %s\nCommand: %s\nOutput:\n%s', err_msg, cmd_str_for_notify, output),
-          vim.log.levels.ERROR
-        )
-      elseif state.is_debug_on then
-        vim.notify(
-          fmt('[WakaTime] Command finished: %s\nOutput:\n%s', cmd_str_for_notify, output),
-          vim.log.levels.DEBUG
+          fmt('[WakaTime] Command: %s\nOutput (Exit Code %d):\n%s', cmd_str_for_notify, exit_code, output),
+          level
         )
       end
 
@@ -986,6 +1018,14 @@ local function run_cli_command(args, output_buffer_key, callback_key, exit_handl
     end,
     pty = false,
   })
+
+  if job_id == 0 then
+    vim.notify(fmt('[WakaTime] Failed to start command: %s', cmd_str_for_notify), vim.log.levels.ERROR)
+  elseif job_id == -1 then
+    vim.notify(fmt('[WakaTime] Invalid command arguments: %s', cmd_str_for_notify), vim.log.levels.ERROR)
+  end
+
+  return job_id
 end
 
 -- Public API Functions (callable via require('wakatime').<func>)
@@ -993,6 +1033,98 @@ end
 function M.get_today_summary(callback)
   state.async_callback_today = callback or print_today
   run_cli_command({ '--today' }, 'nvim_async_output_today', 'async_callback_today')
+end
+
+local function update_status_bar_text(output)
+  state.status_bar_refresh_in_progress = false
+
+  local summary = strip_whitespace(output or ''):gsub('[\r\n]+', ' ')
+  state.status_bar_text = summary
+  state.status_bar_last_update = fn.localtime()
+
+  cmd('redrawstatus')
+  pcall(function()
+    local lualine = require('lualine')
+    if type(lualine.refresh) == 'function' then lualine.refresh({ scope = 'window' }) end
+  end)
+end
+
+maybe_refresh_status_bar = function(force)
+  if not state.config.status_bar_enabled then return end
+  if not state.status_bar_requested then return end
+  if not executable(state.wakatime_cli) then return end
+  if state.status_bar_refresh_in_progress then return end
+
+  local now = fn.localtime()
+  if not force and state.status_bar_last_update > 0 then
+    local age = now - state.status_bar_last_update
+    if age < state.status_bar_refresh_interval then return end
+  end
+
+  state.status_bar_refresh_in_progress = true
+  state.async_callback_status_bar = update_status_bar_text
+  local job_id = run_cli_command({ '--today' }, 'nvim_async_output_status_bar', 'async_callback_status_bar')
+  if not job_id or job_id <= 0 then state.status_bar_refresh_in_progress = false end
+end
+
+local function is_wakatime_lualine_component(component)
+  if type(component) == 'table' then
+    return component.__wakatime_statusline == true
+  end
+  return false
+end
+
+local function make_lualine_component()
+  return {
+    function() return require('wakatime').statusline() end,
+    cond = function() return require('wakatime').statusline() ~= '' end,
+    __wakatime_statusline = true,
+  }
+end
+
+maybe_attach_lualine_status_bar = function(attempt)
+  if not state.config.status_bar_enabled or state.status_bar_component_added then return end
+
+  local ok, lualine = pcall(require, 'lualine')
+  if not ok or type(lualine.get_config) ~= 'function' or type(lualine.setup) ~= 'function' then
+    if attempt < 5 then vim.defer_fn(function() maybe_attach_lualine_status_bar(attempt + 1) end, 500) end
+    return
+  end
+
+  local config = lualine.get_config()
+  if type(config) ~= 'table' then
+    if attempt < 5 then vim.defer_fn(function() maybe_attach_lualine_status_bar(attempt + 1) end, 500) end
+    return
+  end
+
+  config.sections = config.sections or {}
+  config.sections.lualine_x = config.sections.lualine_x or {}
+
+  for _, component in ipairs(config.sections.lualine_x) do
+    if is_wakatime_lualine_component(component) then
+      state.status_bar_component_added = true
+      state.status_bar_requested = true
+      maybe_refresh_status_bar(false)
+      return
+    end
+  end
+
+  table.insert(config.sections.lualine_x, 1, make_lualine_component())
+  lualine.setup(config)
+  state.status_bar_component_added = true
+  state.status_bar_requested = true
+  maybe_refresh_status_bar(false)
+end
+
+function M.statusline()
+  if not state.config.status_bar_enabled then return '' end
+
+  if not state.status_bar_requested then
+    state.status_bar_requested = true
+    maybe_refresh_status_bar(false)
+  end
+
+  return state.status_bar_text
 end
 
 function M.get_file_experts(callback)
@@ -1048,49 +1180,28 @@ update_line_numbers = function()
   local prev_lines = state.lines_in_files[file]
   local delta = current_lines - prev_lines
 
-  -- Track line changes based on AI state
-  if state.is_ai_code_generating then
-    state.ai_line_changes[file] = (state.ai_line_changes[file] or 0) + delta
-  else
-    state.human_line_changes[file] = (state.human_line_changes[file] or 0) + delta
-  end
+  -- Always classify line changes as human; wakatime-cli decides final category.
+  state.human_line_changes[file] = (state.human_line_changes[file] or 0) + delta
 
   -- Update current line count
   state.lines_in_files[file] = current_lines
 end
 
-detect_ai_code_generation = function()
-  -- Simple heuristic: check if AI detection is enabled via global variable
-  -- This can be expanded to integrate with specific AI tools
-  if vim.g.wakatime_ai_detected then
-    state.is_ai_code_generating = true
-    state.ai_debounce_count = state.ai_debounce_count + 1
-
-    -- Clear existing timer and set new one
-    if state.ai_debounce_timer then
-      vim.fn.timer_stop(state.ai_debounce_timer)
-    end
-
-    state.ai_debounce_timer = vim.fn.timer_start(1000, function()
-      if state.ai_debounce_count > 1 then
-        state.is_ai_code_generating = false
-        state.ai_debounce_count = 0
-        state.ai_debounce_timer = nil
-      end
-    end)
-  end
-end
-
 -- Setup Function (Main entry point)
 
 function M.setup(user_config)
+  user_config = user_config or {}
+
   if state.initialized then
-    vim.notify('[WakaTime] Already initialized.', vim.log.levels.WARN)
+    -- Re-apply opts when called again (e.g. user setup runs after auto-init from plugin/wakatime.vim)
+    if next(user_config) ~= nil then
+      state.config = vim.tbl_deep_extend('force', state.config, user_config)
+    end
     return
   end
 
   -- Merge user config with defaults
-  state.config = vim.tbl_deep_extend('force', state.config, user_config or {})
+  state.config = vim.tbl_deep_extend('force', state.config, user_config)
 
   -- Determine home directory
   local wakatime_home_env = os.getenv('WAKATIME_HOME')
@@ -1110,12 +1221,22 @@ function M.setup(user_config)
   -- Define paths based on home dir
   state.config_file = state.home .. '/.wakatime.cfg'
   state.shared_state_parent_dir = state.home .. '/.wakatime'
-  state.shared_state_file = state.shared_state_parent_dir .. '/nvim_shared_state' -- Use different state file than Vim
+  state.shared_state_file = state.shared_state_parent_dir .. '/vim_shared_state'
 
   -- Apply settings from config file if they exist (e.g., vi_redraw)
-  local vi_redraw = get_ini_setting('settings', 'vi_redraw')
-  if vi_redraw == 'enabled' or vi_redraw == 'auto' or vi_redraw == 'disabled' then
-    state.config.redraw_setting = vi_redraw
+  if user_config.redraw_setting == nil then
+    local vi_redraw = get_ini_setting('settings', 'vi_redraw')
+    if vi_redraw == 'enabled' or vi_redraw == 'auto' or vi_redraw == 'disabled' then
+      state.config.redraw_setting = vi_redraw
+    end
+  end
+  if user_config.status_bar_enabled == nil then
+    local status_bar_enabled = get_ini_setting('settings', 'status_bar_enabled')
+    if status_bar_enabled == 'false' then
+      state.config.status_bar_enabled = false
+    elseif status_bar_enabled == 'true' then
+      state.config.status_bar_enabled = true
+    end
   end
   -- Apply debug from config file (will be re-checked in setup_debug_mode)
   local debug_setting = get_ini_setting('settings', 'debug')
@@ -1132,6 +1253,11 @@ function M.setup(user_config)
     group = group,
     pattern = '*',
     callback = function() init_and_handle_activity(false) end,
+  })
+  api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI', 'InsertEnter', 'TextChanged', 'TextChangedI' }, {
+    group = group,
+    pattern = '*',
+    callback = record_interaction,
   })
   api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
     group = group,
@@ -1163,6 +1289,8 @@ function M.setup(user_config)
   api.nvim_create_user_command('WakaTimeApiKey', prompt_for_api_key, { nargs = 0 })
   api.nvim_create_user_command('WakaTimeDebugEnable', function() set_debug_mode(true) end, { nargs = 0 })
   api.nvim_create_user_command('WakaTimeDebugDisable', function() set_debug_mode(false) end, { nargs = 0 })
+  api.nvim_create_user_command('WakaTimeStatusBarEnable', function() set_status_bar(true) end, { nargs = 0 })
+  api.nvim_create_user_command('WakaTimeStatusBarDisable', function() set_status_bar(false) end, { nargs = 0 })
   api.nvim_create_user_command(
     'WakaTimeScreenRedrawDisable',
     function() set_redraw_setting('disabled') end,
@@ -1182,11 +1310,13 @@ function M.setup(user_config)
   api.nvim_create_user_command('WakaTimeFileExpert', function() M.get_file_experts() end, { nargs = 0 })
   api.nvim_create_user_command('WakaTimeCliLocation', function() M.get_cli_location() end, { nargs = 0 })
   api.nvim_create_user_command('WakaTimeCliVersion', function() M.get_cli_version() end, { nargs = 0 })
-  api.nvim_create_user_command('WakaTimeAIEnable', function() vim.g.wakatime_ai_detected = true end, { nargs = 0 })
-  api.nvim_create_user_command('WakaTimeAIDisable', function() vim.g.wakatime_ai_detected = false end, { nargs = 0 })
 
   state.initialized = true
-  vim.notify('[WakaTime] Initialized.', vim.log.levels.INFO)
+  if state.is_debug_on then
+    vim.notify('[WakaTime] Initialized.', vim.log.levels.INFO)
+  end
+
+  maybe_attach_lualine_status_bar(0)
 
   -- Trigger initial check in case VimEnter already fired before setup completed
   vim.defer_fn(function() init_and_handle_activity(false) end, 100)

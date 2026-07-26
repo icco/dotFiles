@@ -1,6 +1,9 @@
+// Package main implements dotool, a CLI for managing dotfiles via symlinks
+// and for updating bundled vim plugins and oh-my-zsh.
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -17,53 +20,30 @@ var rootCmd = &cobra.Command{
 var infectCmd = &cobra.Command{
 	Use:   "infect",
 	Short: "Install dotfiles and link all configuration files",
-	Run: func(cmd *cobra.Command, args []string) {
-		if err := runInfect(); err != nil {
-			log.Fatalf("Error running infect: %v", err)
-		}
-	},
+	RunE:  func(_ *cobra.Command, _ []string) error { return runInfect() },
 }
 
 var vimCmd = &cobra.Command{
 	Use:   "vim",
 	Short: "Update vim plugins and sort spell file",
-	Run: func(cmd *cobra.Command, args []string) {
-		if err := runVim(); err != nil {
-			log.Fatalf("Error running vim: %v", err)
-		}
-	},
-}
-
-var testCmd = &cobra.Command{
-	Use:   "test",
-	Short: "Run tests",
-	Run: func(cmd *cobra.Command, args []string) {
-		if err := runTest(); err != nil {
-			log.Fatalf("Error running test: %v", err)
-		}
-	},
+	RunE:  func(cmd *cobra.Command, _ []string) error { return runVim(cmd.Context()) },
 }
 
 var omzCmd = &cobra.Command{
 	Use:   "omz",
 	Short: "Update oh-my-zsh to latest version",
-	Run: func(cmd *cobra.Command, args []string) {
-		if err := runOmz(); err != nil {
-			log.Fatalf("Error updating oh-my-zsh: %v", err)
-		}
-	},
+	RunE:  func(cmd *cobra.Command, _ []string) error { return updateOhMyZsh(cmd.Context()) },
 }
 
 func init() {
 	rootCmd.AddCommand(infectCmd)
 	rootCmd.AddCommand(vimCmd)
-	rootCmd.AddCommand(testCmd)
 	rootCmd.AddCommand(omzCmd)
 }
 
 func main() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
 }
@@ -71,17 +51,6 @@ func main() {
 func runInfect() error {
 	log.Println("Running infect command...")
 
-	// Run test first
-	if err := runTest(); err != nil {
-		return fmt.Errorf("test failed: %w", err)
-	}
-
-	// Build directory structure
-	if err := buildStructure(); err != nil {
-		return fmt.Errorf("failed to build structure: %w", err)
-	}
-
-	// Link files
 	if err := linkFiles(); err != nil {
 		return fmt.Errorf("failed to link files: %w", err)
 	}
@@ -90,38 +59,17 @@ func runInfect() error {
 	return nil
 }
 
-func runVim() error {
+func runVim(ctx context.Context) error {
 	log.Println("Running vim command...")
 
-	// Sort vim spell
-	if err := sortVimSpell(); err != nil {
+	if err := sortVimSpell(ctx); err != nil {
 		return fmt.Errorf("failed to sort vim spell: %w", err)
 	}
 
-	// Upgrade vim plugins
-	if err := upgradeVimPlugins(); err != nil {
+	if err := upgradeVimPlugins(ctx); err != nil {
 		return fmt.Errorf("failed to upgrade vim plugins: %w", err)
 	}
 
 	log.Println("Vim command completed successfully!")
-	return nil
-}
-
-func runTest() error {
-	log.Println("Running tests...")
-	// This would check Go version instead of Ruby version
-	// For now, just return success
-	log.Println("Tests passed!")
-	return nil
-}
-
-func runOmz() error {
-	log.Println("Updating oh-my-zsh...")
-
-	if err := updateOhMyZsh(); err != nil {
-		return fmt.Errorf("failed to update oh-my-zsh: %w", err)
-	}
-
-	log.Println("Oh-my-zsh updated successfully!")
 	return nil
 }

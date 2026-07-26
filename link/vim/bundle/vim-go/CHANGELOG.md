@@ -5,10 +5,21 @@ BACKWARDS INCOMPATIBILITIES:
   [[GH-3710]](https://github.com/fatih/vim-go/pull/3710)
 
 IMPROVEMENTS:
+* Improving handling of strings from delve that Neovim marshals to a Blob
+  value.
+  [[GH-3744]](https://github.com/fatih/vim-go/pull/3744)
 
 BUG FIXES:
 * Fix delay when listing breakpoints when stepping in Neovim.
   [[GH-3714]](https://github.com/fatih/vim-go/pull/3714)
+* Fix :GoReportGitHubIssue after GitHub changed template URL behaviors.
+  [[GH-3736]](https://github.com/fatih/vim-go/pull/3736)
+* Add support for GNUMakefile to compiler settings.
+  [[GH-3723]](https://github.com/fatih/vim-go/pull/3723)
+* Bring back go-callers mappings, its documentation, and :GoCallers
+  documentation.
+  [[GH-3741]](https://github.com/fatih/vim-go/pull/3741)
+
 
 ## v1.29 - (April 18, 2025)
 

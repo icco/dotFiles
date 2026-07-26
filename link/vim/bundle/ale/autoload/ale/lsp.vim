@@ -23,6 +23,7 @@ function! ale#lsp#Register(executable_or_address, project, language, init_option
         " config: Configuration settings to send to the server.
         " callback_list: A list of callbacks for handling LSP responses.
         " capabilities_queue: The list of callbacks to call with capabilities.
+        " dynamic_registrations: A map of dynamically registered capabilities.
         " capabilities: Features the server supports.
         let s:connections[l:conn_id] = {
         \   'id': l:conn_id,
@@ -37,6 +38,8 @@ function! ale#lsp#Register(executable_or_address, project, language, init_option
         \   'config': {},
         \   'callback_list': [],
         \   'init_queue': [],
+        \   'dynamic_registrations': {},
+        \   'static_pull_model': 0,
         \   'capabilities': {
         \       'hover': 0,
         \       'rename': 0,
@@ -196,6 +199,27 @@ function! ale#lsp#ReadMessageData(data) abort
     return [l:remainder, l:response_list]
 endfunction
 
+function! s:UpdatePullModelCapability(conn) abort
+    let a:conn.capabilities.pull_model = get(a:conn, 'static_pull_model', 0)
+
+    if a:conn.capabilities.pull_model
+        return
+    endif
+
+    for l:registration in values(get(a:conn, 'dynamic_registrations', {}))
+        if get(l:registration, 'method', '') is# 'textDocument/diagnostic'
+            let l:options = get(l:registration, 'registerOptions', {})
+
+            if type(l:options) is v:t_dict
+            \&& type(get(l:options, 'interFileDependencies')) is v:t_bool
+                let a:conn.capabilities.pull_model = 1
+
+                return
+            endif
+        endif
+    endfor
+endfunction
+
 " Update capabilities from the server, so we know which features the server
 " supports.
 function! ale#lsp#UpdateCapabilities(conn_id, capabilities) abort
@@ -280,7 +304,8 @@ function! ale#lsp#UpdateCapabilities(conn_id, capabilities) abort
     " Check if the language server supports pull model diagnostics.
     if type(get(a:capabilities, 'diagnosticProvider')) is v:t_dict
         if type(get(a:capabilities.diagnosticProvider, 'interFileDependencies')) is v:t_bool
-            let l:conn.capabilities.pull_model = 1
+            let l:conn.static_pull_model = 1
+            call s:UpdatePullModelCapability(l:conn)
         endif
     endif
 
@@ -311,6 +336,121 @@ function! ale#lsp#UpdateCapabilities(conn_id, capabilities) abort
     endif
 endfunction
 
+" Update capabilities registered dynamically with client/registerCapability.
+" Returns 1 when pull diagnostics were registered.
+function! ale#lsp#RegisterCapabilities(conn_id, registrations) abort
+    let l:conn = get(s:connections, a:conn_id, {})
+
+    if empty(l:conn) || type(a:registrations) isnot v:t_list
+        return 0
+    endif
+
+    if !has_key(l:conn, 'dynamic_registrations')
+        let l:conn.dynamic_registrations = {}
+    endif
+
+    let l:registered_pull_diagnostics = 0
+
+    for l:registration in a:registrations
+        if type(l:registration) isnot v:t_dict
+            continue
+        endif
+
+        let l:id = get(l:registration, 'id', '')
+
+        if empty(l:id)
+            continue
+        endif
+
+        let l:conn.dynamic_registrations[l:id] = l:registration
+
+        if get(l:registration, 'method', '') is# 'textDocument/diagnostic'
+            let l:options = get(l:registration, 'registerOptions', {})
+
+            if type(l:options) is v:t_dict
+            \&& type(get(l:options, 'interFileDependencies')) is v:t_bool
+                let l:registered_pull_diagnostics = 1
+            endif
+        endif
+    endfor
+
+    call s:UpdatePullModelCapability(l:conn)
+
+    return l:registered_pull_diagnostics
+endfunction
+
+" Update capabilities removed dynamically with client/unregisterCapability.
+" The LSP spec names the list "unregisterations".
+function! ale#lsp#UnregisterCapabilities(conn_id, unregisterations) abort
+    let l:conn = get(s:connections, a:conn_id, {})
+
+    if empty(l:conn) || type(a:unregisterations) isnot v:t_list
+        return 0
+    endif
+
+    if !has_key(l:conn, 'dynamic_registrations')
+        let l:conn.dynamic_registrations = {}
+    endif
+
+    let l:unregistered_pull_diagnostics = 0
+
+    for l:unregistration in a:unregisterations
+        if type(l:unregistration) isnot v:t_dict
+            continue
+        endif
+
+        let l:id = get(l:unregistration, 'id', '')
+        let l:method = get(l:unregistration, 'method', '')
+
+        if empty(l:id) || !has_key(l:conn.dynamic_registrations, l:id)
+            continue
+        endif
+
+        let l:registration = l:conn.dynamic_registrations[l:id]
+
+        if get(l:registration, 'method', '') isnot# l:method
+            continue
+        endif
+
+        if l:method is# 'textDocument/diagnostic'
+            let l:unregistered_pull_diagnostics = 1
+        endif
+
+        call remove(l:conn.dynamic_registrations, l:id)
+    endfor
+
+    call s:UpdatePullModelCapability(l:conn)
+
+    return l:unregistered_pull_diagnostics
+endfunction
+
+" Send textDocument/diagnostic requests for all open documents on a connection.
+" Returns a list of request details so callers can map responses back to URIs.
+function! ale#lsp#SendDiagnosticsForOpenDocuments(conn_id) abort
+    let l:conn = get(s:connections, a:conn_id, {})
+    let l:request_list = []
+
+    if empty(l:conn) || !ale#lsp#HasCapability(a:conn_id, 'pull_model')
+        return l:request_list
+    endif
+
+    for l:buffer_string in sort(keys(l:conn.open_documents))
+        let l:buffer = str2nr(l:buffer_string)
+        let l:message = ale#lsp#message#Diagnostic(l:buffer)
+        let l:request_id = ale#lsp#Send(a:conn_id, l:message)
+
+        if l:request_id > 0
+            call add(l:request_list, {
+            \   'id': l:request_id,
+            \   'buffer': l:buffer,
+            \   'uri': l:message[2].textDocument.uri,
+            \})
+        endif
+    endfor
+
+    return l:request_list
+endfunction
+
 " Update a connection's configuration dictionary and notify LSP servers
 " of any changes since the last update. Returns 1 if a configuration
 " update was sent; otherwise 0 will be returned.
@@ -327,6 +467,27 @@ function! ale#lsp#UpdateConfig(conn_id, buffer, config) abort
     call ale#lsp#Send(a:conn_id, l:message)
 
     return 1
+endfunction
+
+function! ale#lsp#GetConnectionConfig(conn_id) abort
+    let l:conn = get(s:connections, a:conn_id, {})
+
+    return get(l:conn, 'config', {})
+endfunction
+
+" Send a JSON-RPC response to a server-initiated request (e.g. workspace/configuration).
+" Unlike ale#lsp#Send, which builds outgoing requests/notifications with a 'method' field,
+" this sends a response with 'id' + 'result' fields to reply to a request the server sent us.
+function! ale#lsp#SendResponse(conn_id, id, result) abort
+    let l:conn = get(s:connections, a:conn_id, {})
+
+    if empty(l:conn)
+        return
+    endif
+
+    let l:body = json_encode({'jsonrpc': '2.0', 'id': a:id, 'result': a:result})
+    let l:data = 'Content-Length: ' . strlen(l:body) . "\r\n\r\n" . l:body
+    call s:SendMessageData(l:conn, l:data)
 endfunction
 
 function! ale#lsp#CallInitCallbacks(conn_id) abort
@@ -848,4 +1009,34 @@ function! ale#lsp#HasCapability(conn_id, capability) abort
     endif
 
     return l:conn.capabilities[a:capability]
+endfunction
+
+" Get the completion trigger characters for a connection.
+function! ale#lsp#GetCompletionTriggerCharacters(conn_id) abort
+    let l:conn = get(s:connections, a:conn_id, {})
+
+    if empty(l:conn)
+        return []
+    endif
+
+    return get(l:conn.capabilities, 'completion_trigger_characters', [])
+endfunction
+
+" Get all completion trigger characters from LSPs active for a buffer.
+function! ale#lsp#GetAllCompletionTriggerCharactersForBuffer(buffer) abort
+    let l:all_triggers = []
+
+    for l:conn in values(s:connections)
+        if has_key(l:conn.open_documents, a:buffer)
+            let l:triggers = get(l:conn.capabilities, 'completion_trigger_characters', [])
+
+            for l:char in l:triggers
+                if index(l:all_triggers, l:char) < 0
+                    call add(l:all_triggers, l:char)
+                endif
+            endfor
+        endif
+    endfor
+
+    return l:all_triggers
 endfunction

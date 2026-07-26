@@ -6,7 +6,7 @@
 " Website:     https://wakatime.com/
 " ============================================================================
 
-let s:VERSION = '11.3.0'
+let s:VERSION = '12.0.0'
 
 
 " Init {{{
@@ -28,6 +28,13 @@ let s:VERSION = '11.3.0'
         finish
     endif
     let g:loaded_wakatime = s:true
+
+    " Use the Neovim Lua implementation when available.
+    if has('nvim') && exists('*luaeval')
+        if luaeval("pcall(function() require('wakatime').setup() end)")
+            finish
+        endif
+    endif
 
     " Backup & Override cpoptions
     let s:old_cpo = &cpo
@@ -59,6 +66,8 @@ let s:VERSION = '11.3.0'
     let s:is_debug_on = s:false
     let s:local_cache_expire = 10  " seconds between reading s:shared_state_file
     let s:last_heartbeat = {'last_activity_at': 0, 'last_heartbeat_at': 0, 'file': ''}
+    let s:last_interaction_at = 0
+    let s:interaction_timeout = 120
     let s:heartbeats_buffer = []
     let s:send_buffer_seconds = 30  " seconds between sending buffered heartbeats
     let s:last_sent = localtime()
@@ -66,14 +75,9 @@ let s:VERSION = '11.3.0'
     let s:has_async = s:has_async_patch && exists('*job_start')
     let s:nvim_async = exists('*jobstart')
 
-    " AI vs Human line change tracking
-    let s:is_ai_code_generating = s:false
+    " Line change tracking
     let s:lines_in_files = {}
-    let s:ai_line_changes = {}
     let s:human_line_changes = {}
-    let s:ai_debounce_timer = -1
-    let s:ai_debounce_count = 0
-    let s:ai_recent_pastes = []
 
     function! s:Init()
         " Set default heartbeat frequency in minutes
@@ -108,30 +112,41 @@ let s:VERSION = '11.3.0'
         let s:autoupdate_cli = s:false
 
         " Check vimrc config for wakatime-cli binary path
-        if exists("g:wakatime_CLIPath") && filereadable(g:wakatime_CLIPath)
+        if exists("g:wakatime_CLIPath")
             let s:wakatime_cli = g:wakatime_CLIPath
 
         " Legacy configuration of wakatime-cli
-        elseif exists("g:wakatime_OverrideCommandPrefix") && filereadable(g:wakatime_OverrideCommandPrefix)
+        elseif exists("g:wakatime_OverrideCommandPrefix")
             let s:wakatime_cli = g:wakatime_OverrideCommandPrefix
 
-        " Check $PATH and ~/.wakatime/wakatime-cli symlink
+        " Check $PATH and managed ~/.wakatime/wakatime-cli
         else
             let path = s:home . '/.wakatime/wakatime-cli'
 
-            " Check for wakatime-cli
-            if !filereadable(path) && s:Executable('wakatime-cli')
+            " Prefer wakatime-cli from PATH so package managers and wrappers still work
+            if s:Executable('wakatime-cli')
                 let s:wakatime_cli = 'wakatime-cli'
 
-            " Check for wakatime
-            elseif !filereadable(path) && s:Executable('wakatime') && !s:Contains(exepath('wakatime'), 'npm') && !s:Contains(exepath('wakatime'), 'node')
+            " Check for legacy wakatime binary in PATH
+            elseif s:Executable('wakatime') && !s:Contains(exepath('wakatime'), 'npm') && !s:Contains(exepath('wakatime'), 'node')
                 let s:wakatime_cli = 'wakatime'
 
-            " Check for wakatime-cli installed via Homebrew
-            elseif !filereadable(path) && filereadable('/usr/local/bin/wakatime-cli')
+            " Prefer the managed CLI before falling back to Homebrew binaries
+            elseif filereadable(path)
+                let s:wakatime_cli = path
+                if s:IsWindows()
+                    let s:wakatime_cli = s:wakatime_cli . '.exe'
+                endif
+
+            " Check for wakatime-cli installed via Homebrew only as a last resort
+            elseif filereadable('/opt/homebrew/bin/wakatime-cli')
+                let s:wakatime_cli = '/opt/homebrew/bin/wakatime-cli'
+
+            " Check for wakatime-cli installed via Homebrew on Intel macOS
+            elseif filereadable('/usr/local/bin/wakatime-cli')
                 let s:wakatime_cli = '/usr/local/bin/wakatime-cli'
 
-            " Default to ~/.wakatime/wakatime-cli
+            " Default to managed ~/.wakatime/wakatime-cli and enable auto-update
             else
                 let s:autoupdate_cli = s:true
                 let s:wakatime_cli = path
@@ -144,7 +159,7 @@ let s:VERSION = '11.3.0'
     endfunction
 
     function! s:InstallCLI(use_external_python)
-        if !s:autoupdate_cli && s:Executable(s:wakatime_cli)
+        if !s:autoupdate_cli || s:Executable(s:wakatime_cli)
             return
         endif
 
@@ -176,11 +191,7 @@ let s:VERSION = '11.3.0'
                     \ 'stoponexit': '',
                     \ 'callback': {channel, output -> s:AsyncInstallHandler(output)}})
             elseif s:nvim_async
-                if s:IsWindows()
-                    let job_cmd = cmd
-                else
-                    let job_cmd = [&shell, &shellcmdflag, s:JoinArgs(cmd)]
-                endif
+                let job_cmd = cmd
                 let s:nvim_async_output = ['']
                 let job_opts = {
                     \ 'on_stdout': function('s:NeovimAsyncInstallOutputHandler'),
@@ -275,7 +286,7 @@ EOF
             let py = 'python'
         endif
         let code = py . " import sys, vim;from os.path import abspath, join;sys.path.insert(0, abspath(join('" . s:plugin_root_folder . "', 'scripts')));from install_cli import main;main(home='" . s:home . "');"
-        let cmd = [v:progname, '-u', 'NONE', '-c', code, '+qall']
+        let cmd = s:GetRoundAboutInstallCmd(code)
         if s:has_async
             if !s:IsWindows()
                 let job_cmd = [&shell, &shellcmdflag, s:JoinArgs(cmd)]
@@ -286,11 +297,7 @@ EOF
             endif
             let job = job_start(job_cmd, {'stoponexit': ''})
         elseif s:nvim_async
-            if s:IsWindows()
-                let job_cmd = cmd
-            else
-                let job_cmd = [&shell, &shellcmdflag, s:JoinArgs(cmd)]
-            endif
+            let job_cmd = cmd
             let job_opts = {}
             if !s:IsWindows()
                 let job_opts['detach'] = 1
@@ -309,6 +316,23 @@ EOF
                 let stdout = system(s:JoinArgs(cmd) . ' &')
             endif
         endif
+    endfunction
+
+    function! s:GetRoundAboutInstallCmd(code)
+        let vim_prog = v:progname
+
+        " Avoid spawning a second GUI instance when running from gvim/macvim.
+        if !s:IsWindows() && (has('gui_running') || v:progname =~# '^\%(g\?vimx\?\|gvim\|mvim\)$')
+            if s:Executable('vim')
+                let vim_prog = 'vim'
+            endif
+        endif
+
+        let cmd = [vim_prog]
+        if !s:IsWindows() && vim_prog ==# v:progname && (has('gui_running') || v:progname =~# '^\%(gvim\|mvim\)$')
+            let cmd = cmd + ['-v']
+        endif
+        return cmd + ['-u', 'NONE', '-c', a:code, '+qall']
     endfunction
 
 " }}}
@@ -364,7 +388,9 @@ EOF
     function! s:SetupCLI()
         if !s:cli_already_setup
             let s:cli_already_setup = s:true
-            call s:InstallCLI(s:true)
+            if s:autoupdate_cli && !s:Executable(s:wakatime_cli)
+                call s:InstallCLI(s:true)
+            endif
         endif
     endfunction
 
@@ -495,7 +521,8 @@ EOF
     endfunction
 
     function! s:JsonEscape(str)
-        return substitute(a:str, '"', '\\"', 'g')
+        let escaped = substitute(a:str, '\\', '\\\\', 'g')
+        return substitute(escaped, '"', '\\"', 'g')
     endfunction
 
     function! s:JoinArgs(args)
@@ -520,6 +547,16 @@ EOF
         return s:n2s(localtime())
     endfunction
 
+    function! s:HasActiveDebugSession()
+        if !has('nvim') || !exists('*luaeval')
+            return s:false
+        endif
+
+        " Guard against unrelated Lua modules named `dap` which don't expose
+        " the nvim-dap API expected below.
+        return luaeval("pcall(function() local dap = package.loaded['dap']; return type(dap) == 'table' and type(dap.session) == 'function' and dap.session() ~= nil end)")
+    endfunction
+
     function! s:AppendHeartbeat(file, now, is_write, last)
         let file = a:file
         if empty(file)
@@ -542,13 +579,10 @@ EOF
             let heartbeat.cursorpos = cursor[2]
             let heartbeat.lines = line("$")
 
-            " Add AI vs Human line changes
-            "if has_key(s:ai_line_changes, file) && s:ai_line_changes[file] != 0
-            "    let heartbeat.ai_line_changes = s:ai_line_changes[file]
-            "endif
-            "if has_key(s:human_line_changes, file) && s:human_line_changes[file] != 0
-            "    let heartbeat.human_line_changes = s:human_line_changes[file]
-            "endif
+            " Add Human line changes
+            if has_key(s:human_line_changes, file) && s:human_line_changes[file] != 0
+                let heartbeat.human_line_changes = s:human_line_changes[file]
+            endif
 
             let s:heartbeats_buffer = s:heartbeats_buffer + [heartbeat]
             call s:SetLastHeartbeat(a:now, a:now, file)
@@ -598,9 +632,6 @@ EOF
                 let cmd = cmd + ['--alternate-language', heartbeat.language]
             endif
         endif
-        if has_key(heartbeat, 'ai_line_changes')
-            let cmd = cmd + ['--ai-line-changes', string(heartbeat.ai_line_changes)]
-        endif
         if has_key(heartbeat, 'human_line_changes')
             let cmd = cmd + ['--human-line-changes', string(heartbeat.human_line_changes)]
         endif
@@ -609,14 +640,8 @@ EOF
         endif
 
         " Debugging category support
-        if has('lua')
-            " check if nvim-dap is loaded
-            if luaeval("package.loaded['dap'] ~= nil")
-                " check if debugging session is active
-                if luaeval("require('dap').session() ~= nil")
-                    let cmd = cmd + ['--category', 'debugging']
-                endif
-            end
+        if s:HasActiveDebugSession()
+            let cmd = cmd + ['--category', 'debugging']
         endif
 
         " overwrite shell
@@ -641,11 +666,7 @@ EOF
                 call ch_sendraw(channel, extra_heartbeats . "\n")
             endif
         elseif s:nvim_async
-            if s:IsWindows()
-                let job_cmd = cmd
-            else
-                let job_cmd = [&shell, &shellcmdflag, s:JoinArgs(cmd)]
-            endif
+            let job_cmd = cmd
             let s:nvim_async_output = ['']
             let job_opts = {
                 \ 'on_stdout': function('s:NeovimAsyncOutputHandler'),
@@ -693,7 +714,6 @@ EOF
         let s:last_sent = localtime()
 
         " Clear line changes after sending
-        let s:ai_line_changes = {}
         let s:human_line_changes = {}
 
         " need to repaint in case a key was pressed while sending
@@ -734,9 +754,6 @@ EOF
                     let heartbeat_str = heartbeat_str . ', "alternate_language": "' . s:JsonEscape(heartbeat.language) . '"'
                 endif
             endif
-            if has_key(heartbeat, 'ai_line_changes')
-                let heartbeat_str = heartbeat_str . ', "ai_line_changes": ' . string(heartbeat.ai_line_changes)
-            endif
             if has_key(heartbeat, 'human_line_changes')
                 let heartbeat_str = heartbeat_str . ', "human_line_changes": ' . string(heartbeat.human_line_changes)
             endif
@@ -749,7 +766,7 @@ EOF
     endfunction
 
     function! s:OrderTime(time_str, loop_count)
-        " Add a milisecond to a:time.
+        " Add a millisecond to a:time.
         " Time prevision doesn't matter, but order of heartbeats does.
         if !(a:time_str =~ "\.")
             let millisecond = s:n2s(a:loop_count)
@@ -777,6 +794,14 @@ EOF
 
     function! s:SetLastHeartbeatInMemory(last_activity_at, last_heartbeat_at, file)
         let s:last_heartbeat = {'last_activity_at': a:last_activity_at, 'last_heartbeat_at': a:last_heartbeat_at, 'file': a:file}
+    endfunction
+
+    function! s:RecordInteraction()
+        let s:last_interaction_at = localtime()
+    endfunction
+
+    function! s:HasRecentInteraction(now)
+        return s:last_interaction_at > 0 && a:now - s:last_interaction_at <= s:interaction_timeout
     endfunction
 
     function! s:n2s(number)
@@ -823,6 +848,14 @@ EOF
         let s:is_debug_on = s:false
     endfunction
 
+    function! s:EnableStatusBar()
+        call s:SetIniSetting('settings', 'status_bar_enabled', 'true')
+    endfunction
+
+    function! s:DisableStatusBar()
+        call s:SetIniSetting('settings', 'status_bar_enabled', 'false')
+    endfunction
+
     function! s:EnableScreenRedraw()
         call s:SetIniSetting('settings', 'vi_redraw', 'enabled')
         let s:redraw_setting = 'enabled'
@@ -845,14 +878,25 @@ EOF
         call s:HandleActivity(a:is_write)
     endfunction
 
+    function! s:IsMacroExecuting()
+        return exists('*reg_executing') && !empty(reg_executing())
+    endfunction
+
     function! s:HandleActivity(is_write)
         if !s:config_file_already_setup
             return
         endif
 
-        " Update line numbers and detect AI code generation
+        if s:IsMacroExecuting()
+            return
+        endif
+
+        if a:is_write
+            call s:RecordInteraction()
+        endif
+
+        " Update line numbers for heartbeat metadata
         call s:UpdateLineNumbers()
-        call s:DetectAICodeGeneration()
 
         let file = s:GetCurrentFile()
         if !empty(file) && file !~ "-MiniBufExplorer-" && file !~ "--NO NAME--" && file !~ "^term:"
@@ -862,7 +906,7 @@ EOF
             " Create a heartbeat when saving a file, when the current file
             " changes, and when still editing the same file but enough time
             " has passed since the last heartbeat.
-            if a:is_write || s:EnoughTimePassed(now, last) || file != last.file
+            if a:is_write || file != last.file || (s:EnoughTimePassed(now, last) && s:HasRecentInteraction(now))
                 call s:AppendHeartbeat(file, now, a:is_write, last)
             else
                 if now - s:last_heartbeat.last_activity_at > s:local_cache_expire
@@ -902,11 +946,7 @@ EOF
                 \ 'stoponexit': '',
                 \ 'callback': {channel, output -> s:AsyncTodayHandler(output, cmd)}})
         elseif s:nvim_async
-            if s:IsWindows()
-                let job_cmd = cmd
-            else
-                let job_cmd = [&shell, &shellcmdflag, s:JoinArgs(cmd)]
-            endif
+            let job_cmd = cmd
             let job_opts = {
                 \ 'on_stdout': function('s:NeovimAsyncTodayOutputHandler'),
                 \ 'on_stderr': function('s:NeovimAsyncTodayOutputHandler'),
@@ -945,11 +985,7 @@ EOF
                 \ 'stoponexit': '',
                 \ 'callback': {channel, output -> s:AsyncFileExpertHandler(output, cmd)}})
         elseif s:nvim_async
-            if s:IsWindows()
-                let job_cmd = cmd
-            else
-                let job_cmd = [&shell, &shellcmdflag, s:JoinArgs(cmd)]
-            endif
+            let job_cmd = cmd
             let job_opts = {
                 \ 'on_stdout': function('s:NeovimAsyncFileExpertOutputHandler'),
                 \ 'on_stderr': function('s:NeovimAsyncFileExpertOutputHandler'),
@@ -992,11 +1028,7 @@ EOF
                 \ 'stoponexit': '',
                 \ 'callback': {channel, output -> s:AsyncVersionHandler(output, cmd)}})
         elseif s:nvim_async
-            if s:IsWindows()
-                let job_cmd = cmd
-            else
-                let job_cmd = [&shell, &shellcmdflag, s:JoinArgs(cmd)]
-            endif
+            let job_cmd = cmd
             let job_opts = {
                 \ 'on_stdout': function('s:NeovimAsyncVersionOutputHandler'),
                 \ 'on_stderr': function('s:NeovimAsyncVersionOutputHandler'),
@@ -1061,52 +1093,17 @@ EOF
         let prev_lines = s:lines_in_files[file]
         let delta = current_lines - prev_lines
 
-        " Track line changes based on AI state
-        if s:is_ai_code_generating
-            if !has_key(s:ai_line_changes, file)
-                let s:ai_line_changes[file] = 0
-            endif
-            let s:ai_line_changes[file] = s:ai_line_changes[file] + delta
-        else
-            if !has_key(s:human_line_changes, file)
-                let s:human_line_changes[file] = 0
-            endif
-            let s:human_line_changes[file] = s:human_line_changes[file] + delta
+        " Always classify line changes as human; wakatime-cli decides final category.
+        if !has_key(s:human_line_changes, file)
+            let s:human_line_changes[file] = 0
         endif
+        let s:human_line_changes[file] = s:human_line_changes[file] + delta
 
         " Update current line count
         let s:lines_in_files[file] = current_lines
     endfunction
 
-    function! s:DetectAICodeGeneration()
-        " Simple heuristic: detect large pastes that might be AI-generated
-        let current_time = localtime()
-        let paste_threshold = 5  " lines
 
-        " Get recent change information from v:register or other sources
-        " This is a simplified detection mechanism
-        " In a real implementation, you might hook into specific AI tools
-
-        if exists('g:wakatime_ai_detected') && g:wakatime_ai_detected
-            let s:is_ai_code_generating = s:true
-            let s:ai_debounce_count = s:ai_debounce_count + 1
-
-            " Clear existing timer and set new one
-            if s:ai_debounce_timer != -1
-                call timer_stop(s:ai_debounce_timer)
-            endif
-
-            let s:ai_debounce_timer = timer_start(1000, function('s:StopAIDetection'))
-        endif
-    endfunction
-
-    function! s:StopAIDetection(timer_id)
-        if s:ai_debounce_count > 1
-            let s:is_ai_code_generating = s:false
-            let s:ai_debounce_count = 0
-            let s:ai_debounce_timer = -1
-        endif
-    endfunction
 
 " }}}
 
@@ -1215,6 +1212,7 @@ call s:Init()
 
     augroup Wakatime
         autocmd BufEnter,VimEnter * call s:InitAndHandleActivity(s:false)
+        autocmd CursorMoved,CursorMovedI,InsertEnter,TextChanged,TextChangedI * call s:RecordInteraction()
         autocmd CursorHold,CursorHoldI * call s:HandleActivity(s:false)
         autocmd BufWritePost * call s:HandleActivity(s:true)
         if exists('##QuitPre')
@@ -1230,6 +1228,8 @@ call s:Init()
     :command -nargs=0 WakaTimeApiKey call s:PromptForApiKey()
     :command -nargs=0 WakaTimeDebugEnable call s:EnableDebugMode()
     :command -nargs=0 WakaTimeDebugDisable call s:DisableDebugMode()
+    :command -nargs=0 WakaTimeStatusBarEnable call s:EnableStatusBar()
+    :command -nargs=0 WakaTimeStatusBarDisable call s:DisableStatusBar()
     :command -nargs=0 WakaTimeScreenRedrawDisable call s:DisableScreenRedraw()
     :command -nargs=0 WakaTimeScreenRedrawEnable call s:EnableScreenRedraw()
     :command -nargs=0 WakaTimeScreenRedrawEnableAuto call s:EnableScreenRedrawAuto()
@@ -1237,8 +1237,6 @@ call s:Init()
     :command -nargs=0 WakaTimeFileExpert call g:WakaTimeFileExpert(function('s:PrintFileExpert'))
     :command -nargs=0 WakaTimeCliLocation call g:WakaTimeCliLocation(function('s:Print'))
     :command -nargs=0 WakaTimeCliVersion call g:WakaTimeCliVersion(function('s:Print'))
-    :command -nargs=0 WakaTimeAIEnable let g:wakatime_ai_detected = 1
-    :command -nargs=0 WakaTimeAIDisable let g:wakatime_ai_detected = 0
 
 " }}}
 

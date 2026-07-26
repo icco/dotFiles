@@ -1,0 +1,5 @@
+#! /bin/zsh
+
+cd ~/Projects/random
+
+claude ~/Projects/random/Prompts/daily.md

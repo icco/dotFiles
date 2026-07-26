@@ -1,17 +1,3 @@
-<div align="center" markdown="1">
-  <sup>Special thanks to:</sup>
-  <br>
-  <a href="https://tuple.app/fzf.vim">
-    <img alt="Tuple's sponsorship image" src="https://raw.githubusercontent.com/junegunn/i/master/tuple.png" width="400">
-  </a>
-
-### [Tuple, the premier screen sharing app for developers](https://tuple.app/fzf.vim)
-[Available for MacOS & Windows](https://tuple.app/fzf.vim)<br>
-
-</div>
-
----
-
 fzf :heart: vim
 ===============
 
@@ -110,6 +96,12 @@ Commands
 
 - Most commands support `CTRL-T` / `CTRL-X` / `CTRL-V` key
   bindings to open in a new tab, a new split, or in a new vertical split
+- Most commands support `ALT-ENTER` to insert the selected items into the
+  current buffer instead of opening them. The inserted text depends on the
+  command: file path (`:Files`, `:GFiles`, `:Buffers`, `:History`, `:Locate`),
+  line content (`:Lines`, `:BLines`, `:Marks`, `:Changes`), matched text
+  (`:Rg`, `:Ag`, `:Grep`), tag name (`:Tags`, `:BTags`), or commit hash
+  (`:Commits`, `:BCommits`)
 - Bang-versions of the commands (e.g. `Ag!`) will open fzf in fullscreen
 - You can set `g:fzf_vim.command_prefix` to give the same prefix to the commands
     - e.g. `let g:fzf_vim.command_prefix = 'Fzf'` and you have `FzfFiles`, etc.
@@ -168,6 +160,17 @@ let g:fzf_vim.preview_window = []
 " If you want it to use a different bash, set this variable.
 "   let g:fzf_vim = {}
 "   let g:fzf_vim.preview_bash = 'C:\Git\bin\bash.exe'
+```
+
+#### Paste key
+
+Most commands support a key to insert the selected items into the current
+buffer instead of opening them (see the command list above for what each
+command inserts). Customize it with `g:fzf_vim.paste_key`.
+
+```vim
+" Key to insert the selected items into the current buffer (default: 'alt-enter')
+let g:fzf_vim.paste_key = 'alt-enter'
 ```
 
 #### Command-level options

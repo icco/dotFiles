@@ -8,6 +8,7 @@ call ale#Set('javascript_prettier_options', '')
 
 function! ale#fixers#prettier#GetExecutable(buffer) abort
     return ale#path#FindExecutable(a:buffer, 'javascript_prettier', [
+    \   '.yarn/sdks/prettier/bin/prettier.cjs',
     \   'node_modules/.bin/prettier_d',
     \   'node_modules/prettier-cli/index.js',
     \   'node_modules/.bin/prettier',
@@ -99,7 +100,7 @@ function! ale#fixers#prettier#ApplyFixForVersion(buffer, version) abort
         return {
         \   'cwd': '%s:h',
         \   'command':ale#Escape(l:executable)
-        \       . (!empty(l:options) ? ' ' . l:options : '')
+        \       . ale#Pad(l:options)
         \       . ' --stdin-filepath %s --stdin',
         \   'process_with': 'ale#fixers#prettier#ProcessPrettierDOutput',
         \}
@@ -110,7 +111,7 @@ function! ale#fixers#prettier#ApplyFixForVersion(buffer, version) abort
         return {
         \   'cwd': ale#fixers#prettier#GetCwd(a:buffer),
         \   'command': ale#Escape(l:executable)
-        \       . (!empty(l:options) ? ' ' . l:options : '')
+        \       . ale#Pad(l:options)
         \       . ' --stdin-filepath %s --stdin',
         \}
     endif
@@ -118,7 +119,7 @@ function! ale#fixers#prettier#ApplyFixForVersion(buffer, version) abort
     return {
     \   'command': ale#Escape(l:executable)
     \       . ' %t'
-    \       . (!empty(l:options) ? ' ' . l:options : '')
+    \       . ale#Pad(l:options)
     \       . ' --write',
     \   'read_temporary_file': 1,
     \}

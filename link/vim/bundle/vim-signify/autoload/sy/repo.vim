@@ -85,6 +85,10 @@ function! sy#repo#get_diff(bufnr, vcs, func) abort
 
   let options.func = a:func
 
+  let s:job_gen = get(s:, 'job_gen', 0) + 1
+  let options.job_gen = s:job_gen
+  call setbufvar(a:bufnr, 'sy_job_gen_'.a:vcs, s:job_gen)
+
   if has('nvim')
     if job_id
       silent! call jobstop(job_id)
@@ -151,7 +155,12 @@ function! s:handle_diff(options, exitval) abort
     call sy#verbose('No valid diff found. Disabling this VCS.', a:options.vcs)
   endif
 
-  call setbufvar(a:options.bufnr, 'sy_job_id_'.a:options.vcs, 0)
+  " Only clear the job marker if this is still the current job.
+  " A stale job's callback must not clobber a newer job's marker,
+  " otherwise the newer job becomes orphaned and never gets stopped.
+  if get(a:options, 'job_gen', -1) == getbufvar(a:options.bufnr, 'sy_job_gen_'.a:options.vcs, -2)
+    call setbufvar(a:options.bufnr, 'sy_job_id_'.a:options.vcs, 0)
+  endif
 endfunction
 
 " s:check_diff_diff {{{1
@@ -176,6 +185,11 @@ endfunction
 
 " s:check_diff_svn {{{1
 function! s:check_diff_svn(exitval, diff) abort
+  return a:exitval ? [0, []] : [1, a:diff]
+endfunction
+
+" s:check_diff_jj {{{1
+function! s:check_diff_jj(exitval, diff) abort
   return a:exitval ? [0, []] : [1, a:diff]
 endfunction
 
@@ -629,7 +643,8 @@ let s:default_vcs_cmds = {
       \ 'rcs':      'rcsdiff -U0 %f 2>%n',
       \ 'accurev':  'accurev diff %f -- -U0',
       \ 'perforce': 'p4 info '. sy#util#shell_redirect('%n') . (has('win32') ? ' && set P4DIFF=&&' : ' && env P4DIFF=') .' p4 diff -du0 %f',
-      \ 'tfs':      'tf diff -version:W -noprompt -format:Unified %f'
+      \ 'tfs':      'tf diff -version:W -noprompt -format:Unified %f',
+      \ 'jj':       'jj diff --ignore-working-copy --color=never --git --context=0 -r @ -- %f',
       \ }
 
 let s:default_vcs_cmds_diffmode = {
@@ -645,6 +660,7 @@ let s:default_vcs_cmds_diffmode = {
       \ 'accurev':  'accurev cat %f',
       \ 'perforce': 'p4 print -q %f',
       \ 'tfs':      'tf view -version:W -noprompt %f',
+      \ 'jj':       'jj file show -r @- -- %f',
       \ }
 
 if exists('g:signify_vcs_cmds')

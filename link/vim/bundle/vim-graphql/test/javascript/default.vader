@@ -82,8 +82,30 @@ Given javascript (Template literal with a graphql() function):
 
 Execute (Syntax assertions):
   AssertEqual 'javascript', b:current_syntax
+  AssertEqual 'graphqlFunctionCall', SyntaxOf('graphql')
   AssertEqual 'graphqlTemplateExpression', SyntaxOf('${uid}')
   AssertEqual 'graphqlName', SyntaxOf('user')
+  AssertNotEqual 'jsParensError', SyntaxOf(')')
+
+Given javascript (Template literal with a multiline graphql() function call):
+  graphql(
+    `
+    {
+      user(id: ${uid}) {
+        firstName
+        lastName
+      }
+    }
+    `,
+    [],
+  );
+
+Execute (Syntax assertions):
+  AssertEqual 'javascript', b:current_syntax
+  AssertEqual 'graphqlFunctionCall', SyntaxOf('graphql')
+  AssertEqual 'graphqlTemplateExpression', SyntaxOf('${uid}')
+  AssertEqual 'graphqlName', SyntaxOf('user')
+  AssertNotEqual 'jsParensError', SyntaxOf(')')
 
 Given javascript (Template literal):
   const s = `text`;

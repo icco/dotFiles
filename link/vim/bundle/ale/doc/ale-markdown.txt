@@ -11,7 +11,36 @@ See |ale-cspell-options|
 ===============================================================================
 dprint                                                    *ale-markdown-dprint*
 
-See |ale-dprint-options| and https://dprint.dev/plugins/markdown
+See |ale-dprint-options| and https://dprint.dev/plugins/markdown/.
+
+
+===============================================================================
+harper                                                    *ale-markdown-harper*
+
+                                           *ale-options.markdown_harper_config*
+                                                  *g:ale_markdown_harper_config*
+                                                  *b:ale_markdown_harper_config*
+markdown_harper_config
+g:ale_markdown_harper_config
+  Type: |Dictionary|
+  Default: `{'harper-ls': {'diagnosticSeverity': 'hint', 'dialect': 'American', ...}}`
+
+  Dictionary passed to harper-ls as LSP workspace configuration. The default
+  enables spell check, sentence capitalization, repeated words, long
+  sentences, a/an errors, and spacing rules, and disables spelled-out numbers
+  and wrong-quote checks.
+
+  Example: >
+    let g:ale_markdown_harper_config = {
+    \   'harper-ls': {
+    \       'diagnosticSeverity': 'warning',
+    \       'linters': {
+    \           'SpellCheck': v:true,
+    \           'LongSentences': v:false,
+    \       },
+    \   },
+    \}
+<
 
 
 ===============================================================================
@@ -111,9 +140,11 @@ See |ale-javascript-prettier| for information about the available options.
 ===============================================================================
 pymarkdown                                            *ale-markdown-pymarkdown*
 
+pymarkdown can be used both as a linter and a fixer for Markdown files.
+
                                    *ale-options.markdown_pymarkdown_executable*
                                          *g:ale_markdown_pymarkdown_executable*
-                                          *b:ale_markdown_pymarkdown_executable*
+                                         *b:ale_markdown_pymarkdown_executable*
 markdown_pymarkdown_executable
 g:ale_markdown_pymarkdown_executable
   Type: |String|
@@ -126,7 +157,7 @@ g:ale_markdown_pymarkdown_executable
 
                                       *ale-options.markdown_pymarkdown_options*
                                             *g:ale_markdown_pymarkdown_options*
-                                             *b:ale_markdown_pymarkdown_options*
+                                            *b:ale_markdown_pymarkdown_options*
 markdown_pymarkdown_options
 g:ale_markdown_pymarkdown_options
   Type: |String|
@@ -137,7 +168,7 @@ g:ale_markdown_pymarkdown_options
 
                                    *ale-options.markdown_pymarkdown_use_global*
                                          *g:ale_markdown_pymarkdown_use_global*
-                                          *b:ale_markdown_pymarkdown_use_global*
+                                         *b:ale_markdown_pymarkdown_use_global*
 markdown_pymarkdown_use_global
 g:ale_markdown_pymarkdown_use_global
   Type: |Number|
@@ -147,7 +178,7 @@ g:ale_markdown_pymarkdown_use_global
 
                                   *ale-options.markdown_pymarkdown_auto_pipenv*
                                         *g:ale_markdown_pymarkdown_auto_pipenv*
-                                         *b:ale_markdown_pymarkdown_auto_pipenv*
+                                        *b:ale_markdown_pymarkdown_auto_pipenv*
 markdown_pymarkdown_auto_pipenv
 g:ale_markdown_pymarkdown_auto_pipenv
   Type: |Number|
@@ -158,7 +189,7 @@ g:ale_markdown_pymarkdown_auto_pipenv
 
                                   *ale-options.markdown_pymarkdown_auto_poetry*
                                         *g:ale_markdown_pymarkdown_auto_poetry*
-                                         *b:ale_markdown_pymarkdown_auto_poetry*
+                                        *b:ale_markdown_pymarkdown_auto_poetry*
 markdown_pymarkdown_auto_poetry
 g:ale_markdown_pymarkdown_auto_poetry
   Type: |Number|
@@ -169,7 +200,7 @@ g:ale_markdown_pymarkdown_auto_poetry
 
                                       *ale-options.markdown_pymarkdown_auto_uv*
                                             *g:ale_markdown_pymarkdown_auto_uv*
-                                             *b:ale_markdown_pymarkdown_auto_uv*
+                                            *b:ale_markdown_pymarkdown_auto_uv*
 markdown_pymarkdown_auto_uv
 g:ale_markdown_pymarkdown_auto_uv
   Type: |Number|
@@ -211,6 +242,40 @@ g:ale_markdown_remark_lint_use_global
   Default: `get(g:, 'ale_use_global_executables', 0)`
 
   See |ale-integrations-local-executables|
+
+
+===============================================================================
+rumdl                                                      *ale-markdown-rumdl*
+
+                                        *ale-options.markdown_rumdl_executable*
+                                              *g:ale_markdown_rumdl_executable*
+                                              *b:ale_markdown_rumdl_executable*
+markdown_rumdl_executable
+g:ale_markdown_rumdl_executable
+  Type: |String|
+  Default: `'rumdl'`
+
+  Override the invoked `rumdl` binary.
+
+                                           *ale-options.markdown_rumdl_options*
+                                                 *g:ale_markdown_rumdl_options*
+                                                 *b:ale_markdown_rumdl_options*
+markdown_rumdl_options
+g:ale_markdown_rumdl_options
+  Type: |String|
+  Default: `''`
+
+  This variable can be set to pass additional options to `rumdl server`.
+
+                                       *ale-options.markdown_rumdl_fmt_options*
+                                             *g:ale_markdown_rumdl_fmt_options*
+                                             *b:ale_markdown_rumdl_fmt_options*
+markdown_rumdl_fmt_options
+g:ale_markdown_rumdl_fmt_options
+  Type: |String|
+  Default: `'--silent'`
+
+  This variable can be set to pass additional options to `rumdl fmt`.
 
 
 ===============================================================================

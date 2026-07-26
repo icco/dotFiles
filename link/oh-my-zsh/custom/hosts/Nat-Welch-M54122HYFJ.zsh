@@ -1,0 +1,103 @@
+# ZSH config for work mbp
+export TZ="UTC"
+
+export ART_API_URL=https://art.natwelch.com
+export ART_API_AUDIENCE=32555940559.apps.googleusercontent.com
+
+# Add iterm2 support
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# Try and fix PATH
+export PATH="/opt/homebrew/bin:/usr/local/sbin:/usr/local/bin:$PATH"
+
+# alias ls to GNU ls with colors
+alias ls="/opt/homebrew/bin/gls --color";
+
+# Colors
+export CLICOLOR=1
+export LSCOLORS=ExFxCxDxBxegedabagacad
+export LS_COLORS=$(vivid generate iceberg-dark)
+
+# Golang
+export GOPATH="$HOME/Projects"
+export PATH="$GOPATH/bin:$PATH"
+export GO111MODULE="on"
+export GOPRIVATE="github.com/pinginc/*"
+
+# search! (fzf >= 0.48 integration: CTRL-R history, CTRL-T files, ALT-C cd, **<TAB> completion)
+(( $+commands[fzf] )) && source <(fzf --zsh)
+alias fr='open -R "$(fzf)"'
+alias f='open "$(fzf)"'
+alias fv='vim "$(fzf)"'
+
+alias k='kubectl'
+
+# krew (kubectl plugin manager) bin
+export PATH="${KREW_ROOT:-$HOME/.krew}/bin:$PATH"
+
+wordcount() {
+  pandoc --lua-filter wordcount.lua "$@"
+}
+
+# gallery + ytdl
+alias gd=gallery-dl
+
+# A better which
+alias which='alias | gwhich --tty-only --read-alias --show-dot --show-tilde'
+
+# iaWriter
+alias ia='open -a "IA Writer"'
+
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+# place this after nvm initialization!
+autoload -U add-zsh-hook
+load-nvmrc() {
+  local node_version="$(nvm version)"
+  local nvmrc_path="$(nvm_find_nvmrc)"
+
+  if [ -n "$nvmrc_path" ]; then
+    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+
+    if [ "$nvmrc_node_version" = "N/A" ]; then
+      nvm install
+    elif [ "$nvmrc_node_version" != "$node_version" ]; then
+      nvm use
+    fi
+  elif [ "$node_version" != "$(nvm version default)" ]; then
+    echo "Reverting to nvm default version"
+    nvm use default
+  fi
+}
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/nat/google-cloud-sdk/path.zsh.inc' ]; then source '/Users/nat/google-cloud-sdk/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/nat/google-cloud-sdk/completion.zsh.inc' ]; then source '/Users/nat/google-cloud-sdk/completion.zsh.inc'; fi
+
+# Infra directory switcher
+infra() {
+  source ~/Projects/dotFiles/bin/infra-script
+}
+
+# RVM
+[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+export PATH="$PATH:$HOME/.rvm/bin"
+
+# postgres
+export PATH="/opt/homebrew/opt/postgresql@18/bin:$PATH"
+
+# zmv
+autoload -Uz zmv
+
+# Wiz
+autoload -U +X bashcompinit && bashcompinit
+complete -o nospace -C /opt/homebrew/bin/wizcli wizcli
+
+# vim: set filetype=zsh:

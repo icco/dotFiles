@@ -192,6 +192,11 @@ let s:default_registry = {
 \       'suggested_filetypes': ['python'],
 \       'description': 'Tidy Python imports with pyflyby.',
 \   },
+\   'unimport': {
+\       'function': 'ale#fixers#unimport#Fix',
+\       'suggested_filetypes': ['python'],
+\       'description': 'unimport fixer',
+\   },
 \   'importjs': {
 \       'function': 'ale#fixers#importjs#Fix',
 \       'suggested_filetypes': ['javascript'],
@@ -201,6 +206,11 @@ let s:default_registry = {
 \       'function': 'ale#fixers#puppetlint#Fix',
 \       'suggested_filetypes': ['puppet'],
 \       'description': 'Run puppet-lint -f on a file.',
+\   },
+\   'replace_emdash': {
+\       'function': 'ale#fixers#generic#ReplaceEmDash',
+\       'suggested_filetypes': [],
+\       'description': 'Replace em dash with -- ASCII characters.',
 \   },
 \   'remove_trailing_lines': {
 \       'function': 'ale#fixers#generic#RemoveTrailingBlankLines',
@@ -452,6 +462,11 @@ let s:default_registry = {
 \       'suggested_filetypes': ['markdown'],
 \       'description': 'Fix markdown files with pandoc.',
 \   },
+\   'pymarkdown': {
+\       'function': 'ale#fixers#pymarkdown#Fix',
+\       'suggested_filetypes': ['markdown'],
+\       'description': 'Fix markdown files with pymarkdown.',
+\   },
 \   'shfmt': {
 \       'function': 'ale#fixers#shfmt#Fix',
 \       'suggested_filetypes': ['sh'],
@@ -619,7 +634,7 @@ let s:default_registry = {
 \   },
 \   'dprint': {
 \       'function': 'ale#fixers#dprint#Fix',
-\       'suggested_filetypes': ['dockerfile', 'javascript', 'json', 'markdown', 'toml', 'typescript'],
+\       'suggested_filetypes': ['astro', 'cs', 'css', 'dockerfile', 'go', 'graphql', 'html', 'javascript', 'jinja', 'json', 'less', 'markdown', 'mustache', 'nunjucks', 'php', 'python', 'sass', 'scss', 'sql', 'svelte', 'toml', 'twig', 'typescript', 'vento', 'vue', 'xml', 'yaml'],
 \       'description': 'Pluggable and configurable code formatting platform',
 \   },
 \   'stylua': {
@@ -666,6 +681,11 @@ let s:default_registry = {
 \       'function': 'ale#fixers#raco_fmt#Fix',
 \       'suggested_filetypes': ['racket'],
 \       'description': 'Fix Racket files with raco fmt.',
+\   },
+\   'rescript_format': {
+\       'function': 'ale#fixers#rescript_format#Fix',
+\       'suggested_filetypes': ['rescript'],
+\       'description': 'Official formatter for ReScript.',
 \   },
 \   'ruff': {
 \       'function': 'ale#fixers#ruff#Fix',
@@ -747,6 +767,21 @@ let s:default_registry = {
 \       'suggested_filetypes': ['verilog'],
 \       'description': 'Formats verilog files using verible.',
 \   },
+\   'markdownlint': {
+\       'function': 'ale#fixers#markdownlint#Fix',
+\       'suggested_filetypes': ['markdown'],
+\       'description': 'Fix markdown files with markdownlint.',
+\   },
+\   'rumdl': {
+\       'function': 'ale#fixers#rumdl#Fix',
+\       'suggested_filetypes': ['markdown'],
+\       'description': 'Fix markdown files with rumdl.',
+\   },
+\   'tex-fmt': {
+\       'function': 'ale#fixers#tex_fmt#Fix',
+\       'suggested_filetypes': ['bib', 'tex'],
+\       'description': 'Fix LaTeX and bibliography files with tex-fmt.',
+\   }
 \}
 
 " Reset the function registry to the default entries.
