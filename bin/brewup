@@ -13,5 +13,3 @@ cd ~/Projects/dotfiles && \
   cd -
 
 gcloud components update -q
-
-rvm get stable
