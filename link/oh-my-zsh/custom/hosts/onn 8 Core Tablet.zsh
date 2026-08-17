@@ -12,7 +12,7 @@ GPG_TTY=$(tty)
 export GPG_TTY
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-source /usr/share/doc/fzf/examples/key-bindings.zsh
+# source /usr/share/doc/fzf/examples/key-bindings.zsh
 
 # python
 export PATH="$PATH:$HOME/.local/bin"
