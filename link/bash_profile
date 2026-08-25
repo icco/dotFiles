@@ -4,3 +4,5 @@ if [ -f ~/.bashrc ]; then
 fi
 
 # vim: set filetype=sh:
+
+. "$HOME/.local/bin/env"

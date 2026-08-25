@@ -127,3 +127,5 @@ fi
 echo "===> Loaded .bashrc";
 
 # vim: set filetype=sh:
+
+. "$HOME/.local/bin/env"
