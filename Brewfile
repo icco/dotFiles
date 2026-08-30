@@ -50,7 +50,6 @@ brew "yq"
 brew "zoxide"
 brew "zsh"
 brew "wakatime-cli"
-brew "sheeki03/tap/tirith"
 
 cask "1password"
 cask "1password-cli"
