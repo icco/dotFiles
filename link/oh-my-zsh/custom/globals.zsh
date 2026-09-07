@@ -72,8 +72,36 @@ nvm_default_bin_to_path() {
 #
 # If a future oh-my-zsh adds fields to this function, this copy goes stale and
 # the prompt loses the new field -- it does not break.
+#
+# The plugin refreshes three times per cd and twice per prompt, each one
+# forking git: a chpwd hook, a precmd hook, and a third call from inside
+# git_super_status during prompt expansion. Two of those are redundant --
+# precmd always runs before the prompt is expanded, so the chpwd hook and the
+# git_super_status call have nothing new to find.
+#
+# Dropping the chpwd hook and memoising for the rest of the cycle leaves
+# exactly one refresh per prompt, with no loss of freshness: the memo is
+# invalidated at the front of precmd, so every prompt -- including a bare
+# Enter -- refreshes once. ZSH_THEME_GIT_PROMPT_CACHE would be cheaper still
+# but stops refreshing after non-git commands, leaving the prompt wrong until
+# you cd or run git.
 if (( $+functions[update_current_git_vars] )); then
+  autoload -U add-zsh-hook
+
+  # Redundant with precmd, which runs before every prompt expansion.
+  add-zsh-hook -d chpwd chpwd_update_git_vars
+
+  _git_prompt_memo_pwd=""
+  _git_prompt_invalidate() { _git_prompt_memo_pwd="" }
+  # Must run before precmd_update_git_vars, which the plugin already
+  # appended, so prepend rather than add-zsh-hook.
+  precmd_functions=(_git_prompt_invalidate ${precmd_functions:#_git_prompt_invalidate})
+
   update_current_git_vars() {
+    # Already refreshed for this directory during this prompt cycle.
+    [[ -n $_git_prompt_memo_pwd && $_git_prompt_memo_pwd == $PWD ]] && return
+    _git_prompt_memo_pwd=$PWD
+
     unset __CURRENT_GIT_STATUS
 
     local _GIT_STATUS
