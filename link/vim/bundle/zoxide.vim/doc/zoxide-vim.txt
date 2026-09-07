@@ -13,6 +13,10 @@ USAGE					*zoxide-vim* *zoxide-vim-usage*
 							*:Tz*
 :Tz {query}		same as :Z but local to the current tab.
 
+							*:Bz*
+:Bz {query}		same as :Z but local to the current buffer.
+			(Neovim >=0.13 only)
+
 							*:Zi*
 :Zi {query}		cd to one of your highest ranking directories using
 			fzf.
@@ -22,6 +26,10 @@ USAGE					*zoxide-vim* *zoxide-vim-usage*
 
 							*:Tzi*
 :Tzi {query}		same as :Zi, but local to the current tab.
+
+							*:Bzi*
+:Bzi {query}		same as :Zi, but local to the current buffer.
+			(Neovim >=0.13 only)
 
 ===============================================================================
 CONFIGURATION				*zoxide-vim-configuration*
@@ -43,9 +51,11 @@ g:zoxide_prefix
 			:Jump
 			:Ljump
 			:Tjump
+			:Bjump
 			:Jumpi
 			:Ljumpi
 			:Tjumpi
+			:Bjumpi
 
 			Default value: `'z'`
 
@@ -63,16 +73,14 @@ g:zoxide_hook
 			- `'none'`: never automatically add directories to
 			  zoxide.
 			- `'pwd'`: sets up an autocommand that listens to the
-			  |DirChanged| event. Note: on Neovim < `0.6.0`,
-			  'autochdir' can cause the event to be triggered very
-			  often.
+			  |DirChanged| event.
 
 			Default value: `'none'`
 
 					*g:zoxide_use_select*
 g:zoxide_use_select
-			Use |vim.ui.select()| for :Zi-style commands (Neovim
-			`0.6.0+` only)
+			Use |vim.ui.select()| for :Zi-style commands. Falls
+			back to |inputlist()| when not available.
 
 			Default value: `0`
 

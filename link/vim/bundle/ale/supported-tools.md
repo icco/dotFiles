@@ -241,6 +241,8 @@ formatting.
   * [proselint](http://proselint.com/)
 * FusionScript
   * [fusion-lint](https://github.com/RyanSquared/fusionscript)
+* Generic
+  * [ast-grep](https://ast-grep.github.io/)
 * Git Commit Messages
   * [gitlint](https://github.com/jorisroovers/gitlint)
 * Gleam
@@ -339,6 +341,8 @@ formatting.
   * [inko](https://inko-lang.org/) :floppy_disk:
 * ISPC
   * [ispc](https://ispc.github.io/) :floppy_disk:
+* Janet
+  * [janet-format](https://github.com/janet-lang/spork)
 * Java
   * [PMD](https://pmd.github.io/)
   * [checkstyle](http://checkstyle.sourceforge.net) :floppy_disk:
@@ -392,6 +396,7 @@ formatting.
   * [jsonnet-lint](https://jsonnet.org/learning/tools.html) :speech_balloon:
   * [jsonnetfmt](https://jsonnet.org/learning/tools.html) :speech_balloon:
 * Julia
+  * [fatou](https://github.com/jolars/fatou) :speech_balloon:
   * [languageserver](https://github.com/JuliaEditorSupport/LanguageServer.jl)
 * Kotlin
   * [kotlinc](https://kotlinlang.org) :floppy_disk:
@@ -442,8 +447,10 @@ formatting.
   * [dprint](https://dprint.dev)
   * [harper](https://github.com/elijah-potter/harper) :speech_balloon:
   * [languagetool](https://languagetool.org/) :floppy_disk: :speech_balloon:
-  * [markdownlint](https://github.com/DavidAnson/markdownlint) :floppy_disk:
+  * [markdownlint-cli](https://github.com/igorshubovych/markdownlint-cli) :floppy_disk:
+  * [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2) :floppy_disk:
   * [marksman](https://github.com/artempyanykh/marksman) :speech_balloon:
+  * [mdformat](https://github.com/hukkin/mdformat)
   * [mdl](https://github.com/mivok/markdownlint)
   * [pandoc](https://pandoc.org)
   * [prettier](https://github.com/prettier/prettier)
@@ -509,6 +516,7 @@ formatting.
   * [yamllint](https://yamllint.readthedocs.io/)
 * OpenSCAD
   * [SCA2D](https://gitlab.com/bath_open_instrumentation_group/sca2d) :floppy_disk:
+  * [openscad-lsp](https://github.com/Leathong/openscad-LSP)
   * [scadformat](https://github.com/hugheaves/scadformat)
 * Packer (HCL)
   * [packer-fmt-fixer](https://github.com/hashicorp/packer)
@@ -736,6 +744,7 @@ formatting.
   * [terraform-lsp](https://github.com/juliosueiras/terraform-lsp) :speech_balloon:
   * [tflint](https://github.com/wata727/tflint)
   * [tfsec](https://github.com/aquasecurity/tfsec)
+  * [trivy](https://github.com/aquasecurity/trivy)
 * Texinfo
   * [alex](https://github.com/get-alex/alex)
   * [cspell](https://github.com/streetsidesoftware/cspell/tree/main/packages/cspell)

@@ -3593,6 +3593,8 @@ documented in additional help files.
   fountain................................|ale-fountain-options|
   fusionscript............................|ale-fuse-options|
     fusion-lint...........................|ale-fuse-fusionlint|
+  generic.................................|ale-generic-options|
+    astgrep...............................|ale-generic-astgrep|
   git commit..............................|ale-gitcommit-options|
     gitlint...............................|ale-gitcommit-gitlint|
   gleam...................................|ale-gleam-options|
@@ -3687,6 +3689,8 @@ documented in additional help files.
     inko..................................|ale-inko-inko|
   ispc....................................|ale-ispc-options|
     ispc..................................|ale-ispc-ispc|
+  janet...................................|ale-janet-options|
+    janet-format..........................|ale-janet-janet-format|
   java....................................|ale-java-options|
     checkstyle............................|ale-java-checkstyle|
     clang-format..........................|ale-java-clangformat|
@@ -3740,6 +3744,7 @@ documented in additional help files.
     jsonnetfmt............................|ale-jsonnet-jsonnetfmt|
     jsonnet-lint..........................|ale-jsonnet-jsonnet-lint|
   julia...................................|ale-julia-options|
+    fatou.................................|ale-julia-fatou|
     languageserver........................|ale-julia-languageserver|
   kotlin..................................|ale-kotlin-options|
     kotlinc...............................|ale-kotlin-kotlinc|
@@ -3775,8 +3780,10 @@ documented in additional help files.
     cspell................................|ale-markdown-cspell|
     dprint................................|ale-markdown-dprint|
     harper................................|ale-markdown-harper|
-    markdownlint..........................|ale-markdown-markdownlint|
+    markdownlint-cli......................|ale-markdown-markdownlint-cli|
+    markdownlint-cli2.....................|ale-markdown-markdownlint-cli2|
     marksman..............................|ale-markdown-marksman|
+    mdformat..............................|ale-markdown-mdformat|
     mdl...................................|ale-markdown-mdl|
     pandoc................................|ale-markdown-pandoc|
     prettier..............................|ale-markdown-prettier|
@@ -3833,6 +3840,7 @@ documented in additional help files.
     prettier..............................|ale-openapi-prettier|
     yamllint..............................|ale-openapi-yamllint|
   openscad................................|ale-openscad-options|
+    openscad-lsp..........................|ale-openscad-openscad_lsp|
     sca2d.................................|ale-openscad-sca2d|
     scadformat............................|ale-openscad-scadformat|
   packer..................................|ale-packer-options|
@@ -4045,6 +4053,7 @@ documented in additional help files.
     terraform-ls..........................|ale-terraform-terraform-ls|
     terraform-lsp.........................|ale-terraform-terraform-lsp|
     tflint................................|ale-terraform-tflint|
+    trivy.................................|ale-terraform-trivy|
     tfsec.................................|ale-terraform-tfsec|
   tex.....................................|ale-tex-options|
     chktex................................|ale-tex-chktex|

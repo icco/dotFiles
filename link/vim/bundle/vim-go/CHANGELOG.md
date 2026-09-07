@@ -8,6 +8,9 @@ IMPROVEMENTS:
 * Improving handling of strings from delve that Neovim marshals to a Blob
   value.
   [[GH-3744]](https://github.com/fatih/vim-go/pull/3744)
+* Handle Go 1.27's support for providing a default value for `go env GOBIN`
+  when GOBIN is otherwise undefined.
+  [[GH-3753]](https://github.com/fatih/vim-go/pull/3753)
 
 BUG FIXES:
 * Fix delay when listing breakpoints when stepping in Neovim.
@@ -19,6 +22,12 @@ BUG FIXES:
 * Bring back go-callers mappings, its documentation, and :GoCallers
   documentation.
   [[GH-3741]](https://github.com/fatih/vim-go/pull/3741)
+* Fix highlighting of multi-line string concatenation in a var or const block.
+  [[GH-3750]](https://github.com/fatih/vim-go/pull/3750)
+  [[GH-3751]](https://github.com/fatih/vim-go/pull/3751)
+* Fix :GoDefPop, :GoDefStack, and :GoDefStackClear when Vim's native tag stack
+  is used.
+  [[GH-3754]](https://github.com/fatih/vim-go/pull/3754)
 
 
 ## v1.29 - (April 18, 2025)

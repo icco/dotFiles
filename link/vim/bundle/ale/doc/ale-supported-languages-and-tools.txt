@@ -231,6 +231,8 @@ Notes:
   * `proselint`
 * FusionScript
   * `fusion-lint`
+* Generic
+  * `ast-grep`
 * Git Commit Messages
   * `gitlint`
 * Gleam
@@ -329,6 +331,8 @@ Notes:
   * `inko` !!
 * ISPC
   * `ispc`!!
+* Janet
+  * `janet-format`
 * Java
   * `PMD`
   * `checkstyle`!!
@@ -382,6 +386,7 @@ Notes:
   * `jsonnet-lint`
   * `jsonnetfmt`
 * Julia
+  * `fatou`
   * `languageserver`
 * Kotlin
   * `kotlinc`!!
@@ -432,8 +437,10 @@ Notes:
   * dprint
   * `harper`
   * `languagetool`!!
-  * `markdownlint`!!
+  * `markdownlint-cli`!!
+  * `markdownlint-cli2`!!
   * `marksman`
+  * `mdformat`
   * `mdl`
   * `pandoc`
   * `prettier`
@@ -499,6 +506,7 @@ Notes:
   * `yamllint`
 * OpenSCAD
   * `SCA2D`
+  * `openscad-lsp`
   * `scadformat`
 * Packer
   * `packer-fmt-fixer`
@@ -726,6 +734,7 @@ Notes:
   * `terraform-lsp`
   * `tflint`
   * `tfsec`
+  * `trivy`
 * Texinfo
   * `alex`
   * `cspell`
