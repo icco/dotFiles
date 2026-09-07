@@ -49,27 +49,55 @@ alias which='alias | gwhich --tty-only --read-alias --show-dot --show-tilde'
 alias ia='open -a "IA Writer"'
 
 # nvm
+# --no-use skips nvm_auto, which was 64% of shell startup (~1.1s) per zprof.
+# Sourcing drops from 0.81s to 0.01s.
 export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh" --no-use
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+
+# --no-use leaves no node on PATH, so put the default version there directly.
+# Globs only, no nvm calls and no subprocesses. The `n` qualifier sorts
+# numerically so v22.9.0 sorts below v22.14.0.
+() {
+  local want
+  [[ -r $NVM_DIR/alias/default ]] || return
+  read -r want < $NVM_DIR/alias/default
+  local -a vers=($NVM_DIR/versions/node/v${want#v}*(/Nn))
+  (( $#vers )) && export PATH="${vers[-1]}/bin:$PATH"
+}
 
 # place this after nvm initialization!
+# NB: link/oh-my-zsh/plugins/nvm/nvm.plugin.zsh registers its own load-nvmrc
+# chpwd hook. It is not in plugins=(), so it does not load; adding it there
+# would give you two competing hooks.
 autoload -U add-zsh-hook
+# Walks up for .nvmrc with zsh builtins, so a cd into a plain directory costs
+# nothing. Only directories that actually pin a version pay for nvm. The old
+# version called `nvm version` three times on every single cd (~510ms).
 load-nvmrc() {
-  local node_version="$(nvm version)"
-  local nvmrc_path="$(nvm_find_nvmrc)"
-
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$node_version" ]; then
-      nvm use
+  local dir=$PWD nvmrc=""
+  while [[ -n $dir ]]; do
+    if [[ -f $dir/.nvmrc ]]; then
+      nvmrc=$dir/.nvmrc
+      break
     fi
-  elif [ "$node_version" != "$(nvm version default)" ]; then
+    dir=${dir%/*}
+  done
+
+  if [[ -n $nvmrc ]]; then
+    local want
+    read -r want < $nvmrc
+    if [[ $want != "$_NVM_AUTO_WANT" ]]; then
+      # Try first, install on failure. Probing with `nvm version` beforehand
+      # cost an extra 338ms for the same answer.
+      nvm use "$want" || nvm install
+      _NVM_AUTO_WANT=$want
+    fi
+  elif [[ -n $_NVM_AUTO_WANT ]]; then
+    # Only revert if we were the ones who switched away from the default.
     echo "Reverting to nvm default version"
     nvm use default
+    unset _NVM_AUTO_WANT
   fi
 }
 add-zsh-hook chpwd load-nvmrc
