@@ -48,23 +48,8 @@ alias which='alias | gwhich --tty-only --read-alias --show-dot --show-tilde'
 # iaWriter
 alias ia='open -a "IA Writer"'
 
-# nvm
-# --no-use skips nvm_auto, which was 64% of shell startup (~1.1s) per zprof.
-# Sourcing drops from 0.81s to 0.01s.
-export NVM_DIR="$HOME/.nvm"
-[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh" --no-use
-[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
-
-# --no-use leaves no node on PATH, so put the default version there directly.
-# Globs only, no nvm calls and no subprocesses. The `n` qualifier sorts
-# numerically so v22.9.0 sorts below v22.14.0.
-() {
-  local want
-  [[ -r $NVM_DIR/alias/default ]] || return
-  read -r want < $NVM_DIR/alias/default
-  local -a vers=($NVM_DIR/versions/node/v${want#v}*(/Nn))
-  (( $#vers )) && export PATH="${vers[-1]}/bin:$PATH"
-}
+# nvm without nvm_auto; see nvm_init_lazy in globals.zsh
+nvm_init_lazy
 
 # place this after nvm initialization!
 # NB: link/oh-my-zsh/plugins/nvm/nvm.plugin.zsh registers its own load-nvmrc

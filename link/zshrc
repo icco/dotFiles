@@ -42,9 +42,19 @@ plugins=(
 zstyle :omz:plugins:iterm2 shell-integration yes
 
 # Must precede oh-my-zsh.sh: omz runs compinit, and it can only pick up
-# brew's site-functions if they're already on FPATH.
-[[ -d /opt/homebrew/share/zsh/site-functions ]] &&
-  FPATH=/opt/homebrew/share/zsh/site-functions:$FPATH
+# brew's site-functions if they're already on FPATH. Probe the known prefixes
+# in order rather than shelling out to `brew --prefix`, and stop at the first
+# hit so we keep the single-prefix behaviour this replaced. Linux hosts use
+# the linuxbrew path; hosts without brew match nothing.
+() {
+  local d
+  for d in /opt/homebrew /usr/local /home/linuxbrew/.linuxbrew; do
+    if [[ -d $d/share/zsh/site-functions ]]; then
+      FPATH=$d/share/zsh/site-functions:$FPATH
+      break
+    fi
+  done
+}
 
 source $ZSH/oh-my-zsh.sh
 

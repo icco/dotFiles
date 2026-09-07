@@ -2,9 +2,8 @@ export GOPATH=~/Projects/
 export PATH="$GOPATH/bin:$PATH"
 export GO111MODULE=on
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+# nvm without nvm_auto; see nvm_init_lazy in globals.zsh
+nvm_init_lazy
 
 # GPG
 PINENTRY_USER_DATA="USE_CURSES=1"
