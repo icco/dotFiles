@@ -62,5 +62,46 @@ nvm_default_bin_to_path() {
   (( $#vers )) && export PATH="${vers[-1]}/bin:$PATH"
 }
 
+# git-prompt: prefer the icco/gitstatus binary over the plugin's python script.
+#
+# Redefined here rather than edited in link/oh-my-zsh/plugins/git-prompt/,
+# because that path is vendored oh-my-zsh and `task omz` overwrites it.
+# custom/*.zsh is sourced after plugins (oh-my-zsh.sh:221 vs :216), so this
+# definition wins. The python fallback keeps the prompt working on every host
+# that has not run `brew install icco/tap/gitstatus`.
+#
+# If a future oh-my-zsh adds fields to this function, this copy goes stale and
+# the prompt loses the new field -- it does not break.
+if (( $+functions[update_current_git_vars] )); then
+  update_current_git_vars() {
+    unset __CURRENT_GIT_STATUS
+
+    local _GIT_STATUS
+    if (( $+commands[gitstatus] )); then
+      _GIT_STATUS=$(gitstatus 2>/dev/null)
+    else
+      _GIT_STATUS=$(python3 "$__GIT_PROMPT_DIR/gitstatus.py" 2>/dev/null)
+    fi
+    __CURRENT_GIT_STATUS=("${(@s: :)_GIT_STATUS}")
+
+    GIT_BRANCH=$__CURRENT_GIT_STATUS[1]
+    GIT_AHEAD=$__CURRENT_GIT_STATUS[2]
+    GIT_BEHIND=$__CURRENT_GIT_STATUS[3]
+    GIT_STAGED=$__CURRENT_GIT_STATUS[4]
+    GIT_CONFLICTS=$__CURRENT_GIT_STATUS[5]
+    GIT_CHANGED=$__CURRENT_GIT_STATUS[6]
+    GIT_UNTRACKED=$__CURRENT_GIT_STATUS[7]
+    GIT_STASHED=$__CURRENT_GIT_STATUS[8]
+    GIT_CLEAN=$__CURRENT_GIT_STATUS[9]
+    GIT_DELETED=$__CURRENT_GIT_STATUS[10]
+
+    if [ -z ${ZSH_THEME_GIT_SHOW_UPSTREAM+x} ]; then
+      GIT_UPSTREAM=
+    else
+      GIT_UPSTREAM=$(git rev-parse --abbrev-ref --symbolic-full-name "@{upstream}" 2>/dev/null) && GIT_UPSTREAM="${ZSH_THEME_GIT_PROMPT_UPSTREAM_SEPARATOR}${GIT_UPSTREAM}"
+    fi
+  }
+fi
+
 # And we're done!
 echo "===> Loaded globals.zsh";
