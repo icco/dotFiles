@@ -1,4 +1,7 @@
 extends: default
+# Everything under link/ is vendored upstream (oh-my-zsh, vim plugins).
+ignore: |
+  link/
 rules:
   line-length: disable
   document-start: disable
