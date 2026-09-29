@@ -1,4 +1,4 @@
-module github.com/icco/dotfiles
+module go.icco.me/dotfiles
 
 go 1.24
 
