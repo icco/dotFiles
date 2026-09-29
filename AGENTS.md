@@ -4,7 +4,7 @@ Guidance for coding agents working on dotFiles.
 
 ## Project Overview
 
-Personal configuration and dotfiles repository managed by a custom Go CLI utility `dotool` (`github.com/icco/dotfiles`).
+Personal configuration and dotfiles repository managed by a custom Go CLI utility `dotool` (`go.icco.me/dotfiles`).
 
 ## Commands (Taskfile)
 

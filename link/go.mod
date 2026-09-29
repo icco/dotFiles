@@ -1,4 +1,4 @@
-module github.com/icco/dotfiles/link
+module go.icco.me/dotfiles/link
 
 go 1.21
 
