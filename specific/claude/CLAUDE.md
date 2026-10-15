@@ -4,7 +4,7 @@
 
 - Always make repository changes in a git worktree under `~/Projects/.worktrees/<repo>-<topic>` for personal repos or `~/Work/.worktrees/<repo>-<topic>` for work repos, never beside the repo or in `/tmp`. This overrides a skill's default location.
 - Clone personal repos into `~/Projects` and work repos into `~/Work`.
-- Open URLs with `open -a "Google Chrome" <url>` and Markdown with `open -a "iA Writer" <path>`. Use browser automation only to read or drive a page.
+- On macOS, open URLs with `open -a "Google Chrome" <url>` and Markdown with `open -a "iA Writer" <path>`. Use browser automation only to read or drive a page.
 - Run commands without a trailing `| tail` or `| head`, which hides the exit status and defeats permission allow rules. Trim output with `--jq` or `-q`.
 - mise is already active. Run `mise run <task>` without `eval "$(mise activate ...)"`.
 - Personal Next.js apps share port 8080. Check what runs there before killing it.
