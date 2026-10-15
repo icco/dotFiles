@@ -110,3 +110,39 @@ func TestLinkBinFiles(t *testing.T) {
 		}
 	}
 }
+
+func TestLinkSkipsDotEntries(t *testing.T) {
+	tempDir := t.TempDir()
+	t.Chdir(tempDir)
+
+	for _, file := range []string{"link/.DS_Store", "link/.zsh_favlist", "link/zshrc", "specific/.DS_Store", "specific/config/app/.DS_Store", "specific/config/app/.envrc"} {
+		if err := os.MkdirAll(filepath.Dir(file), 0750); err != nil {
+			t.Fatalf("failed to create directory for %s: %v", file, err)
+		}
+		if err := os.WriteFile(file, []byte("x"), 0600); err != nil {
+			t.Fatalf("failed to create test file %s: %v", file, err)
+		}
+	}
+
+	homeDir := filepath.Join(tempDir, "home")
+	if err := os.MkdirAll(homeDir, 0750); err != nil {
+		t.Fatalf("failed to create home directory: %v", err)
+	}
+	if err := linkDirectory("link", homeDir, true); err != nil {
+		t.Fatalf("linkDirectory() error = %v", err)
+	}
+	if err := linkSpecificFiles(homeDir); err != nil {
+		t.Fatalf("linkSpecificFiles() error = %v", err)
+	}
+
+	for _, want := range []string{".zshrc", ".config/app/.envrc"} {
+		if _, err := os.Lstat(filepath.Join(homeDir, want)); err != nil {
+			t.Errorf("expected symlink %s: %v", want, err)
+		}
+	}
+	for _, unwanted := range []string{"..DS_Store", "..zsh_favlist", ".config/app/.DS_Store"} {
+		if _, err := os.Lstat(filepath.Join(homeDir, unwanted)); err == nil {
+			t.Errorf("unexpected symlink %s", unwanted)
+		}
+	}
+}

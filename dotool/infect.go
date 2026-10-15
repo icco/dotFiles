@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -51,6 +52,9 @@ func linkDirectory(sourceDir, homeDir string, addDot bool) error {
 	}
 
 	for _, entry := range entries {
+		if skipSource(entry.Name()) {
+			continue
+		}
 		sourcePath := filepath.Join(sourceDir, entry.Name())
 		name := entry.Name()
 		if addDot {
@@ -79,6 +83,9 @@ func linkSpecificFiles(homeDir string) error {
 		if err != nil {
 			return fmt.Errorf("failed to get relative path for %s: %w", path, err)
 		}
+		if skipSource(relativePath) {
+			return nil
+		}
 
 		targetPath := filepath.Join(homeDir, "."+relativePath)
 		if err := os.MkdirAll(filepath.Dir(targetPath), 0750); err != nil {
@@ -87,6 +94,12 @@ func linkSpecificFiles(homeDir string) error {
 
 		return createSymlink(path, targetPath, homeDir)
 	})
+}
+
+// skipSource reports whether rel, a path under link/ or specific/, must not be linked.
+// A dot-prefixed top-level name would land at ~/..name, and .DS_Store is Finder litter.
+func skipSource(rel string) bool {
+	return strings.HasPrefix(rel, ".") || filepath.Base(rel) == ".DS_Store"
 }
 
 func linkBinFiles(homeDir string) error {
