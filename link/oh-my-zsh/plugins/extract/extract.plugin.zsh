@@ -101,7 +101,9 @@ EOF
       (*.tar.lz4) lz4 -c -d "$full_path" | tar xvf - ;;
       (*.tar.lrz) (( $+commands[lrzuntar] )) && lrzuntar "$full_path" ;;
       (*.gz) (( $+commands[pigz] )) && pigz -cdk "$full_path" > "${file:t:r}" || gunzip -ck "$full_path" > "${file:t:r}" ;;
-      (*.bz2) (( $+commands[pbzip2] )) && pbzip2 -d "$full_path" || bunzip2 "$full_path" ;;
+      (*.bz2)
+        (( $+commands[pbzip2] )) && pbzip2 -cd "$full_path" > "${file:t:r}" \
+        || bunzip2 -c "$full_path" > "${file:t:r}" ;;
       (*.xz) xzcat "$full_path" > "${file:t:r}" ;;
       (*.lrz) (( $+commands[lrunzip] )) && lrunzip "$full_path" ;;
       (*.lz4) lz4 -d "$full_path" ;;
@@ -119,7 +121,17 @@ EOF
         fi ;;
       (*.rpm)
         rpm2cpio "$full_path" | cpio --quiet -id ;;
-      (*.7z | *.7z.[0-9]* | *.pk7) 7za x "$full_path" ;;
+      (*.7z | *.7z.[0-9]* | *.pk7)
+        if (( $+commands[7zz] )); then
+          7zz x "$full_path"
+        elif (( $+commands[7z] )); then
+          7z x "$full_path"
+        elif (( $+commands[7za] )); then
+          7za x "$full_path"
+        else
+          echo "extract: cannot extract 7z files: install 7zz, 7z or 7za" >&2
+          success=1
+        fi ;;
       (*.deb)
         command mkdir -p "control" "data"
         ar vx "$full_path" > /dev/null
