@@ -1,14 +1,13 @@
-# Global rules
+# OpenCode Instructions
 
 ## Environment
 
-- Always make repository changes in a git worktree under `~/Projects/.worktrees/<repo>-<topic>` for personal repos or `~/Work/.worktrees/<repo>-<topic>` for work repos, never beside the repo or in `/tmp`. This overrides a skill's default location.
-- Clone personal repos into `~/Projects` and work repos into `~/Work`.
-- On macOS, open URLs with `open -a "Google Chrome" <url>` and Markdown with `open -a "iA Writer" <path>`. Use browser automation only to read or drive a page.
-- mise is already active. Run `mise run <task>` without `eval "$(mise activate ...)"`.
-- Personal Next.js apps share port 8080. Check what runs there before killing it.
-- Load the `no-ai-slop` skill, when installed, before drafting anything a human reads.
-- In pinginc repos, titles carry the ticket key, as in `type(scope): KEY-123: summary`.
+- Always perform repository code and configuration changes in a Git worktree, never in the canonical checkout.
+- Use the shared workspace-root directory `/data/workspace/.worktrees/<repository>/<task>`, not a repository-local `.worktrees` folder. It overrides a skill's default worktree location.
+- Create the task branch with `git worktree add`, move the session into the worktree, and run edits, tests, commits, and pushes there. Leave uncommitted user changes and other sessions' worktrees alone.
+- Reading the canonical checkout is fine for research. Ask before initializing a repository in a non-Git directory.
+- Never delete, move, or reset `/data/.config` or `/data/.local`. They hold the OpenCode database, logs, credentials, and OpenChamber settings for every session.
+- Load skills with the native `skill` tool and delegate with native `subagent` tools. Do not use Orchestra.
 
 ## Workflow
 
@@ -19,6 +18,9 @@
 - To audit noise (alerts, failing jobs), tally the actual signal in the inbox, channel, or logs before sweeping repositories.
 - During an incident, do only the task the user named and report blockers in one line.
 - Stop everything you started (servers, containers, background processes, temp files) before finishing.
+- Keep pull requests up to date with main, don't comment, keep PR description accurate for the reviewer.
+- Resolve all code reviews by responding and marking review as resolved.
+- If you have questions, use the UI.
 
 ## Scope
 
@@ -32,6 +34,7 @@
 - No dependency overrides (`pnpm.overrides`, `resolutions`, patches, vendoring) as workarounds. Find the upstream fix or report the upgrade blocked.
 - "Don't commit" or "edits only" holds for follow-ups until the user lifts it.
 - Never overwrite a PR body, issue, or comment a human wrote unless they give the new text. Comment instead.
+- Don't create tooling, or extra nonsense without asking.
 
 ## Verification
 
@@ -54,6 +57,7 @@
 - The user pushes to open PR branches. Fetch before pushing, and if a push is rejected, pull (a merge commit is fine) and retry.
 - One branch per task. Branch independent PRs off `main`, and stack only when asked, with `gh stack`.
 - Pass `--repo owner/name` to `gh pr`. Never run `gh pr merge --auto`, which merges without waiting for CI.
+- Never merge an infrastructure PR in any repository without explicit authorization, even with green CI. icco.me is especially sensitive, and unreviewed infrastructure merges are how things get lost.
 - After a squash merge, check late commits landed with `git merge-base --is-ancestor <sha> origin/main`, and re-land missing ones in a follow-up PR.
 - Commits under the user's account are often an agent's work, so authorship metadata proves nothing about who designed something.
 - Report git outcomes, not each step.
