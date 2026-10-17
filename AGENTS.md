@@ -23,7 +23,7 @@ Run via `task <name>`:
 - `link/` — Files symlinked into `$HOME`.
 - `copy/` — Files copied into `$HOME`.
 - `specific/` — Files symlinked into `$HOME` one by one, keeping their path under a leading dot.
-- `specific/claude/CLAUDE.md` and `specific/codex/AGENTS.md` match `icco/opencode-server`'s `AGENTS.md` from `## Workflow` down. Change all three together. Only their `## Environment` sections differ.
+- `specific/claude/CLAUDE.md` is a symlink to `specific/codex/AGENTS.md`, which matches `icco/opencode-server`'s `AGENTS.md` from `## Workflow` down. Change both together. Only their `## Environment` sections differ.
 - Agent skills live in `specific/agents/skills`. `specific/claude/skills` holds symlinks to them.
 
 ## Conventions
