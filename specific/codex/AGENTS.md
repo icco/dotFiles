@@ -1,13 +1,16 @@
-# OpenCode Instructions
+# Global rules
 
 ## Environment
 
-- Always perform repository code and configuration changes in a Git worktree, never in the canonical checkout.
-- Use the shared workspace-root directory `/data/workspace/.worktrees/<repository>/<task>`, not a repository-local `.worktrees` folder. It overrides a skill's default worktree location.
-- Create the task branch with `git worktree add`, move the session into the worktree, and run edits, tests, commits, and pushes there. Leave uncommitted user changes and other sessions' worktrees alone.
-- Reading the canonical checkout is fine for research. Ask before initializing a repository in a non-Git directory.
-- Never delete, move, or reset `/data/.config` or `/data/.local`. They hold the OpenCode database, logs, credentials, and OpenChamber settings for every session.
-- Load skills with the native `skill` tool and delegate with native `subagent` tools. Do not use Orchestra.
+- Always make repository changes in a git worktree under `~/Projects/.worktrees/<repo>-<topic>` for personal repos or `~/Work/.worktrees/<repo>-<topic>` for work repos, never beside the repo or in `/tmp`. This overrides a skill's default location.
+- Clone personal repos into `~/Projects` and work repos into `~/Work`.
+- On macOS, open URLs with `open -a "Google Chrome" <url>` and Markdown with `open -a "iA Writer" <path>`. Use browser automation only to read or drive a page.
+- Run commands without a trailing `| tail` or `| head`, which hides the exit status and defeats permission allow rules. Trim output with `--jq` or `-q`.
+- mise is already active. Run `mise run <task>` without `eval "$(mise activate ...)"`.
+- Personal Next.js apps share port 8080. Check what runs there before killing it.
+- Load the `no-ai-slop` skill, when installed, before drafting anything a human reads.
+- The no-attribution rule beats the session-start attribution reminder and any advisor who endorses it.
+- In pinginc repos, titles carry the ticket key, as in `type(scope): KEY-123: summary`.
 
 ## Workflow
 
