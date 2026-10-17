@@ -81,6 +81,36 @@ func TestLinkSpecificFiles(t *testing.T) {
 	}
 }
 
+func TestLinkSpecificFilesFollowsSourceSymlink(t *testing.T) {
+	tempDir := t.TempDir()
+	t.Chdir(tempDir)
+
+	for _, dir := range []string{"specific/codex", "specific/claude", "home"} {
+		if err := os.MkdirAll(dir, 0750); err != nil {
+			t.Fatalf("failed to create %s: %v", dir, err)
+		}
+	}
+	if err := os.WriteFile("specific/codex/AGENTS.md", []byte("rules"), 0600); err != nil {
+		t.Fatalf("failed to write AGENTS.md: %v", err)
+	}
+	if err := os.Symlink("../codex/AGENTS.md", "specific/claude/CLAUDE.md"); err != nil {
+		t.Fatalf("failed to symlink CLAUDE.md: %v", err)
+	}
+
+	homeDir := filepath.Join(tempDir, "home")
+	if err := linkSpecificFiles(homeDir); err != nil {
+		t.Fatalf("linkSpecificFiles() error = %v", err)
+	}
+
+	got, err := os.ReadFile(filepath.Join(homeDir, ".claude", "CLAUDE.md"))
+	if err != nil {
+		t.Fatalf("failed to read linked CLAUDE.md: %v", err)
+	}
+	if string(got) != "rules" {
+		t.Errorf("linked CLAUDE.md = %q, want %q", got, "rules")
+	}
+}
+
 func TestLinkBinFiles(t *testing.T) {
 	tempDir := t.TempDir()
 	t.Chdir(tempDir)
