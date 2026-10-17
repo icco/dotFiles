@@ -1,4 +1,4 @@
-# OpenCode Instructions
+# Global Rules
 
 ## Environment
 
