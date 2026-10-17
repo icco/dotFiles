@@ -102,6 +102,7 @@ func TestLinkSpecificFilesFollowsSourceSymlink(t *testing.T) {
 		t.Fatalf("linkSpecificFiles() error = %v", err)
 	}
 
+	// #nosec G304 -- path is inside t.TempDir().
 	got, err := os.ReadFile(filepath.Join(homeDir, ".claude", "CLAUDE.md"))
 	if err != nil {
 		t.Fatalf("failed to read linked CLAUDE.md: %v", err)
