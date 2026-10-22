@@ -1,4 +1,5 @@
 #! /bin/zsh
+# shellcheck disable=SC1071
 
 function reset() {
   git config --local --unset-all user.email

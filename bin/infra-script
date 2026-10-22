@@ -1,4 +1,5 @@
 #! /bin/zsh
+# shellcheck disable=SC1071
 # shellcheck shell=bash
 
 # This script changes directory to the related infra directory if it exists.
