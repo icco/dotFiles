@@ -1,5 +1,5 @@
-#! /bin/zsh
+#!/usr/bin/env bash
 
-cd ~/Projects/random
+cd ~/Projects/random || exit 1
 
 claude ~/Projects/random/Prompts/daily.md

@@ -1,4 +1,4 @@
-#! /bin/zsh
+#!/usr/bin/env bash
 
-docker run --rm -t $@ $(docker build -q .)
+docker run --rm -t "$@" "$(docker build -q .)"
 

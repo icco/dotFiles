@@ -1,7 +1,7 @@
-#! /bin/zsh
+#!/usr/bin/env bash
 
 IP=$(curl -s 'https://api.ipify.org')
-maindomain=$(expr match "$1" '.*\.\(.*\..*\)')
+maindomain=$(expr "$1" : '.*\.\(.*\..*\)')
 subdomain=${1%".$maindomain"}
 
 if [[ -z "$IP" ]]; then
@@ -9,9 +9,9 @@ if [[ -z "$IP" ]]; then
   exit 1
 fi
 
-cd  ~/Projects/icco.me/$maindomain/
+mkdir -p ~/Projects/icco.me/"$maindomain"/
+cd ~/Projects/icco.me/"$maindomain"/ || exit 1
 git pull
-mkdir -p ~/Projects/icco.me/$maindomain/
-echo $IP > ~/Projects/icco.me/$maindomain/$subdomain
+echo "$IP" > ~/Projects/icco.me/"$maindomain"/"$subdomain"
 git add .
 git diff --staged --quiet || git commit -m 'chore: set ip' && git push -u
