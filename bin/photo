@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+#
+# Upload images to photos.natwelch.com and print their URLs.
+#
+# Examples:
+#
+#   photo ~/Desktop/cat.jpg
+#   photo ~/Desktop/*.png
+
+set -euo pipefail
+
+if [ $# -eq 0 ]; then
+  echo "usage: photo FILE..." >&2
+  exit 1
+fi
+
+args=()
+for f in "$@"; do
+  args+=(-F "photo=@$f")
+done
+
+urls=$(curl -fsS "${args[@]}" https://photos.natwelch.com/api/upload | jq -r '.files[].url')
+
+if [ -z "$urls" ]; then
+  echo "photo: nothing uploaded, only image files are accepted" >&2
+  exit 1
+fi
+
+printf '%s\n' "$urls"
+if command -v pbcopy >/dev/null; then
+  printf '%s' "$urls" | pbcopy
+fi
