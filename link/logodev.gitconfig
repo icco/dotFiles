@@ -1,0 +1,7 @@
+[user]
+	name = Nat Welch
+	email = nat@logo.dev
+[commit]
+	gpgsign = false
+
+# vim: set filetype=gitconfig:
