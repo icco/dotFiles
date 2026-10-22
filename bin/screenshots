@@ -1,5 +1,4 @@
-#! /bin/zsh
-# shellcheck disable=SC1071
+#!/usr/bin/env bash
 
 mv -v ~/Desktop/Screen\ Recording* ~/Dropbox/Screenshots/
 mv -v ~/Desktop/Screen\ Shot* ~/Dropbox/Screenshots/

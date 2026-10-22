@@ -15,8 +15,7 @@ jobs:
         uses: actions/checkout@v7
       - name: Run shellcheck on bin/ directory
         run: |
-          # Check all files in bin/ directory (all are shell scripts)
-          find bin/ -type f -exec shellcheck {} \;
+          grep -lE '^#!.*(ba|z)?sh$' bin/* | xargs shellcheck
       - name: Run shellcheck on oh-my-zsh custom directory
         run: |
           # Check .zsh files in custom directory
@@ -26,6 +25,12 @@ jobs:
           if [ -d "link/oh-my-zsh/custom/hosts" ]; then
             find link/oh-my-zsh/custom/hosts -name "*.zsh" -type f -exec shellcheck -s bash {} \;
           fi
+      - name: Install zsh
+        run: |
+          sudo apt-get update && sudo apt-get install -y zsh
+      - name: Syntax check zsh scripts in bin/
+        run: |
+          grep -lE '^#!.*zsh$' bin/* | xargs -n1 zsh -n
   go-test:
     name: Go Tests
     runs-on: ubuntu-latest

@@ -1,6 +1,5 @@
-#! /bin/zsh
-# shellcheck disable=SC1071
+#!/usr/bin/env bash
 
-cd ~/Projects/random
+cd ~/Projects/random || exit 1
 
 claude ~/Projects/random/Prompts/daily.md

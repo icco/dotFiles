@@ -1,16 +1,16 @@
-#! /bin/zsh
-# shellcheck disable=SC1071
+#!/usr/bin/env bash
 
 brew update
 brew upgrade -y
 brew cleanup
 
-cd ~/Projects/dotfiles && \
-  git pull &&
-  brew bundle && \
-  git add Brewfile.lock.json && \
-  git ci -m 'update brewfile' && \
-  git push && \
-  cd -
+(
+  cd ~/Projects/dotfiles &&
+    git pull &&
+    brew bundle &&
+    git add Brewfile.lock.json &&
+    git ci -m 'update brewfile' &&
+    git push
+)
 
 gcloud components update -q
