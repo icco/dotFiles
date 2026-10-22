@@ -8,29 +8,29 @@
 sync_dir () {
   f=$1
 
-  if [ -d $PROJ$f ]; then
+  if [ -d "$PROJ$f" ]; then
     echo "--------> $f"
-    cd $PROJ$f;
+    cd "$PROJ$f" || return 2
     rm -f .DS_Store
-    if [ -d $PROJ$f/.git/ ]; then
+    if [ -d "$PROJ$f/.git/" ]; then
       git fetch --prune
       branch=$(git symbolic-ref --short HEAD 2>/dev/null)
       track=$(git for-each-ref --format='%(upstream:track)' "refs/heads/$branch" 2>/dev/null)
-      upstream=$(git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null)
+      upstream=$(git rev-parse --abbrev-ref --symbolic-full-name '@{u}' 2>/dev/null)
       if [ "$track" = "[gone]" ] || [ -z "$upstream" ]; then
         remote=$(git config "branch.$branch.remote")
         [ -n "$remote" ] || remote=origin
         default=$(git symbolic-ref --short "refs/remotes/$remote/HEAD" 2>/dev/null) \
           || { git remote set-head "$remote" -a >/dev/null 2>&1 && default=$(git symbolic-ref --short "refs/remotes/$remote/HEAD" 2>/dev/null); }
-        if [ -n "$default" ] && [ "${default#$remote/}" != "$branch" ]; then
-          echo "Upstream for $branch is gone/unresolvable; switching to ${default#$remote/}."
-          git checkout "${default#$remote/}"
+        if [ -n "$default" ] && [ "${default#"$remote"/}" != "$branch" ]; then
+          echo "Upstream for $branch is gone/unresolvable; switching to ${default#"$remote"/}."
+          git checkout "${default#"$remote"/}"
         fi
       fi
       git pull
       git status -sb
       return 0;
-    elif [ -d $PROJ$f/.svn/ ]; then
+    elif [ -d "$PROJ$f/.svn/" ]; then
       svn up
       return 0;
     else
@@ -39,48 +39,16 @@ sync_dir () {
   fi;
 }
 
-PROJ=~/Projects/
-if [ -d $PROJ ]; then
-  echo "# ~/Projects --------------------------------------------------------------------------------"
-  for e in $(ls $PROJ | sort -f); do
-    sync_dir $e
-    if [ $? -eq 1 ]; then
-      echo "No known version control."
-    fi
-  done;
-fi
-
-PROJ=~/Sites/
-if [ -d $PROJ ]; then
-  echo "# ~/Sites -----------------------------------------------------------------------------------"
-  for e in $(ls $PROJ | sort -f); do
-    sync_dir $e
-    if [ $? -eq 1 ]; then
-      echo "No known version control."
-    fi
-  done;
-fi
-
-PROJ=~/Work/
-if [ -d $PROJ ]; then
-  echo "# ~/Work ------------------------------------------------------------------------------------"
-  for e in $(ls $PROJ | sort -f); do
-    sync_dir $e
-    if [ $? -eq 1 ]; then
-      echo "No known version control."
-    fi
-  done;
-fi
-
-PROJ=~/logo.dev/
-if [ -d $PROJ ]; then
-  echo "# ~/logo.dev ------------------------------------------------------------------------------------"
-  for e in $(ls $PROJ | sort -f); do
-    sync_dir $e
-    if [ $? -eq 1 ]; then
-      echo "No known version control."
-    fi
-  done;
-fi
+for PROJ in ~/Projects/ ~/Sites/ ~/Work/ ~/logo.dev/; do
+  if [ -d "$PROJ" ]; then
+    printf '# %s %s\n' "${PROJ%/}" "--------------------------------------------------------------------------------"
+    while IFS= read -r e; do
+      sync_dir "$e"
+      if [ $? -eq 1 ]; then
+        echo "No known version control."
+      fi
+    done < <(find "$PROJ" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort -f)
+  fi
+done
 
 echo "All Done!"
