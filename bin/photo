@@ -16,10 +16,15 @@ fi
 
 args=()
 for f in "$@"; do
-  args+=(-F "photo=@$f")
+  f=${f//\\/\\\\}
+  args+=(-F "photo=@\"${f//\"/\\\"}\"")
 done
 
-urls=$(curl -fsS "${args[@]}" https://photos.natwelch.com/api/upload | jq -r '.files[].url')
+body=$(curl -sS --fail-with-body "${args[@]}" https://photos.natwelch.com/api/upload) || {
+  jq -r '.message // empty' <<<"$body" >&2
+  exit 1
+}
+urls=$(jq -r '.files[].url' <<<"$body")
 
 if [ -z "$urls" ]; then
   echo "photo: nothing uploaded, only image files are accepted" >&2
