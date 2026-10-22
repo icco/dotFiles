@@ -63,6 +63,8 @@
 	cookiefile = ~/.gitcookies
 [includeIf "gitdir:~/Work/"]
 	path = "~/.work.gitconfig"
+[includeIf "gitdir:~/logo.dev/"]
+	path = "~/.logodev.gitconfig"
 [init]
 	defaultBranch = main
 [interactive]
