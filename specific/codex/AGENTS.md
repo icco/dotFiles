@@ -2,8 +2,8 @@
 
 ## Environment
 
-- Always make repository changes in a git worktree under `~/Projects/.worktrees/<repo>-<topic>` for personal repos or `~/logo.dev/.worktrees/<repo>-<topic>` for work repos, never beside the repo, inside it (`.claude/worktrees`), or in `/tmp`. This overrides a skill's or `isolation: "worktree"` default location.
-- Clone personal repos into `~/Projects` and work repos into `~/logo.dev`.
+- Always make repository changes in a git worktree under `~/Projects/.worktrees/<repo>-<topic>` for personal repos or `~/Work/.worktrees/<repo>-<topic>` for pinginc and laurel repos, or `~/logo.dev/.worktrees/<repo>-<topic>` for logo.dev repos, never beside the repo, inside it (`.claude/worktrees`), or in `/tmp`. This overrides a skill's or `isolation: "worktree"` default location.
+- Clone personal repos into `~/Projects`, pinginc and laurel repos into `~/Work`, and logo.dev repos into `~/logo.dev`.
 - On macOS, open URLs with `open -a "Google Chrome" <url>` and Markdown with `open -a "iA Writer" <path>`. Use browser automation only to read or drive a page.
 - Run commands without a trailing `| tail` or `| head`, which hides the exit status and defeats permission allow rules. Trim output with `--jq` or `-q`.
 - mise is already active. Run `mise run <task>` without `eval "$(mise activate ...)"`.
