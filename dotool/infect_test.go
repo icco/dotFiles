@@ -177,3 +177,29 @@ func TestLinkSkipsDotEntries(t *testing.T) {
 		}
 	}
 }
+
+func TestLinkSpecificFilesSkipsNodeModules(t *testing.T) {
+	tempDir := t.TempDir()
+	t.Chdir(tempDir)
+
+	for _, file := range []string{"specific/agents/skills/graph/scripts/render.mjs", "specific/agents/skills/graph/scripts/node_modules/vega/index.js"} {
+		if err := os.MkdirAll(filepath.Dir(file), 0750); err != nil {
+			t.Fatalf("failed to create directory for %s: %v", file, err)
+		}
+		if err := os.WriteFile(file, []byte("x"), 0600); err != nil {
+			t.Fatalf("failed to create test file %s: %v", file, err)
+		}
+	}
+
+	homeDir := filepath.Join(tempDir, "home")
+	if err := linkSpecificFiles(homeDir); err != nil {
+		t.Fatalf("linkSpecificFiles() error = %v", err)
+	}
+
+	if _, err := os.Lstat(filepath.Join(homeDir, ".agents/skills/graph/scripts/render.mjs")); err != nil {
+		t.Errorf("expected symlink render.mjs: %v", err)
+	}
+	if _, err := os.Lstat(filepath.Join(homeDir, ".agents/skills/graph/scripts/node_modules")); err == nil {
+		t.Error("unexpected node_modules in home")
+	}
+}
