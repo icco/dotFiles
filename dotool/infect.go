@@ -76,6 +76,9 @@ func linkSpecificFiles(homeDir string) error {
 			return err
 		}
 		if d.IsDir() {
+			if d.Name() == "node_modules" {
+				return filepath.SkipDir
+			}
 			return nil
 		}
 
