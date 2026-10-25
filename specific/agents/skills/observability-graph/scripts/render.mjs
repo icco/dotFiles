@@ -67,11 +67,10 @@ const config = {
   range: { category: { scheme: "tableau10" } },
 };
 
-function seriesName(metric) {
-  if (opts.label && metric[opts.label] !== undefined) return String(metric[opts.label]);
-  const labels = Object.entries(metric).filter(([k]) => k !== "__name__");
+function seriesName(metric, keepName = true) {
+  const labels = Object.entries(metric).filter(([k]) => keepName || k !== "__name__");
   if (labels.length === 0) return metric.__name__ ?? "value";
-  return labels.map(([k, v]) => (labels.length === 1 ? v : `${k}=${v}`)).join(", ");
+  return labels.map(([k, v]) => (labels.length === 1 ? String(v) : `${k}=${v}`)).join(", ");
 }
 
 function toMillis(t) {
@@ -86,8 +85,17 @@ function toRows(input) {
   }
   const matrix = Array.isArray(input.data) ? input.data : input.data?.result;
   if (!Array.isArray(matrix)) throw new Error("--data must be an array of {time, series, value} rows or a Prometheus/Loki matrix ({data: {result: [...]}})");
-  return matrix.flatMap((s) => {
-    const series = seriesName(s.metric ?? {});
+  const keepName = new Set(matrix.map((s) => s.metric?.__name__).filter(Boolean)).size > 1;
+  const rawNames = matrix.map((s) => {
+    const m = s.metric ?? {};
+    if (opts.label && m[opts.label] !== undefined) return String(m[opts.label]);
+    return seriesName(m, keepName);
+  });
+  const nameCounts = new Map();
+  for (const n of rawNames) nameCounts.set(n, (nameCounts.get(n) ?? 0) + 1);
+  return matrix.flatMap((s, i) => {
+    const fallback = seriesName(s.metric ?? {}, true);
+    const series = nameCounts.get(rawNames[i]) > 1 ? (fallback !== rawNames[i] ? fallback : `${rawNames[i]} (#${i + 1})`) : rawNames[i];
     const points = s.values ?? (s.value ? [s.value] : []);
     return points.map(([t, v]) => ({ time: toMillis(Number(t)), series, value: toValue(v) }));
   });
@@ -102,26 +110,38 @@ function limitSeries(rows, stacked) {
   const max = Number(opts["max-series"]);
   const totals = new Map();
   for (const r of rows) totals.set(r.series, (totals.get(r.series) ?? 0) + Math.abs(r.value ?? 0));
-  if (totals.size <= max) return rows;
+  if (totals.size <= max) return { rows, otherName: null };
   const keepCount = stacked ? max - 1 : max;
   const keep = new Set([...totals].sort((a, b) => b[1] - a[1]).slice(0, keepCount).map(([s]) => s));
   const dropped = totals.size - keep.size;
   if (!stacked) {
     console.error(`render: kept the ${keep.size} largest of ${totals.size} series; dropped ${dropped}`);
-    return rows.filter((r) => keep.has(r.series));
+    return { rows: rows.filter((r) => keep.has(r.series)), otherName: null };
   }
+  let otherName = "other";
+  while (totals.has(otherName)) otherName = `${otherName} (other)`;
   const other = new Map();
   for (const r of rows) {
-    if (keep.has(r.series) || r.value === null) continue;
-    other.set(r.time, (other.get(r.time) ?? 0) + r.value);
+    if (keep.has(r.series)) continue;
+    const prev = other.get(r.time);
+    other.set(r.time, prev === null || r.value === null ? null : (prev ?? 0) + r.value);
   }
-  console.error(`render: kept the ${keep.size} largest of ${totals.size} series; summed ${dropped} into "other"`);
-  return [...rows.filter((r) => keep.has(r.series)), ...[...other].map(([time, value]) => ({ time, series: "other", value }))];
+  console.error(`render: kept the ${keep.size} largest of ${totals.size} series; summed ${dropped} into "${otherName}"`);
+  return {
+    rows: [...rows.filter((r) => keep.has(r.series)), ...[...other].map(([time, value]) => ({ time, series: otherName, value }))],
+    otherName,
+  };
 }
 
 function timeFormat(rows) {
-  const times = rows.map((r) => new Date(r.time).getTime());
-  const spanHours = (Math.max(...times) - Math.min(...times)) / 3.6e6;
+  let min = Infinity;
+  let max = -Infinity;
+  for (const r of rows) {
+    const t = new Date(r.time).getTime();
+    if (t < min) min = t;
+    if (t > max) max = t;
+  }
+  const spanHours = (max - min) / 3.6e6;
   if (spanHours <= 36) return "%H:%M";
   if (spanHours <= 24 * 7) return "%a %d %H:%M";
   return "%b %d";
@@ -130,15 +150,20 @@ function timeFormat(rows) {
 function defaultSpec(input) {
   if (!["line", "area", "bar"].includes(opts.mark)) throw new Error(`--mark must be line, area, or bar, got ${opts.mark}`);
   const stacked = opts.mark === "area" || opts.mark === "bar";
-  const rows = limitSeries(input, stacked);
-  if (!rows.some((r) => r.value !== null)) throw new Error("no data points to plot");
+  const nonEmpty = new Set(input.filter((r) => r.value !== null).map((r) => r.series));
+  if (nonEmpty.size === 0) throw new Error("no data points to plot");
+  const { rows: limited, otherName } = limitSeries(
+    input.filter((r) => nonEmpty.has(r.series)),
+    stacked,
+  );
   const counts = new Map();
-  for (const r of rows) if (r.value !== null) counts.set(r.series, (counts.get(r.series) ?? 0) + 1);
+  for (const r of limited) if (r.value !== null) counts.set(r.series, (counts.get(r.series) ?? 0) + 1);
+  const rows = limited.filter((r) => counts.has(r.series));
   const sparse = Math.min(...counts.values()) <= 60;
   const multi = counts.size > 1;
   const peaks = new Map();
   for (const r of rows) if (r.value !== null) peaks.set(r.series, Math.max(peaks.get(r.series) ?? -Infinity, r.value));
-  const order = [...peaks].sort((a, b) => (a[0] === "other") - (b[0] === "other") || b[1] - a[1]).map(([s]) => s);
+  const order = [...peaks].sort((a, b) => (a[0] === otherName) - (b[0] === otherName) || b[1] - a[1]).map(([s]) => s);
   return {
     width: Number(opts.width),
     height: Number(opts.height),
@@ -160,7 +185,10 @@ function defaultSpec(input) {
 }
 
 const spec = opts.spec ? JSON.parse(readFileSync(opts.spec, "utf8")) : defaultSpec(toRows(JSON.parse(readFileSync(opts.data, "utf8"))));
-if (opts.title) spec.title = { text: opts.title, ...(opts.subtitle ? { subtitle: opts.subtitle } : {}) };
+if (opts.title || opts.subtitle) {
+  const existing = typeof spec.title === "string" ? { text: spec.title } : (spec.title ?? {});
+  spec.title = { ...existing, ...(opts.title ? { text: opts.title } : {}), ...(opts.subtitle ? { subtitle: opts.subtitle } : {}) };
+}
 spec.config = { ...config, ...(spec.config ?? {}) };
 
 const view = new vega.View(vega.parse(vl.compile(spec).spec), { renderer: "none" });
