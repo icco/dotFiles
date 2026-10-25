@@ -26,4 +26,6 @@ yq() {
 # zmv
 autoload -Uz zmv
 
+alias fd=fdfind
+
 # vim: set filetype=zsh:
