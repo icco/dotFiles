@@ -9,12 +9,12 @@ tasks:
       - omz
       - brew
     cmds:
-      - "go get -u -v ./..."
-      - "go mod tidy"
-      - "go build -o /tmp/ ./..."
-      - "git add go.*"
-      - "git ci -m 'chore: update go deps'"
-      - "git push -u"
+      - go get -u -v ./...
+      - go mod tidy
+      - go build -o /tmp/ ./...
+      - git add go.*
+      - 'git ci -m ''chore: update go deps'''
+      - git push -u
   infect:
     desc: Install dotfiles
     cmd: go run ./dotool infect
