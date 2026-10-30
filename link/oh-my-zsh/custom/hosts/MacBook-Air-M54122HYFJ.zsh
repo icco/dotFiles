@@ -8,7 +8,7 @@ export ART_API_AUDIENCE=32555940559.apps.googleusercontent.com
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
 # Try and fix PATH
-export PATH="/opt/homebrew/bin:/usr/local/sbin:/usr/local/bin:$PATH"
+export PATH="/opt/homebrew/bin:/usr/local/sbin:/usr/local/bin:${HOME}/.local/bin/:$PATH"
 
 # alias ls to GNU ls with colors
 alias ls="/opt/homebrew/bin/gls --color";
