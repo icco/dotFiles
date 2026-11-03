@@ -97,7 +97,7 @@
 - Use only the template's sections. Tick its fixed checklist items without adding new ones, and write "No Risks Found" rather than dropping a risks section.
 - Six lines of content at most, excluding headers, covering what the PR does, what to look at, and risks or deferred work. Write for the reviewer, with no narrative, no bugs found along the way, and no test plan. Link detail that already lives in a README or the commit message.
 - No AI attribution in PR bodies. `Co-Authored-By` trailers in commits are fine.
-- Titles are lowercase Conventional Commits, and the squash-merged title drives the version bump. Use `fix` for repairs and `fix(ci)` for CI changes, and `chore`, `docs`, or `build` for other plumbing (`chore(deps)` for dependencies), and `feat` only for a new user-facing capability. Never `refactor`. Mark breaking changes with `!` before the colon.
+- Titles are lowercase Conventional Commits, and the squash-merged title drives the version bump. Use `fix` for repairs and `fix(ci)` for CI changes, and `chore` with appropriate scope (such as `docs`, `build` or `deps`) for other plumbing. Use `feat` only for a new user-facing capability. Never `refactor`. Mark breaking changes with `!` before the colon.
 
 ## Personal sites
 
