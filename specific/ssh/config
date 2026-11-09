@@ -16,6 +16,10 @@ Host glass
   User nat
   Hostname glass.local
 
+Host window
+  User nat
+  Hostname window.local
+
 Host gallon
   User nat
   Hostname gallon.local
