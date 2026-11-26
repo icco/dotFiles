@@ -45,6 +45,8 @@ zstyle :omz:plugins:iterm2 shell-integration yes
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 # Better SSH/Rsync/SCP Autocomplete
+# _ssh_hosts skips ~/.ssh/config whenever known_hosts matches, so feed config Host aliases in directly
+zstyle -e ':completion:*:(ssh|scp|rsync|sftp):*' hosts 'reply=(${=${${(M)${(f)"$(cat ~/.ssh/config ~/.orbstack/ssh/config 2>/dev/null)"}:#[Hh]ost *}#[Hh]ost }:#*[*?]*})'
 zstyle ':completion:*:(scp|rsync):*' tag-order ' hosts:-ipaddr:ip\ address hosts:-host:host files'
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' loopback ip6-loopback localhost ip6-localhost broadcasthost
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
