@@ -28,9 +28,15 @@ jobs:
       - name: Install zsh
         run: |
           sudo apt-get update && sudo apt-get install -y zsh
-      - name: Syntax check zsh scripts in bin/
+      - name: Syntax check zsh scripts
         run: |
           grep -lE '^#!.*zsh$' bin/* | xargs -n1 zsh -n
+          zsh -n link/zshrc
+      - name: Run zshellcheck on zshrc
+        uses: afadesigns/zshellcheck@55a5407a798af569742e182e0ac8e911f9ead9c8
+        with:
+          version: v1.8.0
+          args: link/zshrc
   go-test:
     name: Go Tests
     runs-on: ubuntu-latest
