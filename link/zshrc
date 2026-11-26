@@ -63,9 +63,9 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
 # Better SSH/Rsync/SCP Autocomplete
 # _ssh_hosts skips ~/.ssh/config whenever known_hosts matches, so feed config Host aliases in directly
-zstyle -e ':completion:*:(ssh|scp|rsync|sftp):*' hosts 'reply=(); local f l; for f in ~/.ssh/config(N) ~/.orbstack/ssh/config(N); for l in ${(f)"$(<$f)"}; [[ $l == (#i)[[:space:]]#host[[:space:]]##* ]] && reply+=(${${=l}[2,-1]:#*[*?]*})'
+zstyle -e ':completion:*:(ssh|scp|rsync|sftp):*' hosts 'reply=(); local f l; for f in ~/.ssh/config(N) ~/.orbstack/ssh/config(N); for l in ${(f)"$(<$f)"}; [[ $l == (#i)[[:space:]]#host[[:space:]]##* ]] && reply+=(${${=l}[2,-1]:#(*[*?]*|!*)})'
 zstyle ':completion:*:(scp|rsync):*' tag-order ' hosts:-ipaddr:ip\ address hosts:-host:host files'
-zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '*(.|:)*' loopback ip6-loopback localhost ip6-localhost broadcasthost
+zstyle ':completion:*:(ssh|scp|rsync):*:hosts-host' ignored-patterns '<->.<->.<->.<->' '*:*' loopback ip6-loopback localhost ip6-localhost broadcasthost
 zstyle ':completion:*:(ssh|scp|rsync):*:hosts-ipaddr' ignored-patterns '^(<->.<->.<->.<->|(|::)([[:xdigit:].]##:(#c,2))##(|%*))' '127.0.0.<->' '255.255.255.255' '::1' 'fe80::*'
 
 # Allow for autocomplete to be case insensitive
